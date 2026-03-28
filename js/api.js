@@ -8,7 +8,13 @@ async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
     if(!cpfVal) return alert("Digite um CPF");
     
-    const { data } = await _supabase.from('acessos').select('nome, empresa, responsavel').eq('cpf', cpfVal).order('data', { ascending: false }).limit(1);
+    // AJUSTE AQUI: Ordenando pelo ID de forma decrescente para pegar o último registro real
+    const { data } = await _supabase
+        .from('acessos')
+        .select('nome, empresa, responsavel')
+        .eq('cpf', cpfVal)
+        .order('id', { ascending: false }) 
+        .limit(1);
     
     if (data && data.length > 0) {
         document.getElementById('nome').value = data[0].nome || '';
