@@ -268,7 +268,7 @@
         };
         const { error } = await _supabase.from('acessos').insert([payload]);
         if(error) alert("Erro ao salvar.");
-        else { alert("Acesso registrado!"); limpar(); }
+        else { alert("Acesso registrado com sucesso!"); limpar(); }
     }
 
     function limpar() { 
