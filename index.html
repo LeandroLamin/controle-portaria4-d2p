@@ -13,141 +13,120 @@
             --cor-destaque-verde: #27ae60;
             --cor-destaque-laranja: #f39c12;
             --cor-fundo-login: #f4f7f6;
-            --sidebar-width: 280px;
         }
 
-        body { background-color: var(--cor-fundo-login); color: var(--cor-texto); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
+        body { background-color: var(--cor-fundo-login); color: var(--cor-texto); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
 
         /* --- LOGIN --- */
-        #tela-login { height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 380px; text-align: center; border-top: 6px solid var(--cor-primaria); }
+        #tela-login { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 380px; text-align: center; border-top: 6px solid var(--cor-primaria); }
         .logo-subtexto { font-size: 14px; color: var(--cor-primaria); text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-bottom: 25px; }
         #tela-login input { width: 100%; padding: 14px; margin-bottom: 18px; border: 1px solid var(--cor-secundaria); border-radius: 6px; box-sizing: border-box; }
         #tela-login button { width: 100%; background: var(--cor-primaria); color: white; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-        /* --- LAYOUT PRINCIPAL --- */
+        /* --- SISTEMA --- */
         #sistema-principal { display: none; }
-        .wrapper { display: flex; min-height: 100vh; }
-
-        /* SIDEBAR DASHBOARD */
-        .sidebar { 
-            width: var(--sidebar-width); 
-            background-color: var(--cor-primaria); 
-            color: white; 
-            padding: 30px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 20px;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
-            position: fixed;
-            height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .data-viva { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; text-align: center; }
-        .data-viva h3 { margin: 0; font-size: 13px; text-transform: uppercase; color: var(--cor-destaque-amarelo); }
-        .data-viva p { margin: 5px 0 0; font-size: 16px; font-weight: 300; }
-
-        .kpi-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 4px solid var(--cor-destaque-amarelo); }
-        .kpi-card span { font-size: 10px; text-transform: uppercase; opacity: 0.7; display: block; margin-bottom: 5px; }
-        .kpi-card b { font-size: 24px; display: block; }
-        .kpi-verde { border-left-color: var(--cor-destaque-verde); }
-        .kpi-laranja { border-left-color: var(--cor-destaque-laranja); }
-
-        /* CONTEÚDO */
-        .main-content { flex: 1; margin-left: var(--sidebar-width); padding: 30px; display: flex; flex-direction: column; align-items: center; }
-        .header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 10px; width: 900px; }
-        .container-corporativo { border: 1px solid var(--cor-secundaria); padding: 40px; width: 900px; background-color: var(--cor-fundo); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border-radius: 8px; box-sizing: border-box;}
+        body.sistema-aberto { background-color: var(--cor-fundo); align-items: flex-start; padding-top: 20px; }
+        .container-corporativo { border: 1px solid var(--cor-secundaria); padding: 40px; width: 950px; background-color: var(--cor-fundo); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border-radius: 8px; }
+        h1 { text-align: center; font-size: 26px; margin-bottom: 35px; text-transform: uppercase; color: var(--cor-primaria); border-bottom: 3px solid var(--cor-destaque-amarelo); padding-bottom: 15px; }
         
-        h1 { text-align: center; font-size: 22px; margin-bottom: 30px; text-transform: uppercase; color: var(--cor-primaria); border-bottom: 3px solid var(--cor-destaque-amarelo); padding-bottom: 10px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-        .campo { display: flex; flex-direction: column; margin-bottom: 10px; }
-        label { font-size: 11px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; color: var(--cor-primaria); }
-        input, select { padding: 12px; border: 1px solid var(--cor-secundaria); font-size: 14px; border-radius: 6px; outline: none; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+        .campo { display: flex; flex-direction: column; margin-bottom: 12px; }
+        label { font-size: 11px; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; color: var(--cor-primaria); }
+        input, select { padding: 12px; border: 1px solid var(--cor-secundaria); font-size: 14px; border-radius: 6px; outline: none; box-sizing: border-box; }
 
-        .botoes { margin-top: 30px; display: flex; gap: 10px; justify-content: center; }
-        button { padding: 12px 20px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 6px; font-size: 11px; }
+        .botoes { margin-top: 35px; display: flex; gap: 12px; justify-content: center; }
+        button { padding: 14px 25px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 6px; font-size: 12px; }
+        
         .btn-limpar { background-color: #546e7a; color: #fff; }
         .btn-relatorio { background-color: #3498db; color: #fff; }
         .btn-localizar { background-color: var(--cor-destaque-laranja); color: #fff; }
         .btn-salvar { background-color: var(--cor-destaque-verde); color: #fff; }
 
         /* --- MODAL BUSCA --- */
-        #modal-busca { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fff; margin: 2% auto; padding: 30px; border-radius: 8px; width: 95%; max-width: 1200px; max-height: 90vh; overflow-y: auto; }
-        .filtro-grid { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-end; }
-        .tabela-container { overflow-x: auto; border: 1px solid #ddd; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1100px; }
-        table th, table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        table th { background-color: var(--cor-primaria); color: white; }
-        .btn-fechar { background-color: #e74c3c; color: white; float: right; padding: 8px 15px; }
+        #modal-busca { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #fff; margin: 1% auto; padding: 30px; border-radius: 8px; width: 98%; max-width: 1300px; max-height: 95vh; overflow-y: auto; }
+        
+        .filtro-grid { display: flex; gap: 15px; margin-bottom: 25px; align-items: flex-end; }
+        .filtro-item { display: flex; flex-direction: column; flex: 1; }
+        .btn-filtro-container { display: flex; gap: 10px; }
+
+        /* TABELA COMPLETA COM ROLAGEM */
+        .tabela-container { overflow-x: auto; border: 1px solid #ddd; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1200px; }
+        table th, table td { border: 1px solid #ddd; padding: 8px; text-align: left; white-space: nowrap; }
+        table th { background-color: var(--cor-primaria); color: white; position: sticky; top: 0; }
+        
+        .btn-fechar { background-color: #e74c3c; color: white; float: right; }
+        .btn-exportar { background-color: #27ae60; color: white; margin-top: 20px; }
+        .btn-reset-busca { background-color: #95a5a6; color: white; padding: 12px 20px; }
+        .header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 15px; width: 950px; }
     </style>
 </head>
 <body>
 
     <div id="tela-login">
-        <div class="login-box">
-            <div class="logo-subtexto">SEGURANÇA PATRIMONIAL D2P-BRAZIL</div>
-            <h2>Acesso Restrito</h2>
-            <input type="text" id="user-login" placeholder="Usuário">
-            <input type="password" id="user-pass" placeholder="Senha">
-            <button onclick="fazerLogin()">ENTRAR</button>
-        </div>
+        <div class="logo-subtexto">SEGURANÇA PATRIMONIAL D2P-BRAZIL</div>
+        <h2>Acesso Restrito</h2>
+        <input type="text" id="user-login" placeholder="Usuário">
+        <input type="password" id="user-pass" placeholder="Senha">
+        <button onclick="fazerLogin()">ENTRAR</button>
     </div>
 
     <div id="sistema-principal">
-        <div class="wrapper">
-            <div class="sidebar">
-                <div class="data-viva"><h3 id="dia-semana">---</h3><p id="data-completa">--/--/----</p></div>
-                <div class="kpi-card kpi-verde"><span>Entradas Hoje</span><b id="kpi-entradas">0</b></div>
-                <div class="kpi-card kpi-laranja"><span>Saídas Hoje</span><b id="kpi-saidas">0</b></div>
-                <div class="kpi-card"><span>Fluxo Total</span><b id="kpi-total">0</b></div>
-                <div style="margin-top: auto; font-size: 10px; opacity: 0.5; text-align: center;">D2P-BRAZIL v2.1</div>
-            </div>
-
-            <div class="main-content">
-                <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a></div>
-                <div class="container-corporativo">
-                    <h1>CONTROLE DE ACESSO</h1>
-                    <div class="grid">
-                        <div class="campo"><label>CPF:</label><input type="text" id="cpf" style="background:#e8f5e9; border:1px solid #27ae60;"></div>
-                        <div class="campo" style="grid-column: span 2;"><label>NOME:</label><input type="text" id="nome"></div>
-                        <div class="campo"><label>EMPRESA:</label><input type="text" id="empresa"></div>
-                        <div class="campo"><label>RESPONSÁVEL:</label><input type="text" id="responsavel"></div>
-                        <div class="campo">
-                            <label>LIBERADO POR:</label>
-                            <select id="liberado">
-                                <option value="">SELECIONE</option>
-                                <option value="ACESSOS">ACESSOS</option>
-                                <option value="IDENTIFICAÇÃO">IDENTIFICAÇÃO</option>
-                                <option value="INSPETOR DE VIG">INSPETOR DE VIG</option>
-                                <option value="CENTRAL DE SEGURANÇA">CENTRAL DE SEGURANÇA</option>
-                                <option value="SEGURANÇA PATRIMONIAL">SEGURANÇA PATRIMONIAL</option>
-                            </select>
-                        </div>
-                        <div class="campo">
-                            <label>MOTIVO DO ACESSO:</label>
-                            <select id="motivo">
-                                <option value="">SELECIONE</option>
-                                <option value="VISITA">VISITA</option>
-                                <option value="TRABALHO">TRABALHO</option>
-                                <option value="ENTREGA">ENTREGA</option>
-                                <option value="ESQUECEU CRACHÁ">ESQUECEU CRACHÁ</option>
-                                <option value="OUTROS">OUTROS</option>
-                            </select>
-                        </div>
-                        <div class="campo"><label>VIGILANTE:</label><input type="text" id="vigilante"></div>
-                        <div class="campo"><label>Nº CRACHÁ:</label><input type="text" id="cracha"></div>
-                        <div class="campo"><label>ACESSO:</label><select id="tipo"><option value="ENTRADA">ENTRADA</option><option value="SAÍDA">SAÍDA</option></select></div>
-                        <div class="campo" style="grid-column: span 3;"><label>OBSERVAÇÃO:</label><input type="text" id="obs"></div>
-                    </div>
-                    <div class="botoes">
-                        <button class="btn-limpar" onclick="limpar()">LIMPAR TELA</button>
-                        <button class="btn-relatorio" onclick="abrirBusca()">RELATÓRIO / BUSCA</button>
-                        <button class="btn-localizar" onclick="localizar()">LOCALIZAR</button>
-                        <button class="btn-salvar" onclick="salvar()">SALVAR ACESSO</button>
-                    </div>
+        <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a></div>
+        <div class="container-corporativo">
+            <h1>HORSE PORTARIA 4 - CONTROLE DE ACESSO</h1>
+            <div class="grid">
+                <div class="campo"><label>CPF:</label><input type="text" id="cpf" style="background:#e8f5e9; border:1px solid #27ae60;"></div>
+                <div class="campo" style="grid-column: span 2;"><label>NOME:</label><input type="text" id="nome"></div>
+                <div class="campo"><label>EMPRESA:</label><input type="text" id="empresa"></div>
+                <div class="campo"><label>RESPONSÁVEL:</label><input type="text" id="responsavel"></div>
+                <div class="campo">
+                    <label>LIBERADO POR:</label>
+                    <select id="liberado">
+                        <option value="">SELECIONE</option>
+                        <option value="ACESSOS">ACESSOS</option>
+                        <option value="IDENTIFICAÇÃO/ZILDA">IDENTIFICAÇÃO/ZILDA</option>
+                        <option value="INSPETOR DE VIGILANCIA">INSPETOR DE VIGILANCIA</option>
+                        <option value="CENTRAL DE SEGURANÇA">CENTRAL DE SEGURANÇA</option>
+                        <option value="SEGURANÇA PATRIMONIAL">SEGURANÇA PATRIMONIAL</option>
+                        <option value="E-MAIL">E-MAIL</option>
+                        <option value="GDV">GDV</option>
+                        <option value="OUTROS">OUTROS</option>
+                    </select>
                 </div>
+                <div class="campo">
+                    <label>MOTIVO DO ACESSO:</label>
+                    <select id="motivo">
+                        <option value="">SELECIONE</option>
+                        <option value="VISITA">VISITA</option>
+                        <option value="TRABALHO">TRABALHO</option>
+                        <option value="ENTREGA">ENTREGA</option>
+                        <option value="OUTROS">OUTROS</option>
+                        <option value="Esqueceu crachá">Esqueceu crachá</option>
+                        <option value="Perdeu crachá">Perdeu crachá</option>
+                        <option value="Crachá não passa">Crachá não passa</option>
+                        <option value="Crachá vencido">Crachá vencido</option>
+                        <option value="Pendência SG3">Pendência SG3</option>
+                        <option value="Não acessou">Não acessou</option>
+                        <option value="Transbordo">Transbordo</option>
+                        <option value="Visita técnica">Visita técnica</option>
+                        <option value="Visita a Fábrica">Visita a Fábrica</option>
+                        <option value="Perícia Trabalhista">Perícia Trabalhista</option>
+                        <option value="Primeiro dia de trabalho">Primeiro dia de trabalho</option>
+                        <option value="Ambulatório">Ambulatório</option>
+                    </select>
+                </div>
+                <div class="campo"><label>VIGILANTE:</label><input type="text" id="vigilante"></div>
+                <div class="campo"><label>Nº CRACHÁ:</label><input type="text" id="cracha"></div>
+                <div class="campo"><label>ACESSO:</label><select id="tipo"><option value="ENTRADA">ENTRADA</option><option value="SAÍDA">SAÍDA</option></select></div>
+                <div class="campo" style="grid-column: span 3;"><label>OBSERVAÇÃO:</label><input type="text" id="obs"></div>
+            </div>
+            <div class="botoes">
+                <button class="btn-limpar" onclick="limpar()">LIMPAR TELA</button>
+                <button class="btn-relatorio" onclick="abrirBusca()">RELATÓRIO / BUSCA</button>
+                <button class="btn-localizar" onclick="localizar()">LOCALIZAR</button>
+                <button class="btn-salvar" onclick="salvar()">SALVAR ACESSO</button>
             </div>
         </div>
     </div>
@@ -155,21 +134,29 @@
     <div id="modal-busca">
         <div class="modal-content">
             <button class="btn-fechar" onclick="fecharBusca()">X FECHAR</button>
-            <h2 style="color:var(--cor-primaria)">Relatório Completo</h2>
+            <h2 style="color:var(--cor-primaria)">Busca e Relatório Completo</h2>
+            
             <div class="filtro-grid">
-                <div class="campo"><label>Início:</label><input type="date" id="filtro-inicio"></div>
-                <div class="campo"><label>Fim:</label><input type="date" id="filtro-fim"></div>
-                <div class="campo"><label>Nome:</label><input type="text" id="filtro-nome" placeholder="Coringa"></div>
-                <button class="btn-relatorio" style="height:43px" onclick="buscarRelatorio()">FILTRAR</button>
-                <button onclick="limparFiltrosBusca()" style="height:43px; background:#95a5a6; color:#fff">LIMPAR</button>
+                <div class="filtro-item"><label>Data Inicial *:</label><input type="date" id="filtro-inicio"></div>
+                <div class="filtro-item"><label>Data Final *:</label><input type="date" id="filtro-fim"></div>
+                <div class="filtro-item"><label>Nome do Visitante *:</label><input type="text" id="filtro-nome" placeholder="Digite o nome completo ou parte"></div>
+                <div class="btn-filtro-container">
+                    <button class="btn-relatorio" style="height: 43px;" onclick="buscarRelatorio()">FILTRAR</button>
+                    <button class="btn-reset-busca" style="height: 43px;" onclick="limparFiltrosBusca()">LIMPAR</button>
+                </div>
             </div>
+
             <div class="tabela-container">
                 <table id="tabela-resultados">
-                    <thead><tr><th>Data</th><th>Hora</th><th>CPF</th><th>Nome</th><th>Empresa</th><th>Responsável</th><th>Vigilante</th><th>Acesso</th><th>OBS</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Data</th><th>Hora</th><th>CPF</th><th>Nome</th><th>Empresa</th><th>Responsável</th><th>Liberado Por</th><th>Motivo</th><th>Vigilante</th><th>Crachá</th><th>Acesso</th><th>OBS</th>
+                        </tr>
+                    </thead>
                     <tbody></tbody>
                 </table>
             </div>
-            <button class="btn-salvar" style="margin-top:15px" onclick="exportarExcel()">GERAR EXCEL (.CSV)</button>
+            <button class="btn-exportar" onclick="exportarExcel()">GERAR EXCEL (.CSV)</button>
         </div>
     </div>
 
@@ -178,6 +165,7 @@
     const SUPABASE_URL = 'https://n8n-supabase.tbjno4.easypanel.host'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNjQxNzY5MjAwLCJleHAiOjE3OTk1MzU2MDB9.X_judqfP2Urk6dUESFo2bL2x2QaR4bLsvQ-4NGQYEv0';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     let dadosFiltradosGlobal = [];
 
     async function fazerLogin() {
@@ -188,42 +176,83 @@
             document.getElementById('tela-login').style.display = 'none';
             document.getElementById('sistema-principal').style.display = 'block';
             document.getElementById('nome-logado').innerText = data.nome_completo;
-            atualizarDashboard();
+            document.body.classList.add('sistema-aberto');
         } else { alert("Login inválido!"); }
     }
 
-    function atualizarDashboard() {
-        const agora = new Date();
-        const dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-        const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        document.getElementById('dia-semana').innerText = dias[agora.getDay()];
-        document.getElementById('data-completa').innerText = `${agora.getDate()} de ${meses[agora.getMonth()]}`;
-        carregarContadores();
+    async function buscarRelatorio() {
+        const inicio = document.getElementById('filtro-inicio').value;
+        const fim = document.getElementById('filtro-fim').value;
+        const nome = document.getElementById('filtro-nome').value;
+
+        // TRAVA DE SEGURANÇA: Obriga preencher os campos
+        if (!inicio || !fim || !nome) {
+            return alert("Atenção: Para realizar a busca é obrigatório preencher Data Inicial, Data Final e o Nome do Visitante.");
+        }
+
+        let query = _supabase.from('acessos').select('*');
+        query = query.gte('data', inicio).lte('data', fim).ilike('nome', `%${nome}%`);
+
+        const { data } = await query.order('data', { ascending: false }).order('hora', { ascending: false });
+
+        if (data && data.length > 0) {
+            dadosFiltradosGlobal = data;
+            const tbody = document.querySelector('#tabela-resultados tbody');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                tbody.innerHTML += `<tr>
+                    <td>${item.data}</td><td>${item.hora}</td><td>${item.cpf}</td><td>${item.nome}</td>
+                    <td>${item.empresa}</td><td>${item.responsavel}</td><td>${item.liberado}</td>
+                    <td>${item.motivo}</td><td>${item.vigilante}</td><td>${item.cracha || '-'}</td>
+                    <td>${item.acesso}</td><td>${item.obs || ''}</td>
+                </tr>`;
+            });
+        } else {
+            alert("Informação não encontrada: Não há dados com os filtros solicitados.");
+            limparFiltrosBusca();
+        }
     }
 
-    async function carregarContadores() {
-        const hoje = new Date().toISOString().split('T')[0];
-        const { count: ent } = await _supabase.from('acessos').select('*', { count: 'exact', head: true }).eq('data', hoje).eq('acesso', 'ENTRADA');
-        const { count: sai } = await _supabase.from('acessos').select('*', { count: 'exact', head: true }).eq('data', hoje).eq('acesso', 'SAÍDA');
-        document.getElementById('kpi-entradas').innerText = ent || 0;
-        document.getElementById('kpi-saidas').innerText = sai || 0;
-        document.getElementById('kpi-total').innerText = (ent || 0) + (sai || 0);
+    function limparFiltrosBusca() {
+        document.getElementById('filtro-inicio').value = '';
+        document.getElementById('filtro-fim').value = '';
+        document.getElementById('filtro-nome').value = '';
+        const tbody = document.querySelector('#tabela-resultados tbody');
+        if(tbody) tbody.innerHTML = '';
+        dadosFiltradosGlobal = [];
     }
+
+    function exportarExcel() {
+        if (dadosFiltradosGlobal.length === 0) return alert("Busque os dados antes de exportar.");
+        let csv = '\uFEFFData;Hora;CPF;Nome;Empresa;Responsavel;Liberado;Motivo;Vigilante;Cracha;Acesso;Obs\n';
+        dadosFiltradosGlobal.forEach(row => { 
+            csv += `${row.data};${row.hora};${row.cpf};${row.nome};${row.empresa};${row.responsavel};${row.liberado};${row.motivo};${row.vigilante};${row.cracha};${row.acesso};${row.obs}\n`; 
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.setAttribute("href", URL.createObjectURL(blob));
+        link.setAttribute("download", "relatorio_completo_d2p.csv");
+        link.click();
+    }
+
+    function abrirBusca() { limparFiltrosBusca(); document.getElementById('modal-busca').style.display = 'block'; }
+    function fecharBusca() { limparFiltrosBusca(); document.getElementById('modal-busca').style.display = 'none'; }
 
     async function localizar() {
         let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
-        if(!cpfVal) return alert("Digite um CPF para localizar");
-        const { data } = await _supabase.from('acessos').select('nome, empresa, responsavel').eq('cpf', cpfVal).order('data', { ascending: false }).order('hora', { ascending: false }).limit(1);
+        if(!cpfVal) return alert("Digite um CPF");
+        const { data } = await _supabase.from('acessos').select('nome, empresa, responsavel').eq('cpf', cpfVal).order('data', { ascending: false }).limit(1);
         if (data && data.length > 0) {
             document.getElementById('nome').value = data[0].nome || '';
             document.getElementById('empresa').value = data[0].empresa || '';
             document.getElementById('responsavel').value = data[0].responsavel || '';
-            alert("Cadastro anterior localizado!");
-        } else { alert("Nenhum histórico encontrado para este CPF."); }
+        } else { alert("CPF não localizado."); }
     }
 
     async function salvar() {
         const agora = new Date();
+        const dataBanco = agora.toISOString().split('T')[0];
+        const horaBanco = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         const payload = {
             cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
             nome: document.getElementById('nome').value.toUpperCase(),
@@ -235,44 +264,17 @@
             cracha: document.getElementById('cracha').value,
             acesso: document.getElementById('tipo').value,
             obs: document.getElementById('obs').value,
-            data: agora.toISOString().split('T')[0],
-            hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            data: dataBanco, hora: horaBanco
         };
-        if(!payload.cpf || !payload.nome) return alert("CPF e Nome são obrigatórios!");
         const { error } = await _supabase.from('acessos').insert([payload]);
-        if(!error) { alert("Salvo!"); limpar(); carregarContadores(); } else { alert("Erro ao salvar."); }
+        if(error) alert("Erro ao salvar.");
+        else { alert("Acesso registrado!"); limpar(); }
     }
 
-    async function buscarRelatorio() {
-        const ini = document.getElementById('filtro-inicio').value;
-        const fim = document.getElementById('filtro-fim').value;
-        const nom = document.getElementById('filtro-nome').value;
-        if(!ini || !fim || !nom) return alert("Preencha as datas e o nome.");
-        const { data } = await _supabase.from('acessos').select('*').gte('data', ini).lte('data', fim).ilike('nome', `%${nom}%`).order('data', { ascending: false });
-        if(data && data.length > 0) {
-            dadosFiltradosGlobal = data;
-            const tbody = document.querySelector('#tabela-resultados tbody');
-            tbody.innerHTML = '';
-            data.forEach(i => {
-                tbody.innerHTML += `<tr><td>${i.data}</td><td>${i.hora}</td><td>${i.cpf}</td><td>${i.nome}</td><td>${i.empresa}</td><td>${i.responsavel}</td><td>${i.vigilante}</td><td>${i.acesso}</td><td>${i.obs || ''}</td></tr>`;
-            });
-        } else { alert("Nada encontrado."); limparFiltrosBusca(); }
+    function limpar() { 
+        document.querySelectorAll('#sistema-principal input').forEach(i => i.value = ''); 
+        document.querySelectorAll('#sistema-principal select').forEach(s => s.selectedIndex = 0); 
     }
-
-    function exportarExcel() {
-        if (dadosFiltradosGlobal.length === 0) return alert("Busque dados primeiro.");
-        let csv = '\uFEFFData;Hora;CPF;Nome;Empresa;Responsavel;Vigilante;Acesso;Obs\n';
-        dadosFiltradosGlobal.forEach(r => { csv += `${r.data};${r.hora};${r.cpf};${r.nome};${r.empresa};${r.responsavel};${r.vigilante};${r.acesso};${r.obs || ''}\n`; });
-        const link = document.createElement("a");
-        link.setAttribute("href", URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })));
-        link.setAttribute("download", "relatorio_d2p.csv");
-        link.click();
-    }
-
-    function limpar() { document.querySelectorAll('#sistema-principal input').forEach(i => i.value = ''); document.querySelectorAll('#sistema-principal select').forEach(s => s.selectedIndex = 0); }
-    function limparFiltrosBusca() { document.getElementById('filtro-inicio').value = ''; document.getElementById('filtro-fim').value = ''; document.getElementById('filtro-nome').value = ''; document.querySelector('#tabela-resultados tbody').innerHTML = ''; dadosFiltradosGlobal = []; }
-    function abrirBusca() { limparFiltrosBusca(); document.getElementById('modal-busca').style.display = 'block'; }
-    function fecharBusca() { document.getElementById('modal-busca').style.display = 'none'; }
 </script>
 </body>
 </html>
