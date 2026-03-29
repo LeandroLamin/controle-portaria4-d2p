@@ -19,7 +19,7 @@ async function fazerLogin(portariaAtual) {
 
     if (error) {
         console.error("Erro Supabase:", error);
-        alert("Login ou senha inválidos! Lembre-se: 'Leandro' tem o L maiúsculo.");
+        alert("Login ou senha inválidos!");
         return;
     }
 
