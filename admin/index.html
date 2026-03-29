@@ -5,24 +5,24 @@
     <title>Painel MASTER - Novo Cadastro - D2P</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* 1. TRAVA GERAL DE LAYOUT */
+        /* TRAVA GERAL DE LAYOUT */
         * { box-sizing: border-box; }
         body { 
             margin: 0; padding: 0; 
             font-family: 'Segoe UI', sans-serif; 
-            background-color: #f4f7f6; /* Fundo cinza de tudo */
+            background-color: #f4f7f6; 
             display: flex; 
             min-height: 100vh; 
             overflow-x: hidden; 
         }
 
-        /* 2. TELA DE LOGIN MASTER (OVERLAY) */
+        /* TELA DE LOGIN MASTER (OVERLAY) */
         #wrapper-login {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #f4f7f6; display: flex; justify-content: center; align-items: center; z-index: 9999;
         }
 
-        /* 3. BARRA LATERAL (TRAVADA NA ESQUERDA) */
+        /* BARRA LATERAL (TRAVADA NA ESQUERDA) */
         .sidebar {
             width: 260px; height: 100vh; position: fixed; left: 0; top: 0;
             background-color: #2c3e50; color: white; display: flex; flex-direction: column; padding: 20px;
@@ -33,23 +33,23 @@
             text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; cursor: pointer;
         }
         .menu-item:hover, .menu-item.active { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
-        .btn-sair { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: auto; }
+        .btn-sair { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: auto; width: 100%; }
 
-        /* 4. CONTEÚDO PRINCIPAL (EMPURRADO PARA A DIREITA E CENTRALIZADO) */
+        /* CONTEÚDO PRINCIPAL (EMPURRADO PARA A DIREITA E CENTRALIZADO) */
         .main-content {
-            margin-left: 260px; /* Libera o espaço da barra lateral */
+            margin-left: 260px; 
             width: calc(100% - 260px); 
             padding: 40px; 
             display: flex; 
             flex-direction: column; 
-            align-items: center; /* Centraliza a caixa branca no meio do espaço restante */
+            align-items: center; 
         }
 
         /* CAIXA BRANCA DO FORMULÁRIO LIMITADA */
         .caixa-branca {
             background: white; 
             width: 100%; 
-            max-width: 700px; /* Impede de esticar demais na tela */
+            max-width: 700px; 
             padding: 30px; 
             border-radius: 8px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -80,14 +80,14 @@
 
     <nav class="sidebar">
         <div class="sidebar-header">
-            <div style="font-size: 10px; color: #95a5a6;">SEGURANÇA D2P</div>
+            <div style="font-size: 10px; color: #95a5a6; letter-spacing: 2px;">SEGURANÇA D2P</div>
             <h2 style="color: white; font-size: 18px; margin-top: 5px;">PAINEL MASTER</h2>
         </div>
         <div style="flex-grow: 1;">
             <a href="#" class="menu-item active">➕ Novo Cadastro</a>
             <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a> 
         </div>
-        <button class="btn-sair" onclick="location.href='../index.html'">SAIR</button>
+        <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
     </nav>
 
     <main class="main-content">
@@ -131,7 +131,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/config.js"></script>
     <script>
-        // Trava do Admin
         async function autenticarAdmin() {
             const user = document.getElementById('user-admin').value.trim();
             const pass = document.getElementById('pass-admin').value.trim();
@@ -146,7 +145,6 @@
             }
         }
 
-        // Cadastro de Usuário
         async function cadastrarUsuario() {
             const nome = document.getElementById('cad-nome').value.toUpperCase();
             const login = document.getElementById('cad-login').value.trim();
