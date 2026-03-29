@@ -11,12 +11,13 @@
     <div id="tela-login">
         <div class="logo-subtexto">SEGURANÇA PATRIMONIAL D2P-BRAZIL</div>
         <h2>Acesso Restrito - Portaria 04</h2>
-        <input type="text" id="user-login" placeholder="Usuário" translate="no">
+        
+        <input type="text" id="user-login" placeholder="Usuário" autocomplete="off">
         <input type="password" id="user-pass" placeholder="Senha">
         
         <button onclick="fazerLogin('p04')">ENTRAR</button>
 
-        <div style="margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
+        <div style="margin-top: 25px; text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
             <a href="../index.html" style="text-decoration: none; color: #546e7a; font-family: sans-serif; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
@@ -92,7 +93,7 @@
             <div class="filtro-grid">
                 <div class="filtro-item"><label>Data Inicial *:</label><input type="date" id="filtro-inicio"></div>
                 <div class="filtro-item"><label>Data Final *:</label><input type="date" id="filtro-fim"></div>
-                <div class="filtro-item"><label>Nome do Visitante *:</label><input type="text" id="filtro-nome" placeholder="Digite o nome completo ou parte"></div>
+                <div class="filtro-item"><label>Nome do Visitante *:</label><input type="text" id="filtro-nome"></div>
                 <div class="btn-filtro-container">
                     <button class="btn-relatorio" style="height: 43px;" onclick="buscarRelatorio()">FILTRAR</button>
                     <button class="btn-reset-busca" style="height: 43px;" onclick="limparFiltrosBusca()">LIMPAR</button>
