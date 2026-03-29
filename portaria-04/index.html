@@ -6,12 +6,108 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    ... (campos de CPF, nome, botões de salvar, etc) ...
+
+    <div id="tela-login">
+        <div class="logo-subtexto">SEGURANÇA PATRIMONIAL D2P-BRAZIL</div>
+        <h2>Acesso Restrito - Portaria 04</h2>
+        <input type="text" id="user-login" placeholder="Usuário">
+        <input type="password" id="user-pass" placeholder="Senha">
+        <button onclick="fazerLogin()">ENTRAR</button>
+    </div>
+
+    <div id="sistema-principal">
+        <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a></div>
+        <div class="container-corporativo">
+            <h1>CONTROLE DE ACESSO - P04</h1>
+            <div class="grid">
+                <div class="campo"><label>CPF:</label><input type="text" id="cpf" style="background:#e8f5e9; border:1px solid #27ae60;"></div>
+                <div class="campo" style="grid-column: span 2;"><label>NOME:</label><input type="text" id="nome"></div>
+                <div class="campo"><label>EMPRESA:</label><input type="text" id="empresa"></div>
+                <div class="campo"><label>RESPONSÁVEL:</label><input type="text" id="responsavel"></div>
+                <div class="campo">
+                    <label>LIBERADO POR:</label>
+                    <select id="liberado">
+                        <option value="">SELECIONE</option>
+                        <option value="ACESSOS">ACESSOS</option>
+                        <option value="IDENTIFICAÇÃO">IDENTIFICAÇÃO</option>
+                        <option value="INSPETOR DE VIGILANCIA">INSPETOR DE VIGILANCIA</option>
+                        <option value="CENTRAL DE SEGURANÇA">CENTRAL DE SEGURANÇA</option>
+                        <option value="SEGURANÇA PATRIMONIAL">SEGURANÇA PATRIMONIAL</option>
+                        <option value="E-MAIL">E-MAIL</option>
+                        <option value="GDV">GDV</option>
+                        <option value="OUTROS">OUTROS</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label>MOTIVO DO ACESSO:</label>
+                    <select id="motivo">
+                        <option value="">SELECIONE</option>
+                        <option value="VISITA">VISITA</option>
+                        <option value="TRABALHO">TRABALHO</option>
+                        <option value="ENTREGA">ENTREGA</option>
+                        <option value="OUTROS">OUTROS</option>
+                        <option value="Esqueceu crachá">Esqueceu crachá</option>
+                        <option value="Perdeu crachá">Perdeu crachá</option>
+                        <option value="Crachá não passa">Crachá não passa</option>
+                        <option value="Crachá vencido">Crachá vencido</option>
+                        <option value="Pendência SG3">Pendência SG3</option>
+                        <option value="Não acessou">Não acessou</option>
+                        <option value="Transbordo">Transbordo</option>
+                        <option value="Visita técnica">Visita técnica</option>
+                        <option value="Visita a Fábrica">Visita a Fábrica</option>
+                        <option value="Perícia Trabalhista">Perícia Trabalhista</option>
+                        <option value="Primeiro dia de trabalho">Primeiro dia de trabalho</option>
+                        <option value="Ambulatório">Ambulatório</option>
+                    </select>
+                </div>
+                <div class="campo"><label>VIGILANTE:</label><input type="text" id="vigilante"></div>
+                <div class="campo"><label>Nº CRACHÁ:</label><input type="text" id="cracha"></div>
+                <div class="campo"><label>ACESSO:</label><select id="tipo"><option value="ENTRADA">ENTRADA</option><option value="SAÍDA">SAÍDA</option></select></div>
+                <div class="campo" style="grid-column: span 3;"><label>OBSERVAÇÃO:</label><input type="text" id="obs"></div>
+            </div>
+            <div class="botoes">
+                <button class="btn-limpar" onclick="limpar()">LIMPAR TELA</button>
+                <button class="btn-relatorio" onclick="abrirBusca()">RELATÓRIO / BUSCA</button>
+                <button class="btn-localizar" onclick="localizar()">LOCALIZAR</button>
+                <button class="btn-salvar" onclick="salvar()">SALVAR ACESSO</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-busca">
+        <div class="modal-content">
+            <button class="btn-fechar" onclick="fecharBusca()">X FECHAR</button>
+            <h2 style="color:var(--cor-primaria)">Busca e Relatório Completo</h2>
+            
+            <div class="filtro-grid">
+                <div class="filtro-item"><label>Data Inicial *:</label><input type="date" id="filtro-inicio"></div>
+                <div class="filtro-item"><label>Data Final *:</label><input type="date" id="filtro-fim"></div>
+                <div class="filtro-item"><label>Nome do Visitante *:</label><input type="text" id="filtro-nome" placeholder="Digite o nome completo ou parte"></div>
+                <div class="btn-filtro-container">
+                    <button class="btn-relatorio" style="height: 43px;" onclick="buscarRelatorio()">FILTRAR</button>
+                    <button class="btn-reset-busca" style="height: 43px;" onclick="limparFiltrosBusca()">LIMPAR</button>
+                </div>
+            </div>
+
+            <div class="tabela-container">
+                <table id="tabela-resultados">
+                    <thead>
+                        <tr>
+                            <th>Data</th><th>Hora</th><th>CPF</th><th>Nome</th><th>Empresa</th><th>Responsável</th><th>Liberado Por</th><th>Motivo</th><th>Vigilante</th><th>Crachá</th><th>Acesso</th><th>OBS</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <button class="btn-exportar" onclick="exportarExcel()">GERAR EXCEL (.CSV)</button>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/config.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/ui.js"></script>
+
 </body>
 </html>
