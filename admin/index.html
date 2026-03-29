@@ -5,146 +5,99 @@
     <title>Painel MASTER - Novo Cadastro - D2P</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* RESET E ESTRUTURA BASE */
         * { box-sizing: border-box; }
-        
-        body { 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            min-height: 100vh; 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: #f4f7f6; 
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; min-height: 100vh; }
+
+        /* TELA DE LOGIN INICIAL */
+        #wrapper-login {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f4f7f6; display: flex; justify-content: center; align-items: center; z-index: 2000;
         }
 
-        /* BARRA LATERAL FIXA - Agora travada na esquerda */
+        /* SIDEBAR FIXA */
         .sidebar {
-            width: 260px;
-            background-color: #2c3e50;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            z-index: 1000; /* Garante que ela fique por cima */
+            width: 260px; background-color: #2c3e50; color: white; display: flex; flex-direction: column;
+            padding: 20px; position: fixed; left: 0; top: 0; bottom: 0; z-index: 1000;
         }
-
-        .sidebar-header { 
-            text-align: center; 
-            margin-bottom: 30px; 
-            border-bottom: 1px solid #34495e; 
-            padding-bottom: 20px; 
-        }
-
+        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
         .sidebar-menu { flex-grow: 1; }
         .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-            color: #bdc3c7;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: all 0.3s;
-            cursor: pointer;
+            display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7;
+            text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; cursor: pointer;
         }
+        .menu-item:hover, .menu-item.active { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
 
-        .menu-item:hover, .menu-item.active {
-            background-color: #34495e;
-            color: white;
-            border-left: 4px solid #f1c40f;
-        }
-
-        /* CONTEÚDO PRINCIPAL - AGORA CORRIGIDO */
+        /* CONTEÚDO PRINCIPAL AJUSTADO */
         .main-content {
-            margin-left: 260px; /* ISSO AQUI EMPURRA O FUNDO PARA A DIREITA */
-            flex: 1;
-            padding: 40px;
-            width: calc(100% - 260px);
+            margin-left: 260px; flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center;
         }
+        .container-limitado { width: 100%; max-width: 700px; } /* Evita que as infos se percam no zoom */
 
         .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 15px;
+            width: 100%; display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 15px;
         }
 
         .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            max-width: 800px;
+            background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%;
         }
 
-        .btn-logout {
-            background-color: #34495e;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-logout:hover { background-color: #e74c3c; }
+        .btn-logout { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; }
+        .btn-logout:hover { background: #e74c3c; }
     </style>
 </head>
 <body>
+
+    <div id="wrapper-login">
+        <div class="container-corporativo" style="max-width: 350px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="color: #2c3e50; margin: 0;">ACESSO MASTER</h2>
+                <small>Somente Administradores</small>
+            </div>
+            <input type="text" id="user-admin" placeholder="Usuário Admin">
+            <input type="password" id="pass-admin" placeholder="Senha">
+            <button class="btn-salvar" style="width: 100%;" onclick="autenticarAdmin()">ENTRAR NO PAINEL</button>
+            <button class="btn-limpar" style="width: 100%; margin-top: 10px;" onclick="location.href='../index.html'">VOLTAR</button>
+        </div>
+    </div>
 
     <nav class="sidebar">
         <div class="sidebar-header">
             <div style="font-size: 10px; letter-spacing: 2px; color: #95a5a6;">SISTEMA D2P</div>
             <h2 style="color: white; font-size: 18px; margin: 5px 0 0 0;">PAINEL MASTER</h2>
         </div>
-        
         <div class="sidebar-menu">
-            <a href="#" class="menu-item active">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
-                Novo Cadastro
-            </a>
-            <a href="gestao.html" class="menu-item">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/><path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/></svg>
-                Gestão de Usuários
-            </a>
+            <a href="#" class="menu-item active">➕ Novo Cadastro</a>
+            <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
         </div>
-
         <button class="btn-logout" onclick="location.href='../index.html'">SAIR</button>
     </nav>
 
     <main class="main-content">
-        <div class="page-header">
-            <h1 style="margin:0; color:#2c3e50; font-size: 24px;">CADASTRO DE OPERADORES</h1>
-            <div style="font-size: 13px;">Logado como: <b>LEANDRO LAMIN</b></div>
-        </div>
-
-        <div class="form-container">
-            <h3 style="color: #34495e; margin-top: 0; font-size: 16px;">Novo Cadastro de Vigilante</h3>
-            <div class="grid" style="grid-template-columns: 1fr; gap: 15px; margin-top: 20px;">
-                <div class="campo"><label>NOME COMPLETO:</label><input type="text" id="cad-nome" placeholder="NOME DO COLABORADOR"></div>
-                <div class="campo"><label>LOGIN (ÚNICO):</label><input type="text" id="cad-login" placeholder="Ex: joao.p04"></div>
-                <div class="campo"><label>SENHA INICIAL:</label><input type="password" id="cad-senha" placeholder="SENHA"></div>
-                <div class="campo">
-                    <label>NÍVEL DE PERMISSÃO:</label>
-                    <select id="cad-nivel" style="width: 100%; padding: 10px; border-radius: 5px;">
-                        <option value="p01">Portaria 01</option>
-                        <option value="p02">Portaria 02</option>
-                        <option value="p03">Portaria 03</option>
-                        <option value="p04" selected>Portaria 04</option>
-                        <option value="administrador">Administrador (Master)</option>
-                    </select>
-                </div>
+        <div class="container-limitado">
+            <div class="page-header">
+                <h1 style="margin:0; color:#2c3e50; font-size: 22px;">CADASTRO DE OPERADORES</h1>
+                <div style="font-size: 12px;">Usuário: <b id="nome-admin-logado">---</b></div>
             </div>
 
-            <div style="margin-top: 30px;">
-                <button class="btn-salvar" style="width: 100%; height: 50px;" onclick="cadastrarUsuario()">FINALIZAR CADASTRO</button>
+            <div class="form-container">
+                <h3 style="color: #34495e; margin-top: 0; font-size: 16px;">Dados do Novo Vigilante</h3>
+                <div class="grid" style="grid-template-columns: 1fr; gap: 15px;">
+                    <div class="campo"><label>NOME COMPLETO:</label><input type="text" id="cad-nome"></div>
+                    <div class="campo"><label>LOGIN:</label><input type="text" id="cad-login"></div>
+                    <div class="campo"><label>SENHA:</label><input type="password" id="cad-senha"></div>
+                    <div class="campo">
+                        <label>PERMISSÃO:</label>
+                        <select id="cad-nivel" style="width: 100%; padding: 10px;">
+                            <option value="p01">Portaria 01</option>
+                            <option value="p02">Portaria 02</option>
+                            <option value="p03">Portaria 03</option>
+                            <option value="p04" selected>Portaria 04</option>
+                            <option value="administrador">Administrador (Master)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-salvar" style="width: 100%; height: 50px; margin-top: 25px;" onclick="cadastrarUsuario()">FINALIZAR CADASTRO</button>
             </div>
         </div>
     </main>
@@ -152,26 +105,30 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/config.js"></script>
     <script>
+        // DEVOLVENDO A TRAVA DE LOGIN
+        async function autenticarAdmin() {
+            const user = document.getElementById('user-admin').value.trim();
+            const pass = document.getElementById('pass-admin').value.trim();
+            const { data, error } = await _supabase.from('usuarios').select('*').eq('login', user).eq('senha', pass).single();
+
+            if (data && data.nivel_acesso === 'administrador') {
+                document.getElementById('wrapper-login').style.display = 'none';
+                document.getElementById('nome-admin-logado').innerText = data.nome_completo;
+            } else {
+                alert("Acesso Negado: Apenas administradores.");
+            }
+        }
+
         async function cadastrarUsuario() {
             const nome = document.getElementById('cad-nome').value.toUpperCase();
             const login = document.getElementById('cad-login').value.trim();
             const senha = document.getElementById('cad-senha').value.trim();
             const nivel = document.getElementById('cad-nivel').value;
+            if(!nome || !login || !senha) return alert("Preencha tudo!");
 
-            if(!nome || !login || !senha) return alert("Preencha todos os campos.");
-
-            const { error } = await _supabase.from('usuarios').insert([
-                { nome_completo: nome, login: login, senha: senha, nivel_acesso: nivel }
-            ]);
-
-            if(error) {
-                alert("Erro ao gravar: " + error.message);
-            } else {
-                alert("Sucesso! Operador " + nome + " cadastrado.");
-                document.getElementById('cad-nome').value = '';
-                document.getElementById('cad-login').value = '';
-                document.getElementById('cad-senha').value = '';
-            }
+            const { error } = await _supabase.from('usuarios').insert([{ nome_completo: nome, login: login, senha: senha, nivel_acesso: nivel }]);
+            if(error) alert("Erro: " + error.message);
+            else { alert("Cadastrado!"); location.reload(); }
         }
     </script>
 </body>
