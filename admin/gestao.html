@@ -5,9 +5,20 @@
     <title>Painel MASTER - Gestão de Usuários - D2P</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* Estilos específicos para o layout em duas colunas (Sidebar fixa) */
-        body { margin: 0; padding: 0; display: flex; min-height: 100vh; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; }
+        /* RESET DE LAYOUT - Garante que nada flutue errado */
+        * { box-sizing: border-box; }
         
+        body { 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            min-height: 100vh; 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #f4f7f6; 
+            overflow-x: hidden;
+        }
+        
+        /* BARRA LATERAL FIXA NA ESQUERDA */
         .sidebar {
             width: 260px;
             background-color: #2c3e50;
@@ -15,15 +26,23 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            position: fixed;
-            height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            position: fixed; /* Fixa na tela */
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1000;
         }
 
-        .sidebar-header { text-align: center; margin-bottom: 40px; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
-        .safeguard-title { font-size: 20px; margin: 5px 0 0 0; color: white; }
+        .sidebar-header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid #34495e; 
+            padding-bottom: 20px; 
+        }
 
         .sidebar-menu { flex-grow: 1; }
+
         .menu-item {
             display: flex;
             align-items: center;
@@ -32,9 +51,10 @@
             color: #bdc3c7;
             text-decoration: none;
             border-radius: 8px;
-            margin-bottom: 5px;
-            transition: background 0.2s;
+            margin-bottom: 10px;
+            transition: all 0.3s;
             cursor: pointer;
+            font-size: 14px;
         }
 
         .menu-item:hover, .menu-item.active {
@@ -43,9 +63,10 @@
             border-left: 4px solid #f1c40f;
         }
 
+        /* CONTEÚDO PRINCIPAL (Empurrado para a direita) */
         .main-content {
-            margin-left: 260px;
-            flex-grow: 1;
+            margin-left: 260px; /* IMPORTANTE: Abre espaço para a sidebar */
+            flex: 1;
             padding: 40px;
             width: calc(100% - 260px);
         }
@@ -59,9 +80,9 @@
             padding-bottom: 15px;
         }
 
-        .page-title { margin: 0; color: #2c3e50; font-size: 28px; }
+        .page-title { margin: 0; color: #2c3e50; font-size: 24px; font-weight: bold; }
 
-        /* Estilo da Tabela */
+        /* TABELA */
         .table-container {
             background: white;
             padding: 25px;
@@ -69,69 +90,69 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        table th, table td { text-align: left; padding: 15px; border-bottom: 1px solid #eee; }
-        table th { background-color: #f8f9fa; color: #7f8c8d; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        table tr:hover { background-color: #f1f4f6; }
+        table { width: 100%; border-collapse: collapse; }
+        table th { background-color: #f8f9fa; color: #7f8c8d; font-size: 11px; text-transform: uppercase; padding: 15px; text-align: left; }
+        table td { padding: 15px; border-bottom: 1px solid #eee; font-size: 14px; color: #2c3e50; }
 
-        /* Badges de Cores (Verde para Admin) */
-        .badge { font-size: 10px; font-weight: bold; text-transform: uppercase; padding: 5px 10px; border-radius: 20px; color: white; }
-        .badge-admin { background-color: #27ae60; } /* Verde Sucesso */
-        .badge-portaria { background-color: #3498db; } /* Azul Portaria */
+        /* BADGES */
+        .badge { font-size: 10px; font-weight: bold; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; color: white; }
+        .badge-admin { background-color: #27ae60; }
+        .badge-portaria { background-color: #3498db; }
 
-        /* Botão Lixeira */
-        .btn-delete {
-            background: none;
+        /* BOTÃO SAIR */
+        .btn-logout {
+            background-color: #34495e;
+            color: white;
             border: none;
-            color: #e74c3c;
+            padding: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 5px;
-            transition: 0.2s;
+            font-weight: bold;
+            transition: 0.3s;
         }
-
-        .btn-delete:hover { background-color: #fadbd8; }
+        .btn-logout:hover { background-color: #e74c3c; }
     </style>
 </head>
 <body>
 
     <nav class="sidebar">
         <div class="sidebar-header">
-            <h2 class="safeguard-title">Painel MASTER</h2>
+            <div style="font-size: 10px; letter-spacing: 2px; color: #95a5a6;">SISTEMA D2P</div>
+            <h2 style="color: white; font-size: 18px; margin: 5px 0 0 0;">PAINEL MASTER</h2>
         </div>
+        
         <div class="sidebar-menu">
             <a href="index.html" class="menu-item">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
                 Novo Cadastro
             </a>
             <a href="#" class="menu-item active">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/><path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zM2.5 5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/></svg>
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/><path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/></svg>
                 Gestão de Usuários
             </a>
         </div>
-        <div class="sidebar-footer">
-            <button class="btn-limpar" style="width: 100%;" onclick="location.href='../index.html'">SAIR</button>
-        </div>
+
+        <button class="btn-logout" onclick="location.href='../index.html'">SAIR</button>
     </nav>
 
     <main class="main-content">
         <div class="page-header">
-            <h1 class="page-title">Usuários Cadastrados</h1>
-            <div>Logado como: <b>LEANDRO LAMIN</b></div>
+            <h1 class="page-title">USUÁRIOS CADASTRADOS</h1>
+            <div style="font-size: 13px;">Logado como: <b>LEANDRO LAMIN</b></div>
         </div>
 
         <div class="table-container">
-            <h3>Lista Completa</h3>
-            <p style="font-size: 14px; color: #7f8c8d; margin-bottom: 20px;">Use o ícone de lixeira (🗑️) para excluir um acesso permanentemente.</p>
+            <h3 style="margin-top: 0; font-size: 16px; color: #2c3e50;">Lista Completa</h3>
+            <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 20px;">Use o ícone de lixeira (🗑️) para remover acessos.</p>
             
-            <table id="tabela-usuarios">
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Login</th>
-                        <th>Nome Completo</th>
-                        <th>Nível de Acesso</th>
-                        <th style="text-align: center;">Ações</th>
+                        <th>LOGIN</th>
+                        <th>NOME COMPLETO</th>
+                        <th>NÍVEL DE ACESSO</th>
+                        <th style="text-align: center;">AÇÕES</th>
                     </tr>
                 </thead>
                 <tbody id="corpo-tabela-usuarios">
