@@ -5,54 +5,62 @@
     <title>Painel MASTER - Novo Cadastro - D2P</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
+        /* 1. TRAVA GERAL DE LAYOUT */
         * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; min-height: 100vh; overflow-x: hidden; }
-
-        /* TELA DE LOGIN INICIAL (OVERLAY) */
-        #wrapper-login {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #f4f7f6; display: flex; justify-content: center; align-items: center; z-index: 2000;
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #f4f7f6; /* Fundo cinza de tudo */
+            display: flex; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
         }
 
-        /* SIDEBAR FIXA E ALINHADA */
+        /* 2. TELA DE LOGIN MASTER (OVERLAY) */
+        #wrapper-login {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #f4f7f6; display: flex; justify-content: center; align-items: center; z-index: 9999;
+        }
+
+        /* 3. BARRA LATERAL (TRAVADA NA ESQUERDA) */
         .sidebar {
-            width: 260px; background-color: #2c3e50; color: white; display: flex; flex-direction: column;
-            padding: 20px; position: fixed; left: 0; top: 0; bottom: 0; z-index: 1000;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            width: 260px; height: 100vh; position: fixed; left: 0; top: 0;
+            background-color: #2c3e50; color: white; display: flex; flex-direction: column; padding: 20px;
         }
         .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
-        .sidebar-menu { flex-grow: 1; }
         .menu-item {
             display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7;
             text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; cursor: pointer;
         }
         .menu-item:hover, .menu-item.active { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
+        .btn-sair { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: auto; }
 
-        /* CONTEÚDO PRINCIPAL - EMPURRADO PARA A DIREITA */
+        /* 4. CONTEÚDO PRINCIPAL (EMPURRADO PARA A DIREITA E CENTRALIZADO) */
         .main-content {
-            margin-left: 260px; /* ABRE ESPAÇO PARA A SIDEBAR */
-            flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center;
+            margin-left: 260px; /* Libera o espaço da barra lateral */
+            width: calc(100% - 260px); 
+            padding: 40px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; /* Centraliza a caixa branca no meio do espaço restante */
         }
+
+        /* CAIXA BRANCA DO FORMULÁRIO LIMITADA */
+        .caixa-branca {
+            background: white; 
+            width: 100%; 
+            max-width: 700px; /* Impede de esticar demais na tela */
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; max-width: 700px; }
         
-        /* BLOCO CENTRALIZADO PARA EVITAR DESALINHAMENTO */
-        .container-limitado { width: 100%; max-width: 700px; } 
-
-        .page-header {
-            width: 100%; display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 15px;
-        }
-
-        .form-container {
-            background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%;
-        }
-
-        /* AJUSTE DOS CAMPOS PARA FICAREM UM SOBRE O OUTRO NO MOBILE E ALINHADOS NO DESKTOP */
-        .campo { margin-bottom: 15px; }
-        .campo label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; font-size: 13px; }
+        /* CAMPOS DO FORMULÁRIO */
+        .campo { margin-bottom: 15px; width: 100%; }
+        .campo label { display: block; font-size: 13px; font-weight: bold; color: #34495e; margin-bottom: 5px; }
         .campo input, .campo select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; }
-
-        .btn-logout { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: auto; }
-        .btn-logout:hover { background: #e74c3c; }
     </style>
 </head>
 <body>
@@ -65,69 +73,68 @@
             </div>
             <input type="text" id="user-admin" placeholder="Usuário Admin">
             <input type="password" id="pass-admin" placeholder="Senha">
-            <button class="btn-salvar" style="width: 100%;" onclick="autenticarAdmin()">ENTRAR NO PAINEL</button>
+            <button class="btn-salvar" style="width: 100%;" onclick="autenticarAdmin()">ENTRAR</button>
             <button class="btn-limpar" style="width: 100%; margin-top: 10px;" onclick="location.href='../index.html'">VOLTAR</button>
         </div>
     </div>
 
     <nav class="sidebar">
         <div class="sidebar-header">
-            <div style="font-size: 10px; letter-spacing: 2px; color: #95a5a6;">SISTEMA D2P</div>
-            <h2 style="color: white; font-size: 18px; margin: 5px 0 0 0;">PAINEL MASTER</h2>
+            <div style="font-size: 10px; color: #95a5a6;">SEGURANÇA D2P</div>
+            <h2 style="color: white; font-size: 18px; margin-top: 5px;">PAINEL MASTER</h2>
         </div>
-        <div class="sidebar-menu">
+        <div style="flex-grow: 1;">
             <a href="#" class="menu-item active">➕ Novo Cadastro</a>
-            <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
+            <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a> 
         </div>
-        <button class="btn-logout" onclick="location.href='../index.html'">SAIR</button>
+        <button class="btn-sair" onclick="location.href='../index.html'">SAIR</button>
     </nav>
 
     <main class="main-content">
-        <div class="container-limitado">
-            <div class="page-header">
-                <h1 style="margin:0; color:#2c3e50; font-size: 22px;">CADASTRO DE OPERADORES</h1>
-                <div style="font-size: 12px;">Usuário: <b id="nome-admin-logado">---</b></div>
-            </div>
-
-            <div class="form-container">
-                <h3 style="color: #34495e; margin-top: 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Dados do Novo Vigilante</h3>
-                
-                <div style="margin-top: 20px;">
-                    <div class="campo">
-                        <label>NOME COMPLETO:</label>
-                        <input type="text" id="cad-nome" placeholder="NOME DO COLABORADOR">
-                    </div>
-                    <div class="campo">
-                        <label>LOGIN (USUÁRIO):</label>
-                        <input type="text" id="cad-login" placeholder="Ex: joao.p04">
-                    </div>
-                    <div class="campo">
-                        <label>SENHA INICIAL:</label>
-                        <input type="password" id="cad-senha" placeholder="SENHA">
-                    </div>
-                    <div class="campo">
-                        <label>PERMISSÃO / UNIDADE:</label>
-                        <select id="cad-nivel">
-                            <option value="p01">Portaria 01</option>
-                            <option value="p02">Portaria 02</option>
-                            <option value="p03">Portaria 03</option>
-                            <option value="p04" selected>Portaria 04</option>
-                            <option value="administrador">Administrador (Master)</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <button class="btn-salvar" style="width: 100%; height: 50px; margin-top: 20px;" onclick="cadastrarUsuario()">FINALIZAR CADASTRO</button>
-            </div>
+        
+        <div class="page-header">
+            <h1 style="margin:0; color:#2c3e50; font-size: 24px;">CADASTRO DE OPERADORES</h1>
+            <div style="font-size: 13px;">Admin: <b id="nome-admin-logado">---</b></div>
         </div>
+
+        <div class="caixa-branca">
+            <h3 style="margin-top:0; color: #34495e; border-bottom: 1px solid #eee; padding-bottom: 10px;">Dados do Novo Vigilante</h3>
+            
+            <div class="campo">
+                <label>NOME COMPLETO:</label>
+                <input type="text" id="cad-nome" placeholder="Ex: JOÃO DA SILVA">
+            </div>
+            <div class="campo">
+                <label>LOGIN (ÚNICO):</label>
+                <input type="text" id="cad-login" placeholder="Ex: joao.p04">
+            </div>
+            <div class="campo">
+                <label>SENHA DE ACESSO:</label>
+                <input type="password" id="cad-senha" placeholder="SENHA">
+            </div>
+            <div class="campo">
+                <label>NÍVEL DE PERMISSÃO / UNIDADE:</label>
+                <select id="cad-nivel">
+                    <option value="p01">Portaria 01</option>
+                    <option value="p02">Portaria 02</option>
+                    <option value="p03">Portaria 03</option>
+                    <option value="p04" selected>Portaria 04</option>
+                    <option value="administrador">Administrador (Master)</option>
+                </select>
+            </div>
+            
+            <button class="btn-salvar" style="width: 100%; height: 50px; margin-top: 15px;" onclick="cadastrarUsuario()">FINALIZAR CADASTRO</button>
+        </div>
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/config.js"></script>
     <script>
+        // Trava do Admin
         async function autenticarAdmin() {
             const user = document.getElementById('user-admin').value.trim();
-            const pass = document.getElementById('user-admin' === 'user-admin' ? 'pass-admin' : '').value.trim(); // Ajustado seletor
+            const pass = document.getElementById('pass-admin').value.trim();
             
             const { data, error } = await _supabase.from('usuarios').select('*').eq('login', user).eq('senha', pass).single();
 
@@ -139,6 +146,7 @@
             }
         }
 
+        // Cadastro de Usuário
         async function cadastrarUsuario() {
             const nome = document.getElementById('cad-nome').value.toUpperCase();
             const login = document.getElementById('cad-login').value.trim();
