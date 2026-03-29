@@ -2,101 +2,136 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Gestão de Usuários - Master D2P</title>
+    <title>Painel MASTER - Gestão D2P</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; display: flex; min-height: 100vh; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; }
+        /* 1. BLINDAGEM DE LAYOUT */
+        * { box-sizing: border-box !important; }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; overflow-x: hidden; min-height: 100vh; }
 
-        /* SIDEBAR - Travada e Alinhada */
-        .sidebar {
-            width: 260px; background-color: #2c3e50; color: white; display: flex; flex-direction: column;
-            padding: 20px; position: fixed; left: 0; top: 0; bottom: 0; z-index: 1000;
-        }
-        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
+        /* 2. SIDEBAR TRAVADA */
+        .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; background-color: #2c3e50; padding: 20px; display: flex; flex-direction: column; z-index: 1000; }
+        .sidebar-header { text-align: center; border-bottom: 1px solid #34495e; padding-bottom: 20px; margin-bottom: 20px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; }
+        .menu-item.active, .menu-item:hover { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
+        .btn-sair { margin-top: auto; background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; }
+
+        /* 3. CONTEÚDO PRINCIPAL SEPARADO */
+        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; display: flex; flex-direction: column; align-items: flex-start; }
         
-        .menu-item {
-            display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7;
-            text-decoration: none; border-radius: 8px; margin-bottom: 8px; transition: 0.3s; cursor: pointer;
-        }
-        .menu-item:hover, .menu-item.active { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
-
-        /* ÁREA DE CONTEÚDO - Organizada */
-        .main-content {
-            margin-left: 260px; flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center;
-        }
-        .container-centralizado { width: 100%; max-width: 1000px; }
-
-        .page-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 25px; border-bottom: 2px solid #ddd; padding-bottom: 15px;
+        /* 4. A CAIXA BRANCA QUE PRENDE A TABELA (A SOLUÇÃO DO SEU PRINT) */
+        .caixa-branca { 
+            background: white !important; 
+            padding: 30px !important; 
+            border-radius: 8px !important; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
+            width: 100% !important; 
+            max-width: 1000px !important; /* Trava o tamanho */
+            overflow-x: auto !important; /* Se a tabela esticar, ela cria barra de rolagem por dentro, sem quebrar o fundo */
         }
 
-        /* TABELA PROFISSIONAL */
-        .table-card {
-            background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%;
-        }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #f8f9fa; color: #7f8c8d; font-size: 11px; text-transform: uppercase; padding: 15px; text-align: left; border-bottom: 2px solid #eee; }
-        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 14px; color: #333; }
-        
-        /* O "X" VERMELHO QUE VOCÊ SUGERIU */
-        .btn-x {
-            background-color: #ff4757; color: white; border: none; width: 30px; height: 30px;
-            border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 14px;
-            display: flex; align-items: center; justify-content: center; transition: 0.3s; margin: 0 auto;
-        }
-        .btn-x:hover { background-color: #ff6b81; transform: scale(1.1); box-shadow: 0 4px 8px rgba(255, 71, 87, 0.3); }
+        /* 5. FORÇANDO O VISUAL NOVO DA TABELA */
+        table { width: 100% !important; border-collapse: collapse !important; min-width: 600px; }
+        th { background-color: #f8f9fa !important; color: #7f8c8d !important; text-align: left !important; padding: 15px !important; font-size: 12px !important; text-transform: uppercase !important; border-bottom: 2px solid #ddd !important; }
+        td { padding: 15px !important; border-bottom: 1px solid #eee !important; font-size: 14px !important; color: #333 !important; }
 
-        /* BADGES COLORIDOS */
-        .badge { font-size: 10px; font-weight: bold; text-transform: uppercase; padding: 5px 12px; border-radius: 15px; color: white; display: inline-block; }
-        .bg-admin { background-color: #27ae60; box-shadow: 0 2px 6px rgba(39, 174, 96, 0.2); }
-        .bg-p04 { background-color: #3498db; }
-
-        .btn-logout { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: auto; }
+        /* 6. O 'X' VERMELHO E OS BADGES */
+        .btn-x { background-color: #e74c3c !important; color: white !important; border: none !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto; transition: 0.3s; }
+        .btn-x:hover { background-color: #c0392b !important; transform: scale(1.1); }
+        .badge { font-size: 10px; font-weight: bold; padding: 5px 12px; border-radius: 15px; color: white; text-transform: uppercase; }
+        .bg-admin { background-color: #27ae60 !important; }
+        .bg-p04 { background-color: #3498db !important; }
     </style>
 </head>
 <body>
 
     <nav class="sidebar">
         <div class="sidebar-header">
-            <div style="font-size: 10px; letter-spacing: 2px; color: #95a5a6;">SEGURANÇA D2P</div>
-            <h2 style="color: white; font-size: 18px; margin: 5px 0 0 0;">PAINEL MASTER</h2>
+            <div style="font-size: 10px; color: #95a5a6; letter-spacing: 2px;">SEGURANÇA D2P</div>
+            <h2 style="color: white; font-size: 18px; margin-top: 5px;">PAINEL MASTER</h2>
         </div>
-        <div class="sidebar-menu" style="flex-grow:1">
+        <div style="flex-grow: 1;">
             <a href="index.html" class="menu-item">➕ Novo Cadastro</a>
             <a href="#" class="menu-item active">👥 Gestão de Usuários</a>
         </div>
-        <button class="btn-logout" onclick="location.href='../index.html'">SAIR</button>
+        <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
     </nav>
 
     <main class="main-content">
-        <div class="container-centralizado">
-            <div class="page-header">
-                <h1 style="margin:0; color:#2c3e50; font-size: 24px;">Controle de Operadores</h1>
-                <div style="font-size: 13px;">Admin: <b>LEANDRO LAMIN</b></div>
-            </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1000px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
+            <h1 style="margin:0; color:#2c3e50; font-size: 24px;">CONTROLE DE OPERADORES</h1>
+            <div style="font-size: 13px;">Admin: <b>LEANDRO LAMIN</b></div>
+        </div>
 
-            <div class="table-card">
-                <table id="tabela-usuarios">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;">ID</th>
-                            <th>LOGIN</th>
-                            <th>NOME COMPLETO</th>
-                            <th>NÍVEL</th>
-                            <th style="text-align: center;">REMOVER</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpo-tabela-usuarios">
-                        </tbody>
-                </table>
-            </div>
+        <div class="caixa-branca">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">ID</th>
+                        <th>LOGIN</th>
+                        <th>NOME COMPLETO</th>
+                        <th>NÍVEL</th>
+                        <th style="text-align: center; width: 90px;">REMOVER</th>
+                    </tr>
+                </thead>
+                <tbody id="corpo-tabela-usuarios">
+                    <tr><td colspan="5" style="text-align:center">Carregando dados...</td></tr>
+                </tbody>
+            </table>
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/config.js"></script>
-    <script src="../js/gestao_admin.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', buscarUsuariosDiretoAqui);
+
+        async function buscarUsuariosDiretoAqui() {
+            const corpoTabela = document.getElementById('corpo-tabela-usuarios');
+            try {
+                const { data: usuarios, error } = await _supabase.from('usuarios').select('*').order('id', { ascending: true });
+                if (error) throw error;
+
+                corpoTabela.innerHTML = '';
+
+                if (usuarios && usuarios.length > 0) {
+                    usuarios.forEach(user => {
+                        const classeBadge = user.nivel_acesso === 'administrador' ? 'bg-admin' : 'bg-p04';
+                        
+                        // X Vermelho Forçado no HTML
+                        const btnRemover = user.login !== 'Leandro' ? 
+                            `<button class="btn-x" onclick="solicitarExclusao(${user.id}, '${user.login}')">X</button>` : 
+                            `<span style="color:#bdc3c7; font-size:12px;">(Master)</span>`;
+
+                        const linhaHTML = `
+                            <tr>
+                                <td>${user.id}</td>
+                                <td><b>${user.login}</b></td>
+                                <td>${user.nome_completo}</td>
+                                <td><span class="badge ${classeBadge}">${user.nivel_acesso}</span></td>
+                                <td style="text-align: center;">${btnRemover}</td>
+                            </tr>
+                        `;
+                        corpoTabela.insertAdjacentHTML('beforeend', linhaHTML);
+                    });
+                }
+            } catch (err) {
+                corpoTabela.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red">Erro ao carregar banco.</td></tr>';
+            }
+        }
+
+        async function solicitarExclusao(idUsuario, loginUsuario) {
+            if (confirm(`⚠️ Excluir '${loginUsuario.toUpperCase()}' permanentemente?`)) {
+                try {
+                    await _supabase.from('usuarios').delete().eq('id', idUsuario);
+                    alert("Acesso removido!");
+                    buscarUsuariosDiretoAqui();
+                } catch (err) {
+                    alert("Erro: " + err.message);
+                }
+            }
+        }
+    </script>
 </body>
 </html>
