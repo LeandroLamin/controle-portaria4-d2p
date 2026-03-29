@@ -1,30 +1,32 @@
-// js/auth.js - Versão Final Corrigida
+// js/auth.js - Versão para Banco de Dados Padronizado
 async function fazerLogin(portariaAtual) {
-    const user = document.getElementById('user-login').value;
-    const pass = document.getElementById('user-pass').value;
+    const user = document.getElementById('user-login').value.trim();
+    const pass = document.getElementById('user-pass').value.trim();
     
-    // 1. Conexão com a tabela correta (sem acento)
+    if (!user || !pass) return alert("Preencha todos os campos!");
+
+    // Busca simples na tabela usuarios
     const { data, error } = await _supabase
-        .from('usuarios') 
+        .from('usuarios')
         .select('*')
         .eq('login', user)
         .eq('senha', pass)
-        .single();
-    
+        .single(); // Agora o .single() vai funcionar porque o ID está correto
+
     if (error) {
-        console.error("Erro na busca:", error);
-        return alert("Login ou senha inválidos! Verifique se usou letras maiúsculas.");
+        console.error("Erro no login:", error.message);
+        return alert("Login ou senha inválidos! (Lembre-se do L maiúsculo em Leandro)");
     }
 
     if (data) {
-        // 2. Trava de Segurança: ADM entra em tudo, P04 só na P04
+        // Validação de Permissão: administrador entra em tudo, portaria específica entra na sua pasta
         if (data.nivel_acesso === 'administrador' || data.nivel_acesso === portariaAtual) {
             document.getElementById('tela-login').style.display = 'none';
             document.getElementById('sistema-principal').style.display = 'block';
             document.getElementById('nome-logado').innerText = data.nome_completo;
             document.body.classList.add('sistema-aberto');
         } else {
-            alert("ACESSO NEGADO: Você está na " + portariaAtual.toUpperCase() + " mas seu nível é " + data.nivel_acesso.toUpperCase());
+            alert("ACESSO NEGADO: Seu nível é " + data.nivel_acesso.toUpperCase() + ". Procure o administrador.");
         }
     }
 }
