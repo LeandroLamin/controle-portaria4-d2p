@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel MASTER - Gestão de Usuários</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body style="background-color: #f4f7f6;">
+
+    <div class="container-corporativo" style="margin-top: 50px; max-width: 600px; margin-left: auto; margin-right: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 12px; font-weight: bold; color: #34495e; letter-spacing: 2px;">SEGURANÇA PATRIMONIAL D2P</div>
+            <h1 style="margin-top: 5px; color: #2c3e50;">CADASTRO DE OPERADORES</h1>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr; gap: 15px;">
+            <div class="campo">
+                <label>Nome do Colaborador (Vigilante):</label>
+                <input type="text" id="cad-nome" placeholder="NOME COMPLETO">
+            </div>
+            <div class="campo">
+                <label>Login de Acesso:</label>
+                <input type="text" id="cad-login" placeholder="Ex: joao.p04">
+            </div>
+            <div class="campo">
+                <label>Senha de Acesso:</label>
+                <input type="password" id="cad-senha" placeholder="SENHA">
+            </div>
+            <div class="campo">
+                <label>Nível de Permissão:</label>
+                <select id="cad-nivel" style="width: 100%; padding: 10px; border-radius: 5px;">
+                    <option value="p01">PORTARIA 01</option>
+                    <option value="p02">PORTARIA 02</option>
+                    <option value="p03">PORTARIA 03</option>
+                    <option value="p04" selected>PORTARIA 04</option>
+                    <option value="administrador">ADMINISTRADOR (ACESSO TOTAL)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="botoes" style="margin-top: 30px; display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn-salvar" style="width: 100%; height: 50px;" onclick="cadastrarUsuario()">CADASTRAR NOVO ACESSO</button>
+            <button class="btn-limpar" style="width: 100%;" onclick="location.href='../index.html'">VOLTAR AO INÍCIO</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script>
+        async function cadastrarUsuario() {
+            const nome = document.getElementById('cad-nome').value.toUpperCase();
+            const login = document.getElementById('cad-login').value;
+            const senha = document.getElementById('cad-senha').value;
+            const nivel = document.getElementById('cad-nivel').value;
+
+            if(!nome || !login || !senha) return alert("Atenção: Todos os campos são obrigatórios.");
+
+            const { error } = await _supabase.from('usuarios').insert([
+                { nome_completo: nome, login: login, senha: senha, nivel_acesso: nivel }
+            ]);
+
+            if(error) {
+                alert("Erro ao gravar no banco: " + error.message);
+            } else {
+                alert("Sucesso! O acesso para " + nome + " foi criado como " + nivel.toUpperCase());
+                // Limpa os campos para o próximo cadastro
+                document.getElementById('cad-nome').value = '';
+                document.getElementById('cad-login').value = '';
+                document.getElementById('cad-senha').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
