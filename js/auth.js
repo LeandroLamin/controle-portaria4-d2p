@@ -1,18 +1,17 @@
-// js/auth.js - Versão Administrador Completo
+// js/auth.js - Ajustado com acento conforme seu banco
 
 async function fazerLogin(portariaAtual) {
     const user = document.getElementById('user-login').value;
     const pass = document.getElementById('user-pass').value;
     
     const { data, error } = await _supabase
-        .from('usuarios')
+        .from('usuários') // ADICIONADO O ACENTO AQUI (ú)
         .select('*')
         .eq('login', user)
         .eq('senha', pass)
         .single();
     
     if (data) {
-        // Agora verificamos se é 'administrador' (escrito por extenso)
         if (data.nivel_acesso === 'administrador' || data.nivel_acesso === portariaAtual) {
             document.getElementById('tela-login').style.display = 'none';
             document.getElementById('sistema-principal').style.display = 'block';
