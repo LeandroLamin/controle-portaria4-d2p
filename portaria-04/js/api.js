@@ -17,10 +17,10 @@ async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
     if (!cpfVal) return alert("Digite um CPF");
 
-    const data = await dbBuscar('acessos', { cpf: cpfVal });
+    const data = await dbBuscar('acessos', { cpf: cpfVal }, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
-        const ultimo = data[data.length - 1]; // pega o registro mais recente
+        const ultimo = data[0]; // já vem o mais recente
         document.getElementById('nome').value = ultimo.nome;
         document.getElementById('empresa').value = ultimo.empresa;
         document.getElementById('responsavel').value = ultimo.responsavel;
