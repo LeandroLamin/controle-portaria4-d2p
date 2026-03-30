@@ -5,37 +5,18 @@
     <title>Painel MASTER - Gestão D2P</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* 1. BLINDAGEM DE LAYOUT */
         * { box-sizing: border-box !important; }
         body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; overflow-x: hidden; min-height: 100vh; }
-
-        /* 2. SIDEBAR TRAVADA */
         .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; background-color: #2c3e50; padding: 20px; display: flex; flex-direction: column; z-index: 1000; }
         .sidebar-header { text-align: center; border-bottom: 1px solid #34495e; padding-bottom: 20px; margin-bottom: 20px; }
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; }
         .menu-item.active, .menu-item:hover { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
         .btn-sair { margin-top: auto; background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; }
-
-        /* 3. CONTEÚDO PRINCIPAL SEPARADO */
         .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; display: flex; flex-direction: column; align-items: flex-start; }
-        
-        /* 4. A CAIXA BRANCA QUE PRENDE A TABELA (A SOLUÇÃO DO SEU PRINT) */
-        .caixa-branca { 
-            background: white !important; 
-            padding: 30px !important; 
-            border-radius: 8px !important; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
-            width: 100% !important; 
-            max-width: 1000px !important; /* Trava o tamanho */
-            overflow-x: auto !important; /* Se a tabela esticar, ela cria barra de rolagem por dentro, sem quebrar o fundo */
-        }
-
-        /* 5. FORÇANDO O VISUAL NOVO DA TABELA */
+        .caixa-branca { background: white !important; padding: 30px !important; border-radius: 8px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; width: 100% !important; max-width: 1000px !important; overflow-x: auto !important; }
         table { width: 100% !important; border-collapse: collapse !important; min-width: 600px; }
         th { background-color: #f8f9fa !important; color: #7f8c8d !important; text-align: left !important; padding: 15px !important; font-size: 12px !important; text-transform: uppercase !important; border-bottom: 2px solid #ddd !important; }
         td { padding: 15px !important; border-bottom: 1px solid #eee !important; font-size: 14px !important; color: #333 !important; }
-
-        /* 6. O 'X' VERMELHO E OS BADGES */
         .btn-x { background-color: #e74c3c !important; color: white !important; border: none !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto; transition: 0.3s; }
         .btn-x:hover { background-color: #c0392b !important; transform: scale(1.1); }
         .badge { font-size: 10px; font-weight: bold; padding: 5px 12px; border-radius: 15px; color: white; text-transform: uppercase; }
@@ -81,54 +62,52 @@
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/config.js"></script>
-    
+    <script src="../conexao/config.js"></script>
+    <script src="../conexao/db.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', buscarUsuariosDiretoAqui);
+        document.addEventListener('DOMContentLoaded', buscarUsuarios);
 
-        async function buscarUsuariosDiretoAqui() {
+        async function buscarUsuarios() {
             const corpoTabela = document.getElementById('corpo-tabela-usuarios');
-            try {
-                const { data: usuarios, error } = await _supabase.from('usuarios').select('*').order('id', { ascending: true });
-                if (error) throw error;
+            const data = await dbBuscar('usuarios', {}, { order: 'id.asc' });
 
-                corpoTabela.innerHTML = '';
-
-                if (usuarios && usuarios.length > 0) {
-                    usuarios.forEach(user => {
-                        const classeBadge = user.nivel_acesso === 'administrador' ? 'bg-admin' : 'bg-p04';
-                        
-                        // X Vermelho Forçado no HTML
-                        const btnRemover = user.login !== 'Leandro' ? 
-                            `<button class="btn-x" onclick="solicitarExclusao(${user.id}, '${user.login}')">X</button>` : 
-                            `<span style="color:#bdc3c7; font-size:12px;">(Master)</span>`;
-
-                        const linhaHTML = `
-                            <tr>
-                                <td>${user.id}</td>
-                                <td><b>${user.login}</b></td>
-                                <td>${user.nome_completo}</td>
-                                <td><span class="badge ${classeBadge}">${user.nivel_acesso}</span></td>
-                                <td style="text-align: center;">${btnRemover}</td>
-                            </tr>
-                        `;
-                        corpoTabela.insertAdjacentHTML('beforeend', linhaHTML);
-                    });
-                }
-            } catch (err) {
+            if (data === null) {
                 corpoTabela.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red">Erro ao carregar banco.</td></tr>';
+                return;
+            }
+
+            corpoTabela.innerHTML = '';
+
+            if (data.length > 0) {
+                data.forEach(user => {
+                    const classeBadge = user.nivel_acesso === 'administrador' ? 'bg-admin' : 'bg-p04';
+                    const btnRemover = user.login !== 'Leandro' ?
+                        `<button class="btn-x" onclick="solicitarExclusao(${user.id}, '${user.login}')">X</button>` :
+                        `<span style="color:#bdc3c7; font-size:12px;">(Master)</span>`;
+
+                    corpoTabela.insertAdjacentHTML('beforeend', `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td><b>${user.login}</b></td>
+                            <td>${user.nome_completo}</td>
+                            <td><span class="badge ${classeBadge}">${user.nivel_acesso}</span></td>
+                            <td style="text-align: center;">${btnRemover}</td>
+                        </tr>
+                    `);
+                });
+            } else {
+                corpoTabela.innerHTML = '<tr><td colspan="5" style="text-align:center">Nenhum usuário cadastrado.</td></tr>';
             }
         }
 
         async function solicitarExclusao(idUsuario, loginUsuario) {
             if (confirm(`⚠️ Excluir '${loginUsuario.toUpperCase()}' permanentemente?`)) {
-                try {
-                    await _supabase.from('usuarios').delete().eq('id', idUsuario);
+                const result = await dbDeletar('usuarios', { id: idUsuario });
+                if (result && result.ok) {
                     alert("Acesso removido!");
-                    buscarUsuariosDiretoAqui();
-                } catch (err) {
-                    alert("Erro: " + err.message);
+                    buscarUsuarios();
+                } else {
+                    alert("Erro ao remover usuário.");
                 }
             }
         }
