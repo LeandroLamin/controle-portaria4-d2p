@@ -2,8 +2,8 @@
  * ================================================================================
  * PROJETO: SISTEMA DE CONTROLE DE ACESSO - D2P-BRAZIL
  * UNIDADE: PORTARIA 04 (P04)
- * DESCRIÇÃO: Lógica de Banco de Dados e Controle de Interface (Modal).
- * LOCALIZAÇÃO: /portaria-04/js/api.js
+ * ARQUIVO: api.js (Lógica de Banco de Dados e Interface)
+ * DESCRIÇÃO: Responsável por salvar, localizar e controlar o Modal de Busca.
  * ================================================================================
  */
 
@@ -25,16 +25,19 @@ validarTerminalLGPD();
 
 let dadosFiltradosGlobal = [];
 
-// --- FUNÇÕES DE INTERFACE (MODAL) ---
+// --- FUNÇÕES DE INTERFACE (ABRIR/FECHAR MODAL) ---
+// Essas funções são as que fazem o botão "Relatório" funcionar
 function abrirBusca() {
-    document.getElementById('modal-busca').style.display = 'flex';
+    const modal = document.getElementById('modal-busca');
+    if (modal) modal.style.display = 'flex';
 }
 
 function fecharBusca() {
-    document.getElementById('modal-busca').style.display = 'none';
+    const modal = document.getElementById('modal-busca');
+    if (modal) modal.style.display = 'none';
 }
 
-// --- LÓGICA DE BANCO DE DATA (SUPABASE) ---
+// --- LÓGICA DO SISTEMA ---
 
 // Localizar registro (ID decrescente)
 async function localizar() {
@@ -55,7 +58,7 @@ async function localizar() {
     } else { alert("CPF não localizado."); }
 }
 
-// Salvar com Trava de Observação
+// Salvar com Trava de Observação e Unidade
 async function salvar() {
     const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
     const nome = document.getElementById('nome').value.trim();
@@ -87,7 +90,7 @@ async function salvar() {
         obs: obs.toUpperCase(),
         data: agora.toISOString().split('T')[0],
         hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-        portaria: UNIDADE_ATUAL // Identifica que veio da P04
+        portaria: UNIDADE_ATUAL // Agora salva qual portaria gerou o dado
     };
 
     const { error } = await _supabase.from('acessos').insert([payload]);
@@ -116,13 +119,12 @@ async function buscarRelatorio() {
     const nome = document.getElementById('filtro-nome').value;
     if (!inicio || !fim || !nome) return alert("Preencha os filtros.");
 
-    // Busca apenas os dados desta portaria específica
     let query = _supabase.from('acessos')
         .select('*')
         .gte('data', inicio)
         .lte('data', fim)
         .ilike('nome', `%${nome}%`)
-        .eq('portaria', UNIDADE_ATUAL);
+        .eq('portaria', UNIDADE_ATUAL); // Filtra apenas dados da P04
 
     const { data } = await query.order('id', { ascending: false });
 
@@ -151,5 +153,6 @@ function limparFiltrosBusca() {
     document.getElementById('filtro-inicio').value = '';
     document.getElementById('filtro-fim').value = '';
     document.getElementById('filtro-nome').value = '';
-    document.querySelector('#tabela-resultados tbody').innerHTML = '';
+    const tbody = document.querySelector('#tabela-resultados tbody');
+    if (tbody) tbody.innerHTML = '';
 }
