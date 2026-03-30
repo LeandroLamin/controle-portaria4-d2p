@@ -74,7 +74,8 @@ async function buscarRelatorio() {
 
     const data = await dbBuscar('acessos', filtros);
 
-    if (data && data.length > 0) {
+    if (data === null) return; // erro já foi alertado pelo db.js
+    if (data.length > 0) {
         dadosFiltradosGlobal = data;
         renderizarTabela(data);
     } else {
