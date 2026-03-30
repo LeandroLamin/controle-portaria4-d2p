@@ -12,11 +12,10 @@ function limparFiltrosBusca() {
     document.getElementById('filtro-nome').value = '';
     const tbody = document.querySelector('#tabela-resultados tbody');
     if(tbody) tbody.innerHTML = '';
-    dadosFiltradosGlobal = []; // Variável global do api.js
+    dadosFiltradosGlobal = [];
 }
 
 function abrirBusca() { 
-    limparFiltrosBusca(); 
     document.getElementById('modal-busca').style.display = 'block'; 
 }
 
