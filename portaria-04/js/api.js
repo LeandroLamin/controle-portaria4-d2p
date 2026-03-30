@@ -1,41 +1,37 @@
 /**
  * ================================================================================
  * PROJETO: SISTEMA DE CONTROLE DE ACESSO - D2P-BRAZIL (PORTARIA 04)
- * ARQUIVO: api.js (Versão Webhook Segura)
+ * ARQUIVO: portaria-04/js/api.js
+ * DEPENDE: /conexao/config.js e /conexao/db.js
  * ================================================================================
  */
 
 let dadosFiltradosGlobal = [];
-const N8N_URL = 'https://n8n.laminlpp.com.br/webhook'; // Seu servidor n8n
 
 // --- INTERFACE ---
 function abrirBusca() { document.getElementById('modal-busca').style.display = 'flex'; }
 function fecharBusca() { document.getElementById('modal-busca').style.display = 'none'; }
 
-// --- 1. LOCALIZAR (Via n8n) ---
+// --- 1. LOCALIZAR (usa dbBuscar global) ---
 async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
-    if(!cpfVal) return alert("Digite um CPF");
+    if (!cpfVal) return alert("Digite um CPF");
 
-    try {
-        const res = await fetch(`${N8N_URL}/localizar-cpf`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cpf: cpfVal })
-        });
-        const data = await res.json();
+    const data = await dbBuscar('acessos', { cpf: cpfVal });
 
-        if (data && data.nome) {
-            document.getElementById('nome').value = data.nome;
-            document.getElementById('empresa').value = data.empresa;
-            document.getElementById('responsavel').value = data.responsavel;
-        } else { alert("CPF não localizado na base."); }
-    } catch (err) { console.error("Erro ao localizar:", err); }
+    if (data && data.length > 0) {
+        const ultimo = data[data.length - 1]; // pega o registro mais recente
+        document.getElementById('nome').value = ultimo.nome;
+        document.getElementById('empresa').value = ultimo.empresa;
+        document.getElementById('responsavel').value = ultimo.responsavel;
+    } else {
+        alert("CPF não localizado na base.");
+    }
 }
 
-// --- 2. SALVAR (Via n8n) ---
+// --- 2. SALVAR (usa dbSalvar global) ---
 async function salvar() {
-    const payload = {
+    const dados = {
         cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
         nome: document.getElementById('nome').value.trim().toUpperCase(),
         empresa: document.getElementById('empresa').value.trim().toUpperCase(),
@@ -48,23 +44,21 @@ async function salvar() {
         obs: document.getElementById('obs').value.trim().toUpperCase()
     };
 
-    if (!payload.cpf || !payload.nome || payload.obs.length < 2) {
+    if (!dados.cpf || !dados.nome || dados.obs.length < 2) {
         return alert("⚠️ Preencha todos os campos obrigatórios.");
     }
 
-    try {
-        const res = await fetch(`${N8N_URL}/salvar-acesso`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        
-        if (res.ok) { alert("✅ Registrado com sucesso!"); limpar(); }
-        else { alert("Erro ao salvar no servidor."); }
-    } catch (err) { alert("Erro de conexão com n8n."); }
+    const result = await dbSalvar('acessos', dados);
+
+    if (result && result.ok) {
+        alert("✅ Registrado com sucesso!");
+        limpar();
+    } else {
+        alert("Erro ao salvar no servidor.");
+    }
 }
 
-// --- 3. BUSCAR RELATÓRIO (AQUI ESTÁ O SEGREDO DA VARIÁVEL) ---
+// --- 3. BUSCAR RELATÓRIO (filtro por período — fetch direto pois usa data range) ---
 async function buscarRelatorio() {
     const filtro = {
         inicio: document.getElementById('filtro-inicio').value,
@@ -75,14 +69,13 @@ async function buscarRelatorio() {
     if (!filtro.inicio || !filtro.fim) return alert("Selecione o período.");
 
     try {
-        const res = await fetch(`${N8N_URL}/buscar-relatorio`, {
+        const res = await fetch(`${N8N_URL}/db-buscar`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(filtro)
+            body: JSON.stringify({ tabela: 'acessos', filtros: filtro })
         });
 
-        // AQUI: Pegamos a variável JSON que o n8n devolve
-        const data = await res.json(); 
+        const data = await res.json();
 
         if (data && data.length > 0) {
             dadosFiltradosGlobal = data;
@@ -91,9 +84,12 @@ async function buscarRelatorio() {
             alert("Nada encontrado.");
             document.querySelector('#tabela-resultados tbody').innerHTML = '';
         }
-    } catch (err) { alert("Erro ao buscar dados."); }
+    } catch (err) {
+        alert("Erro ao buscar dados.");
+    }
 }
 
+// --- RENDERIZAR TABELA ---
 function renderizarTabela(lista) {
     const tbody = document.querySelector('#tabela-resultados tbody');
     tbody.innerHTML = '';
