@@ -3,8 +3,8 @@
 
 // --- INÍCIO DA BLINDAGEM DE SEGURANÇA (LGPD) ---
 // Credenciais do terminal (Mantenha segredo)
-const _0x4a2 = 'auth_admin_v1@leandrolpp.com.br';
-const _0x9b1 = '2c<x+-NMGf{Q7T3^SR%C0;P=H;p%7_h5?;@Bc<k';
+const _0x4a2 = 'leandrolamindepaulapereira@gmail.com';
+const _0x9b1 = 'Portaria#Lamin@Secure_2026_!X';
 
 async function validarTerminalLGPD() {
     // Tenta autenticar o terminal silenciosamente para liberar o RLS do banco
