@@ -7,9 +7,6 @@
  * ================================================================================
  */
 
-// --- CONFIGURAÇÃO DA UNIDADE ---
-const UNIDADE_ATUAL = "PORTARIA-04";
-
 // --- BLINDAGEM DE SEGURANÇA (LGPD) ---
 const _0x4a2 = 'leandrolamindepaulapereira@gmail.com';
 const _0x9b1 = 'Portaria#Lamin@Secure_2026_!X';
@@ -26,7 +23,6 @@ validarTerminalLGPD();
 let dadosFiltradosGlobal = [];
 
 // --- FUNÇÕES DE INTERFACE (ABRIR/FECHAR MODAL) ---
-// Essas funções são as que fazem o botão "Relatório" funcionar
 function abrirBusca() {
     const modal = document.getElementById('modal-busca');
     if (modal) modal.style.display = 'flex';
@@ -37,9 +33,9 @@ function fecharBusca() {
     if (modal) modal.style.display = 'none';
 }
 
-// --- LÓGICA DO SISTEMA ---
+// --- LÓGICA DO SISTEMA (COLUNAS: id, data, hora, cpf, nome, empresa, responsavel, motivo, liberado, vigilante, cracha, obs, acesso) ---
 
-// Localizar registro (ID decrescente)
+// Localizar registro (ID decrescente para pegar o mais recente)
 async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
     if(!cpfVal) return alert("Digite um CPF");
@@ -58,7 +54,7 @@ async function localizar() {
     } else { alert("CPF não localizado."); }
 }
 
-// Salvar com Trava de Observação e Unidade
+// Salvar usando APENAS as colunas existentes no seu banco
 async function salvar() {
     const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
     const nome = document.getElementById('nome').value.trim();
@@ -71,6 +67,7 @@ async function salvar() {
     const acesso = document.getElementById('tipo').value;
     const obs = document.getElementById('obs').value.trim();
 
+    // TRAVA: Bloqueia se campos vazios ou observação muito curta
     if (!cpf || !nome || !empresa || !responsavel || !liberado || !motivo || !vigilante || !cracha || acesso === "" || obs.length < 2) {
         alert("⚠️ ATENÇÃO: Todos os campos são obrigatórios, incluindo a OBSERVAÇÃO.");
         return; 
@@ -86,11 +83,10 @@ async function salvar() {
         motivo, 
         vigilante: vigilante.toUpperCase(), 
         cracha, 
-        acesso, 
+        acesso, // ENTRADA ou SAÍDA
         obs: obs.toUpperCase(),
         data: agora.toISOString().split('T')[0],
-        hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-        portaria: UNIDADE_ATUAL // Agora salva qual portaria gerou o dado
+        hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
     };
 
     const { error } = await _supabase.from('acessos').insert([payload]);
@@ -123,8 +119,7 @@ async function buscarRelatorio() {
         .select('*')
         .gte('data', inicio)
         .lte('data', fim)
-        .ilike('nome', `%${nome}%`)
-        .eq('portaria', UNIDADE_ATUAL); // Filtra apenas dados da P04
+        .ilike('nome', `%${nome}%`);
 
     const { data } = await query.order('id', { ascending: false });
 
@@ -135,7 +130,7 @@ async function buscarRelatorio() {
         data.forEach(item => {
             tbody.innerHTML += `<tr><td>${item.data}</td><td>${item.hora}</td><td>${item.cpf}</td><td>${item.nome}</td><td>${item.empresa}</td><td>${item.responsavel}</td><td>${item.liberado}</td><td>${item.motivo}</td><td>${item.vigilante}</td><td>${item.cracha}</td><td>${item.acesso}</td><td>${item.obs}</td></tr>`;
         });
-    } else { alert("Nada encontrado para esta portaria."); }
+    } else { alert("Nada encontrado."); }
 }
 
 function exportarExcel() {
@@ -145,7 +140,7 @@ function exportarExcel() {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.setAttribute("href", URL.createObjectURL(blob));
-    link.setAttribute("download", `relatorio_${UNIDADE_ATUAL.toLowerCase()}.csv`);
+    link.setAttribute("download", "relatorio_p04.csv");
     link.click();
 }
 
