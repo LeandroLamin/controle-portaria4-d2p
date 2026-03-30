@@ -99,6 +99,7 @@ async function salvar() {
         limpar(); 
     }
 }
+
 // Filtra os dados para o Relatório
 async function buscarRelatorio() {
     const inicio = document.getElementById('filtro-inicio').value;
@@ -144,4 +145,35 @@ function exportarExcel() {
     link.setAttribute("href", URL.createObjectURL(blob));
     link.setAttribute("download", "relatorio_completo_d2p.csv");
     link.click();
+}
+
+// --- FUNÇÕES DE LIMPEZA E RESET (ADICIONADAS) ---
+
+function limpar() {
+    // Limpa campos de texto
+    document.getElementById('cpf').value = '';
+    document.getElementById('nome').value = '';
+    document.getElementById('empresa').value = '';
+    document.getElementById('responsavel').value = '';
+    document.getElementById('vigilante').value = '';
+    document.getElementById('cracha').value = '';
+    document.getElementById('obs').value = '';
+    
+    // Reseta os selects para o estado inicial
+    document.getElementById('liberado').selectedIndex = 0;
+    document.getElementById('motivo').selectedIndex = 0;
+    document.getElementById('tipo').value = 'ENTRADA';
+    
+    // Foca no primeiro campo para o próximo atendimento
+    document.getElementById('cpf').focus();
+    console.log("Campos resetados com sucesso.");
+}
+
+function limparFiltrosBusca() {
+    document.getElementById('filtro-inicio').value = '';
+    document.getElementById('filtro-fim').value = '';
+    document.getElementById('filtro-nome').value = '';
+    
+    const tbody = document.querySelector('#tabela-resultados tbody');
+    if (tbody) tbody.innerHTML = '';
 }
