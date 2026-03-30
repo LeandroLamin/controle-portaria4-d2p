@@ -75,7 +75,7 @@ async function buscarRelatorio() {
     // Adiciona filtro de nome apenas se preenchido
     if (nome) {
     if (/^\d+$/.test(nome)) {
-        filtros.cpf_like = nome;
+        filtros.cpf = nome;
     } else {
         filtros.nome_like = nome;
     }
