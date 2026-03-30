@@ -73,7 +73,13 @@ async function buscarRelatorio() {
     };
 
     // Adiciona filtro de nome apenas se preenchido
-    if (nome) filtros.nome_like = nome;
+    if (nome) {
+    if (/^\d+$/.test(nome)) {
+        filtros.cpf_like = nome;
+    } else {
+        filtros.nome_like = nome;
+    }
+}
 
     const data = await dbBuscar('acessos', filtros);
 
