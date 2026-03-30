@@ -16,13 +16,13 @@ async function validarTerminalLGPD() {
         email: _0x4a2,
         password: _0x9b1
     });
-    if (error) console.error("Erro Segurança P04.");
+    if (error) console.error("Erro Segurança P04:", error.message);
 }
 validarTerminalLGPD();
 
 let dadosFiltradosGlobal = [];
 
-// --- FUNÇÕES DE INTERFACE (ABRIR/FECHAR MODAL) ---
+// --- FUNÇÕES DE INTERFACE ---
 function abrirBusca() {
     const modal = document.getElementById('modal-busca');
     if (modal) modal.style.display = 'flex';
@@ -33,20 +33,21 @@ function fecharBusca() {
     if (modal) modal.style.display = 'none';
 }
 
-// --- LÓGICA DO SISTEMA (COLUNAS: id, data, hora, cpf, nome, empresa, responsavel, motivo, liberado, vigilante, cracha, obs, acesso) ---
+// --- LÓGICA DO SISTEMA ---
 
-// Localizar registro (ID decrescente para pegar o mais recente)
 async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
     if(!cpfVal) return alert("Digite um CPF");
     
-    const { data } = await _supabase
+    const { data, error } = await _supabase
         .from('acessos')
         .select('nome, empresa, responsavel')
         .eq('cpf', cpfVal)
         .order('id', { ascending: false }) 
         .limit(1);
     
+    if (error) console.error("Erro ao localizar:", error.message);
+
     if (data && data.length > 0) {
         document.getElementById('nome').value = data[0].nome || '';
         document.getElementById('empresa').value = data[0].empresa || '';
@@ -54,7 +55,6 @@ async function localizar() {
     } else { alert("CPF não localizado."); }
 }
 
-// Salvar usando APENAS as colunas existentes no seu banco
 async function salvar() {
     const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
     const nome = document.getElementById('nome').value.trim();
@@ -67,7 +67,6 @@ async function salvar() {
     const acesso = document.getElementById('tipo').value;
     const obs = document.getElementById('obs').value.trim();
 
-    // TRAVA: Bloqueia se campos vazios ou observação muito curta
     if (!cpf || !nome || !empresa || !responsavel || !liberado || !motivo || !vigilante || !cracha || acesso === "" || obs.length < 2) {
         alert("⚠️ ATENÇÃO: Todos os campos são obrigatórios, incluindo a OBSERVAÇÃO.");
         return; 
@@ -83,7 +82,7 @@ async function salvar() {
         motivo, 
         vigilante: vigilante.toUpperCase(), 
         cracha, 
-        acesso, // ENTRADA ou SAÍDA
+        acesso, 
         obs: obs.toUpperCase(),
         data: agora.toISOString().split('T')[0],
         hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
@@ -112,31 +111,58 @@ function limpar() {
 async function buscarRelatorio() {
     const inicio = document.getElementById('filtro-inicio').value;
     const fim = document.getElementById('filtro-fim').value;
-    const nome = document.getElementById('filtro-nome').value;
-    if (!inicio || !fim || !nome) return alert("Preencha os filtros.");
+    const nomeBusca = document.getElementById('filtro-nome').value.trim();
+
+    if (!inicio || !fim || !nomeBusca) return alert("Preencha os filtros.");
+
+    console.log("Iniciando busca:", { inicio, fim, nomeBusca });
 
     let query = _supabase.from('acessos')
         .select('*')
         .gte('data', inicio)
         .lte('data', fim)
-        .ilike('nome', `%${nome}%`);
+        .ilike('nome', `%${nomeBusca}%`);
 
-    const { data } = await query.order('id', { ascending: false });
+    const { data, error } = await query.order('id', { ascending: false });
+
+    if (error) {
+        console.error("Erro na busca do Supabase:", error.message);
+        return alert("Erro no banco: " + error.message);
+    }
+
+    console.log("Registros encontrados:", data.length);
 
     if (data && data.length > 0) {
         dadosFiltradosGlobal = data;
         const tbody = document.querySelector('#tabela-resultados tbody');
         tbody.innerHTML = '';
         data.forEach(item => {
-            tbody.innerHTML += `<tr><td>${item.data}</td><td>${item.hora}</td><td>${item.cpf}</td><td>${item.nome}</td><td>${item.empresa}</td><td>${item.responsavel}</td><td>${item.liberado}</td><td>${item.motivo}</td><td>${item.vigilante}</td><td>${item.cracha}</td><td>${item.acesso}</td><td>${item.obs}</td></tr>`;
+            tbody.innerHTML += `<tr>
+                <td>${item.data}</td>
+                <td>${item.hora}</td>
+                <td>${item.cpf}</td>
+                <td>${item.nome}</td>
+                <td>${item.empresa}</td>
+                <td>${item.responsavel}</td>
+                <td>${item.liberado}</td>
+                <td>${item.motivo}</td>
+                <td>${item.vigilante}</td>
+                <td>${item.cracha}</td>
+                <td>${item.acesso}</td>
+                <td>${item.obs}</td>
+            </tr>`;
         });
-    } else { alert("Nada encontrado."); }
+    } else { 
+        alert("Nada encontrado para este período ou nome."); 
+    }
 }
 
 function exportarExcel() {
     if (dadosFiltradosGlobal.length === 0) return alert("Busque os dados primeiro.");
     let csv = '\uFEFFData;Hora;CPF;Nome;Empresa;Responsavel;Liberado;Motivo;Vigilante;Cracha;Acesso;Obs\n';
-    dadosFiltradosGlobal.forEach(row => { csv += `${row.data};${row.hora};${row.cpf};${row.nome};${row.empresa};${row.responsavel};${row.liberado};${row.motivo};${row.vigilante};${row.cracha};${row.acesso};${row.obs}\n`; });
+    dadosFiltradosGlobal.forEach(row => { 
+        csv += `${row.data};${row.hora};${row.cpf};${row.nome};${row.empresa};${row.responsavel};${row.liberado};${row.motivo};${row.vigilante};${row.cracha};${row.acesso};${row.obs}\n`; 
+    });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.setAttribute("href", URL.createObjectURL(blob));
