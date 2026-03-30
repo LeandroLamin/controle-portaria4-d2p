@@ -5,13 +5,13 @@
 // ============================================================
 
 // --- BUSCAR ---
-// Exemplo: dbBuscar('acessos', { cpf: '12345678900' })
-async function dbBuscar(tabela, filtros = {}) {
+// Exemplo: dbBuscar('acessos', { cpf: '12345678900' }, { order: 'id.desc', limit: 1 })
+async function dbBuscar(tabela, filtros = {}, opcoes = {}) {
     try {
         const res = await fetch(`${N8N_URL}/db-buscar`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tabela, filtros })
+            body: JSON.stringify({ tabela, filtros, ...opcoes })
         });
         const data = await res.json();
         return data;
