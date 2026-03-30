@@ -2,26 +2,22 @@
 // Arquivo responsável pelas chamadas ao Banco de Dados (Supabase)
 
 // --- INÍCIO DA BLINDAGEM DE SEGURANÇA (LGPD) ---
-// Credenciais do terminal (Mantenha segredo)
 const _0x4a2 = 'leandrolamindepaulapereira@gmail.com';
 const _0x9b1 = 'Portaria#Lamin@Secure_2026_!X';
 
 async function validarTerminalLGPD() {
-    // Tenta autenticar o terminal silenciosamente para liberar o RLS do banco
     const { data, error } = await _supabase.auth.signInWithPassword({
         email: _0x4a2,
         password: _0x9b1
     });
 
     if (error) {
-        // Mensagem genérica para não dar pistas a invasores no console
         console.error("Erro 403: Acesso ao banco restrito conforme LGPD.");
     } else {
         console.log("Terminal validado com sucesso. Acesso autorizado.");
     }
 }
 
-// Inicia a trava de segurança assim que o script é carregado
 validarTerminalLGPD();
 // --- FIM DA BLINDAGEM ---
 
@@ -32,7 +28,6 @@ async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
     if(!cpfVal) return alert("Digite um CPF");
     
-    // USANDO APENAS O ID: O maior ID é SEMPRE o registro mais recente no banco
     const { data, error } = await _supabase
         .from('acessos')
         .select('nome, empresa, responsavel')
@@ -60,14 +55,14 @@ async function salvar() {
     const motivo = document.getElementById('motivo').value;
     const vigilante = document.getElementById('vigilante').value.trim();
     const cracha = document.getElementById('cracha').value.trim();
-    const acesso = document.getElementById('tipo').value;
+    const acesso = document.getElementById('tipo').value; // Captura o valor do SELECT
     const obs = document.getElementById('obs').value.trim();
 
     // 2. A TRAVA (CONDIÇÃO DE PARADA)
-    // Agora inclui a verificação do campo acesso (acesso === "")
+    // Se o acesso for "" (SELECIONE), ele entra na trava e para o salvamento
     if (!cpf || !nome || !empresa || !responsavel || liberado === "" || motivo === "" || !vigilante || !cracha || acesso === "") {
         alert("⚠️ CAMPOS OBRIGATÓRIOS FALTANDO!\n\nPor favor, preencha todos os campos e selecione as opções de 'Liberado por', 'Motivo' e 'Acesso' antes de salvar.");
-        return; // Esse return impede que o código continue para a parte de salvar
+        return; // MATA A EXECUÇÃO E NÃO SALVA
     }
 
     // 3. SE PASSAR PELA TRAVA, ELE SALVA
@@ -95,7 +90,7 @@ async function salvar() {
     if(error) {
         alert("Erro ao salvar: " + error.message);
     } else { 
-        alert("Acesso registrado com sucesso!"); 
+        alert("✅ Acesso registrado com sucesso!"); 
         limpar(); 
     }
 }
@@ -128,7 +123,7 @@ async function buscarRelatorio() {
             </tr>`;
         });
     } else {
-        alert("Informação não encontrada: Não há dados com os filtros solicitados.");
+        alert("Informação não encontrada.");
         limparFiltrosBusca();
     }
 }
@@ -150,7 +145,6 @@ function exportarExcel() {
 // --- FUNÇÕES DE LIMPEZA E RESET ---
 
 function limpar() {
-    // Limpa campos de texto
     document.getElementById('cpf').value = '';
     document.getElementById('nome').value = '';
     document.getElementById('empresa').value = '';
@@ -159,21 +153,19 @@ function limpar() {
     document.getElementById('cracha').value = '';
     document.getElementById('obs').value = '';
     
-    // Reseta os selects para o estado inicial (SELECIONE)
+    // Reseta os selects para o estado inicial (Índice 0 = SELECIONE)
     document.getElementById('liberado').selectedIndex = 0;
     document.getElementById('motivo').selectedIndex = 0;
-    document.getElementById('tipo').selectedIndex = 0; // Ajustado para iniciar em SELECIONE
+    document.getElementById('tipo').selectedIndex = 0; // <--- AGORA VOLTA PARA O SELECIONE
     
-    // Foca no primeiro campo para o próximo atendimento
     document.getElementById('cpf').focus();
-    console.log("Campos resetados com sucesso.");
+    console.log("Campos resetados para novo atendimento.");
 }
 
 function limparFiltrosBusca() {
     document.getElementById('filtro-inicio').value = '';
     document.getElementById('filtro-fim').value = '';
     document.getElementById('filtro-nome').value = '';
-    
     const tbody = document.querySelector('#tabela-resultados tbody');
     if (tbody) tbody.innerHTML = '';
 }
