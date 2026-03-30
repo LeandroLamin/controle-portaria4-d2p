@@ -64,9 +64,9 @@ async function salvar() {
     const obs = document.getElementById('obs').value.trim();
 
     // 2. A TRAVA (CONDIÇÃO DE PARADA)
-    // Se algum desses for vazio, o código PARA e exibe o alerta
-    if (!cpf || !nome || !empresa || !responsavel || liberado === "" || motivo === "" || !vigilante || !cracha) {
-        alert("⚠️ CAMPOS OBRIGATÓRIOS FALTANDO!\n\nPor favor, preencha todos os campos e selecione as opções de 'Liberado por' e 'Motivo' antes de salvar.");
+    // Agora inclui a verificação do campo acesso (acesso === "")
+    if (!cpf || !nome || !empresa || !responsavel || liberado === "" || motivo === "" || !vigilante || !cracha || acesso === "") {
+        alert("⚠️ CAMPOS OBRIGATÓRIOS FALTANDO!\n\nPor favor, preencha todos os campos e selecione as opções de 'Liberado por', 'Motivo' e 'Acesso' antes de salvar.");
         return; // Esse return impede que o código continue para a parte de salvar
     }
 
@@ -147,7 +147,7 @@ function exportarExcel() {
     link.click();
 }
 
-// --- FUNÇÕES DE LIMPEZA E RESET (ADICIONADAS) ---
+// --- FUNÇÕES DE LIMPEZA E RESET ---
 
 function limpar() {
     // Limpa campos de texto
@@ -159,10 +159,10 @@ function limpar() {
     document.getElementById('cracha').value = '';
     document.getElementById('obs').value = '';
     
-    // Reseta os selects para o estado inicial
+    // Reseta os selects para o estado inicial (SELECIONE)
     document.getElementById('liberado').selectedIndex = 0;
     document.getElementById('motivo').selectedIndex = 0;
-    document.getElementById('tipo').value = 'ENTRADA';
+    document.getElementById('tipo').selectedIndex = 0; // Ajustado para iniciar em SELECIONE
     
     // Foca no primeiro campo para o próximo atendimento
     document.getElementById('cpf').focus();
