@@ -1,4 +1,4 @@
-// portaria-04/js/api.js
+a// portaria-04/js/api.js
 // Arquivo EXCLUSIVO da Portaria 04
 
 // --- BLINDAGEM DE SEGURANÇA ---
@@ -35,7 +35,7 @@ async function localizar() {
     } else { alert("CPF não localizado."); }
 }
 
-// Salvar com Trava de "SELECIONE"
+// Salvar com Trava de Campos Obrigatórios e Observação
 async function salvar() {
     const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
     const nome = document.getElementById('nome').value.trim();
@@ -48,16 +48,24 @@ async function salvar() {
     const acesso = document.getElementById('tipo').value;
     const obs = document.getElementById('obs').value.trim();
 
-    // A TRAVA: Bloqueia se o valor for vazio (que é o caso do "SELECIONE")
+    // A TRAVA: Bloqueia se o valor for vazio, incluindo a observação
     if (!cpf || !nome || !empresa || !responsavel || !liberado || !motivo || !vigilante || !cracha || !obs || acesso === "") {
-        alert("⚠️ ATENÇÃO: Preencha todos os campos.");
+        alert("⚠️ ATENÇÃO: Todos os campos são obrigatórios, incluindo a OBSERVAÇÃO.");
         return; 
     }
 
     const agora = new Date();
     const payload = {
-        cpf, nome: nome.toUpperCase(), empresa: empresa.toUpperCase(), responsavel: responsavel.toUpperCase(),
-        liberado, motivo, vigilante: vigilante.toUpperCase(), cracha, acesso, obs,
+        cpf, 
+        nome: nome.toUpperCase(), 
+        empresa: empresa.toUpperCase(), 
+        responsavel: responsavel.toUpperCase(),
+        liberado, 
+        motivo, 
+        vigilante: vigilante.toUpperCase(), 
+        cracha, 
+        acesso, 
+        obs: obs.toUpperCase(), // Salvando observação em caixa alta
         data: agora.toISOString().split('T')[0],
         hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
     };
@@ -85,7 +93,7 @@ function limpar() {
     document.getElementById('cpf').focus();
 }
 
-// Funções de Busca e Excel (Simplificadas para P04)
+// Funções de Busca e Excel (Ordenado por ID decrescente)
 async function buscarRelatorio() {
     const inicio = document.getElementById('filtro-inicio').value;
     const fim = document.getElementById('filtro-fim').value;
