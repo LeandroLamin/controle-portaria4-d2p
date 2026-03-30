@@ -1,7 +1,16 @@
-a// portaria-04/js/api.js
-// Arquivo EXCLUSIVO da Portaria 04
+/**
+ * ================================================================================
+ * PROJETO: SISTEMA DE CONTROLE DE ACESSO - D2P-BRAZIL
+ * UNIDADE: PORTARIA 04 (P04)
+ * DESCRIÇÃO: Lógica de Banco de Dados e Controle de Interface (Modal).
+ * LOCALIZAÇÃO: /portaria-04/js/api.js
+ * ================================================================================
+ */
 
-// --- BLINDAGEM DE SEGURANÇA ---
+// --- CONFIGURAÇÃO DA UNIDADE ---
+const UNIDADE_ATUAL = "PORTARIA-04";
+
+// --- BLINDAGEM DE SEGURANÇA (LGPD) ---
 const _0x4a2 = 'leandrolamindepaulapereira@gmail.com';
 const _0x9b1 = 'Portaria#Lamin@Secure_2026_!X';
 
@@ -16,7 +25,18 @@ validarTerminalLGPD();
 
 let dadosFiltradosGlobal = [];
 
-// Localizar registro (Pega o mais recente pelo ID)
+// --- FUNÇÕES DE INTERFACE (MODAL) ---
+function abrirBusca() {
+    document.getElementById('modal-busca').style.display = 'flex';
+}
+
+function fecharBusca() {
+    document.getElementById('modal-busca').style.display = 'none';
+}
+
+// --- LÓGICA DE BANCO DE DATA (SUPABASE) ---
+
+// Localizar registro (ID decrescente)
 async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
     if(!cpfVal) return alert("Digite um CPF");
@@ -35,7 +55,7 @@ async function localizar() {
     } else { alert("CPF não localizado."); }
 }
 
-// Salvar com Trava de Campos Obrigatórios e Observação
+// Salvar com Trava de Observação
 async function salvar() {
     const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
     const nome = document.getElementById('nome').value.trim();
@@ -48,8 +68,7 @@ async function salvar() {
     const acesso = document.getElementById('tipo').value;
     const obs = document.getElementById('obs').value.trim();
 
-    // A TRAVA: Bloqueia se o valor for vazio, incluindo a observação
-    if (!cpf || !nome || !empresa || !responsavel || !liberado || !motivo || !vigilante || !cracha || !obs || acesso === "") {
+    if (!cpf || !nome || !empresa || !responsavel || !liberado || !motivo || !vigilante || !cracha || acesso === "" || obs.length < 2) {
         alert("⚠️ ATENÇÃO: Todos os campos são obrigatórios, incluindo a OBSERVAÇÃO.");
         return; 
     }
@@ -65,9 +84,10 @@ async function salvar() {
         vigilante: vigilante.toUpperCase(), 
         cracha, 
         acesso, 
-        obs: obs.toUpperCase(), // Salvando observação em caixa alta
+        obs: obs.toUpperCase(),
         data: agora.toISOString().split('T')[0],
-        hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        portaria: UNIDADE_ATUAL // Identifica que veio da P04
     };
 
     const { error } = await _supabase.from('acessos').insert([payload]);
@@ -84,23 +104,26 @@ function limpar() {
     document.getElementById('vigilante').value = '';
     document.getElementById('cracha').value = '';
     document.getElementById('obs').value = '';
-    
-    // Reseta menus para "SELECIONE" (Posição 0)
     document.getElementById('liberado').selectedIndex = 0;
     document.getElementById('motivo').selectedIndex = 0;
     document.getElementById('tipo').selectedIndex = 0; 
-    
     document.getElementById('cpf').focus();
 }
 
-// Funções de Busca e Excel (Ordenado por ID decrescente)
 async function buscarRelatorio() {
     const inicio = document.getElementById('filtro-inicio').value;
     const fim = document.getElementById('filtro-fim').value;
     const nome = document.getElementById('filtro-nome').value;
     if (!inicio || !fim || !nome) return alert("Preencha os filtros.");
 
-    let query = _supabase.from('acessos').select('*').gte('data', inicio).lte('data', fim).ilike('nome', `%${nome}%`);
+    // Busca apenas os dados desta portaria específica
+    let query = _supabase.from('acessos')
+        .select('*')
+        .gte('data', inicio)
+        .lte('data', fim)
+        .ilike('nome', `%${nome}%`)
+        .eq('portaria', UNIDADE_ATUAL);
+
     const { data } = await query.order('id', { ascending: false });
 
     if (data && data.length > 0) {
@@ -110,7 +133,7 @@ async function buscarRelatorio() {
         data.forEach(item => {
             tbody.innerHTML += `<tr><td>${item.data}</td><td>${item.hora}</td><td>${item.cpf}</td><td>${item.nome}</td><td>${item.empresa}</td><td>${item.responsavel}</td><td>${item.liberado}</td><td>${item.motivo}</td><td>${item.vigilante}</td><td>${item.cracha}</td><td>${item.acesso}</td><td>${item.obs}</td></tr>`;
         });
-    } else { alert("Nada encontrado."); }
+    } else { alert("Nada encontrado para esta portaria."); }
 }
 
 function exportarExcel() {
@@ -120,7 +143,7 @@ function exportarExcel() {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.setAttribute("href", URL.createObjectURL(blob));
-    link.setAttribute("download", "relatorio_p04.csv");
+    link.setAttribute("download", `relatorio_${UNIDADE_ATUAL.toLowerCase()}.csv`);
     link.click();
 }
 
@@ -128,4 +151,5 @@ function limparFiltrosBusca() {
     document.getElementById('filtro-inicio').value = '';
     document.getElementById('filtro-fim').value = '';
     document.getElementById('filtro-nome').value = '';
+    document.querySelector('#tabela-resultados tbody').innerHTML = '';
 }
