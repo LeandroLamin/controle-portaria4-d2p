@@ -51,21 +51,41 @@ async function localizar() {
 
 // Salva o novo registro de acesso
 async function salvar() {
+    // 1. Captura dos elementos
+    const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+    const nome = document.getElementById('nome').value.trim();
+    const empresa = document.getElementById('empresa').value.trim();
+    const responsavel = document.getElementById('responsavel').value.trim();
+    const liberado = document.getElementById('liberado').value;
+    const motivo = document.getElementById('motivo').value;
+    const vigilante = document.getElementById('vigilante').value.trim();
+    const cracha = document.getElementById('cracha').value.trim();
+    const acesso = document.getElementById('tipo').value;
+    const obs = document.getElementById('obs').value.trim();
+
+    // 2. A TRAVA (CONDIÇÃO DE PARADA)
+    // Se algum desses for vazio, o código PARA e exibe o alerta
+    if (!cpf || !nome || !empresa || !responsavel || liberado === "" || motivo === "" || !vigilante || !cracha) {
+        alert("⚠️ CAMPOS OBRIGATÓRIOS FALTANDO!\n\nPor favor, preencha todos os campos e selecione as opções de 'Liberado por' e 'Motivo' antes de salvar.");
+        return; // Esse return impede que o código continue para a parte de salvar
+    }
+
+    // 3. SE PASSAR PELA TRAVA, ELE SALVA
     const agora = new Date();
     const dataBanco = agora.toISOString().split('T')[0];
     const horaBanco = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     
     const payload = {
-        cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
-        nome: document.getElementById('nome').value.toUpperCase(),
-        empresa: document.getElementById('empresa').value.toUpperCase(),
-        responsavel: document.getElementById('responsavel').value.toUpperCase(),
-        liberado: document.getElementById('liberado').value,
-        motivo: document.getElementById('motivo').value,
-        vigilante: document.getElementById('vigilante').value.toUpperCase(),
-        cracha: document.getElementById('cracha').value,
-        acesso: document.getElementById('tipo').value,
-        obs: document.getElementById('obs').value,
+        cpf: cpf,
+        nome: nome.toUpperCase(),
+        empresa: empresa.toUpperCase(),
+        responsavel: responsavel.toUpperCase(),
+        liberado: liberado,
+        motivo: motivo,
+        vigilante: vigilante.toUpperCase(),
+        cracha: cracha,
+        acesso: acesso,
+        obs: obs,
         data: dataBanco, 
         hora: horaBanco
     };
@@ -73,13 +93,12 @@ async function salvar() {
     const { error } = await _supabase.from('acessos').insert([payload]);
     
     if(error) {
-        alert("Erro ao salvar.");
+        alert("Erro ao salvar: " + error.message);
     } else { 
         alert("Acesso registrado com sucesso!"); 
         limpar(); 
     }
 }
-
 // Filtra os dados para o Relatório
 async function buscarRelatorio() {
     const inicio = document.getElementById('filtro-inicio').value;
