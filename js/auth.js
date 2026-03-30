@@ -1,49 +1,47 @@
-// js/auth.js - Versão Blindada com RLS + Tabela de Usuários
+// js/auth.js - Versão Segura (login via n8n)
 async function fazerLogin(portariaAtual) {
     const userDigitado = document.getElementById('user-login').value.trim();
     const passDigitada = document.getElementById('user-pass').value.trim();
-    
+
     if (!userDigitado || !passDigitada) {
         alert("Por favor, preencha o usuário e a senha.");
         return;
     }
 
-    // --- PASSO 1: ABRIR A PORTA DO BANCO (AUTENTICAÇÃO OFICIAL) ---
-    // Usamos o e-mail coringa que você cadastrou no Authentication do Supabase
-    const { error: authError } = await _supabase.auth.signInWithPassword({
-        email: 'leandrolamindepaulapereira@gmail.com', // Seu e-mail coringa
-        password: 'Portaria#Lamin@Secure_2026_!X'    // Sua senha forte
-    });
-
-    if (authError) {
-        console.error("Falha na Camada de Segurança:", authError.message);
-        alert("Erro de conexão segura. O banco está blindado.");
+    // --- PASSO 1: ENVIAR CREDENCIAIS AO SERVIDOR (n8n) ---
+    // Nenhuma senha fica exposta no frontend
+    let resultado;
+    try {
+        const resposta = await fetch('https://n8n.laminlpp.com.br/webhook/login-portaria', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                login: userDigitado,
+                senha: passDigitada,
+                portaria: portariaAtual
+            })
+        });
+        resultado = await resposta.json();
+    } catch (err) {
+        console.error("Erro de conexão:", err);
+        alert("Erro de conexão com o servidor.");
         return;
     }
 
-    // --- PASSO 2: VALIDAR QUEM É O VIGILANTE (SUA TABELA) ---
-    // Agora que o banco está "aberto", conseguimos ler a tabela 'usuarios'
-    const { data, error: dbError } = await _supabase
-        .from('usuarios')
-        .select('*')
-        .eq('login', userDigitado)
-        .eq('senha', passDigitada)
-        .single();
-
-    if (dbError || !data) {
-        console.error("Erro de Login:", dbError);
-        alert("Login ou senha inválidos!");
+    // --- PASSO 2: VALIDAR RESPOSTA DO SERVIDOR ---
+    if (!resultado.ok) {
+        alert(resultado.mensagem || "Login ou senha inválidos!");
         return;
     }
 
     // --- PASSO 3: CHECAR NÍVEL DE ACESSO ---
-    if (data.nivel_acesso === 'administrador' || data.nivel_acesso === portariaAtual) {
+    if (resultado.nivel_acesso === 'administrador' || resultado.nivel_acesso === portariaAtual) {
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('sistema-principal').style.display = 'block';
-        document.getElementById('nome-logado').innerText = data.nome_completo;
+        document.getElementById('nome-logado').innerText = resultado.nome_completo;
         document.body.classList.add('sistema-aberto');
-        console.log("Acesso liberado para: " + data.nome_completo);
+        console.log("Acesso liberado para: " + resultado.nome_completo);
     } else {
-        alert("ACESSO NEGADO: Seu nível é " + data.nivel_acesso.toUpperCase() + " e esta tela é apenas para " + portariaAtual.toUpperCase());
+        alert("ACESSO NEGADO: Seu nível é " + resultado.nivel_acesso.toUpperCase() + " e esta tela é apenas para " + portariaAtual.toUpperCase());
     }
 }
