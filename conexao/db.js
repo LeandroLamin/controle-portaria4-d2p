@@ -11,7 +11,7 @@ async function dbBuscar(tabela, filtros = {}, opcoes = {}) {
         const res = await fetch(`${N8N_URL}/db-buscar`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tabela, filtros, ...opcoes })
+           body: JSON.stringify({ tabela, filtros, order: opcoes.order || '', limit: opcoes.limit || '' })
         });
         const data = await res.json();
         return data;
