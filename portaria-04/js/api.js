@@ -49,8 +49,8 @@ async function salvar() {
     const obs = document.getElementById('obs').value.trim();
 
     // A TRAVA: Bloqueia se o valor for vazio (que é o caso do "SELECIONE")
-    if (!cpf || !nome || !empresa || !responsavel || !liberado || !motivo || !vigilante || !cracha || acesso === "") {
-        alert("⚠️ ATENÇÃO: Preencha todos os campos e selecione ENTRADA ou SAÍDA.");
+    if (!cpf || !nome || !empresa || !responsavel || !liberado || !motivo || !vigilante || !cracha || !obs || acesso === "") {
+        alert("⚠️ ATENÇÃO: Preencha todos os campos.");
         return; 
     }
 
