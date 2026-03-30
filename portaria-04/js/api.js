@@ -8,11 +8,7 @@
 
 let dadosFiltradosGlobal = [];
 
-// --- INTERFACE ---
-function abrirBusca() { document.getElementById('modal-busca').style.display = 'flex'; }
-function fecharBusca() { document.getElementById('modal-busca').style.display = 'none'; }
-
-// --- 1. LOCALIZAR (usa dbBuscar global) ---
+// --- 1. LOCALIZAR ---
 async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
     if (!cpfVal) return alert("Digite um CPF");
@@ -20,7 +16,7 @@ async function localizar() {
     const data = await dbBuscar('acessos', { cpf: cpfVal }, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
-        const ultimo = data[0]; // já vem o mais recente
+        const ultimo = data[0];
         document.getElementById('nome').value = ultimo.nome;
         document.getElementById('empresa').value = ultimo.empresa;
         document.getElementById('responsavel').value = ultimo.responsavel;
@@ -29,7 +25,7 @@ async function localizar() {
     }
 }
 
-// --- 2. SALVAR (usa dbSalvar global) ---
+// --- 2. SALVAR ---
 async function salvar() {
     const dados = {
         cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
@@ -58,7 +54,7 @@ async function salvar() {
     }
 }
 
-// --- 3. BUSCAR RELATÓRIO (filtro por período com data range) ---
+// --- 3. BUSCAR RELATÓRIO ---
 async function buscarRelatorio() {
     const inicio = document.getElementById('filtro-inicio').value;
     const fim = document.getElementById('filtro-fim').value;
@@ -66,20 +62,15 @@ async function buscarRelatorio() {
 
     if (!inicio || !fim) return alert("Selecione o período.");
 
-    // Monta filtros com sufixos _gte e _lte para intervalo de data
-    const filtros = {
-        data_gte: inicio,
-        data_lte: fim
-    };
+    const filtros = { data_gte: inicio, data_lte: fim };
 
-    // Adiciona filtro de nome apenas se preenchido
     if (nome) {
-    if (/^\d+$/.test(nome)) {
-        filtros.cpf = nome;
-    } else {
-        filtros.nome_like = nome;
+        if (/^\d+$/.test(nome)) {
+            filtros.cpf = nome;
+        } else {
+            filtros.nome_like = nome;
+        }
     }
-}
 
     const data = await dbBuscar('acessos', filtros);
 
@@ -106,6 +97,7 @@ function renderizarTabela(lista) {
     });
 }
 
+// --- EXPORTAR EXCEL ---
 function exportarExcel() {
     if (dadosFiltradosGlobal.length === 0) return alert("Busque os dados primeiro.");
     let csv = '\uFEFFData;Hora;CPF;Nome;Empresa;Responsavel;Liberado;Motivo;Vigilante;Cracha;Acesso;Obs\n';
