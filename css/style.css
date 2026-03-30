@@ -1,52 +1,146 @@
 :root {
     --cor-fundo: #ffffff;
     --cor-texto: #333333;
-    --cor-primaria: #34495e;
-    --cor-secundaria: #b0bec5;
+    --cor-primaria: #2c3e50; /* Um tom levemente mais escuro e sério */
+    --cor-secundaria: #bdc3c7;
     --cor-destaque-amarelo: #f1c40f;
     --cor-destaque-verde: #27ae60;
-    --cor-destaque-laranja: #f39c12;
+    --cor-destaque-laranja: #e67e22;
     --cor-fundo-login: #f4f7f6;
+    --sombra-suave: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transicao: all 0.3s ease;
 }
 
-body { background-color: var(--cor-fundo-login); color: var(--cor-texto); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+body { 
+    background-color: var(--cor-fundo-login); 
+    color: var(--cor-texto); 
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; /* Fontes mais modernas */
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    margin: 0; 
+}
 
-#tela-login { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 380px; text-align: center; border-top: 6px solid var(--cor-primaria); }
-.logo-subtexto { font-size: 14px; color: var(--cor-primaria); text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-bottom: 25px; }
-#tela-login input { width: 100%; padding: 14px; margin-bottom: 18px; border: 1px solid var(--cor-secundaria); border-radius: 6px; box-sizing: border-box; }
-#tela-login button { width: 100%; background: var(--cor-primaria); color: white; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+/* Efeito de Vidro Suave no Login */
+#tela-login { 
+    background: white; 
+    padding: 45px; 
+    border-radius: 16px; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08); 
+    width: 380px; 
+    text-align: center; 
+    border-top: 8px solid var(--cor-primaria); 
+    transition: var(--transicao);
+}
 
-#sistema-principal { display: none; }
-body.sistema-aberto { background-color: var(--cor-fundo); align-items: flex-start; padding-top: 20px; }
-.container-corporativo { border: 1px solid var(--cor-secundaria); padding: 40px; width: 950px; background-color: var(--cor-fundo); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border-radius: 8px; }
-h1 { text-align: center; font-size: 26px; margin-bottom: 35px; text-transform: uppercase; color: var(--cor-primaria); border-bottom: 3px solid var(--cor-destaque-amarelo); padding-bottom: 15px; }
+.logo-subtexto { 
+    font-size: 13px; 
+    color: #7f8c8d; 
+    text-transform: uppercase; 
+    letter-spacing: 3px; 
+    font-weight: 700; 
+    margin-bottom: 30px; 
+}
 
-.grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
-.campo { display: flex; flex-direction: column; margin-bottom: 12px; }
-label { font-size: 11px; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; color: var(--cor-primaria); }
-input, select { padding: 12px; border: 1px solid var(--cor-secundaria); font-size: 14px; border-radius: 6px; outline: none; box-sizing: border-box; }
+/* Inputs com feedback visual */
+input, select { 
+    padding: 12px 15px; 
+    border: 2px solid #edf2f7; 
+    font-size: 14px; 
+    border-radius: 8px; 
+    outline: none; 
+    box-sizing: border-box; 
+    transition: var(--transicao);
+}
 
-.botoes { margin-top: 35px; display: flex; gap: 12px; justify-content: center; }
-button { padding: 14px 25px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 6px; font-size: 12px; }
+input:focus, select:focus { 
+    border-color: var(--cor-primaria); 
+    box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.1); 
+    background-color: #fff;
+}
 
-.btn-limpar { background-color: #546e7a; color: #fff; }
+/* Botões com efeito de profundidade */
+button { 
+    padding: 12px 24px; 
+    border: none; 
+    font-weight: 700; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    border-radius: 8px; 
+    font-size: 12px; 
+    transition: var(--transicao);
+    letter-spacing: 1px;
+}
+
+button:hover { 
+    transform: translateY(-2px); 
+    filter: brightness(1.1); 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+}
+
+button:active { transform: translateY(0); }
+
+.btn-salvar { background-color: var(--cor-destaque-verde); color: #fff; }
 .btn-relatorio { background-color: #3498db; color: #fff; }
 .btn-localizar { background-color: var(--cor-destaque-laranja); color: #fff; }
-.btn-salvar { background-color: var(--cor-destaque-verde); color: #fff; }
+.btn-limpar { background-color: #95a5a6; color: #fff; }
 
-#modal-busca { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
-.modal-content { background-color: #fff; margin: 1% auto; padding: 30px; border-radius: 8px; width: 98%; max-width: 1300px; max-height: 95vh; overflow-y: auto; }
+/* Container do Sistema */
+.container-corporativo { 
+    border: 1px solid rgba(0,0,0,0.05); 
+    padding: 40px; 
+    width: 1000px; 
+    background-color: var(--cor-fundo); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+    border-radius: 12px; 
+}
 
-.filtro-grid { display: flex; gap: 15px; margin-bottom: 25px; align-items: flex-end; }
-.filtro-item { display: flex; flex-direction: column; flex: 1; }
-.btn-filtro-container { display: flex; gap: 10px; }
+/* Tabelas estilo "SaaS" (Zebra e Hover) */
+.tabela-container { 
+    border-radius: 8px; 
+    overflow: hidden; 
+    border: 1px solid #e2e8f0; 
+    margin-top: 25px; 
+}
 
-.tabela-container { overflow-x: auto; border: 1px solid #ddd; margin-top: 20px; }
-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1200px; }
-table th, table td { border: 1px solid #ddd; padding: 8px; text-align: left; white-space: nowrap; }
-table th { background-color: var(--cor-primaria); color: white; position: sticky; top: 0; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
 
-.btn-fechar { background-color: #e74c3c; color: white; float: right; }
-.btn-exportar { background-color: #27ae60; color: white; margin-top: 20px; }
-.btn-reset-busca { background-color: #95a5a6; color: white; padding: 12px 20px; }
-.header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 15px; width: 950px; }
+table th { 
+    background-color: #f8fafc; 
+    color: var(--cor-primaria); 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    border-bottom: 2px solid #e2e8f0; 
+    padding: 15px 10px;
+}
+
+table td { 
+    padding: 12px 10px; 
+    border-bottom: 1px solid #f1f5f9; 
+    color: #475569; 
+}
+
+table tbody tr:nth-child(even) { background-color: #fcfcfc; }
+
+table tbody tr:hover { 
+    background-color: #f1f7ff; 
+    transition: background 0.2s; 
+}
+
+/* Modais mais elegantes */
+.modal-content { 
+    background-color: #fff; 
+    margin: 2% auto; 
+    padding: 35px; 
+    border-radius: 12px; 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.header-usuario { 
+    text-align: right; 
+    font-size: 13px; 
+    color: #94a3b8; 
+    font-weight: 500; 
+    margin-bottom: 15px; 
+}
