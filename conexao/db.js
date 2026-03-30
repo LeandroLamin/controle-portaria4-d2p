@@ -18,7 +18,7 @@ async function dbBuscar(tabela, filtros = {}, opcoes = {}) {
     } catch (err) {
         console.error(`[dbBuscar] Erro na tabela '${tabela}':`, err);
         alert("Erro de conexão ao buscar dados.");
-        return [];
+        return null; // <- era []
     }
 }
 
