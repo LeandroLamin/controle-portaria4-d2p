@@ -106,4 +106,15 @@ function renderizarTabela(lista) {
     });
 }
 
-// ... manter funções limpar() e exportarExcel() que já funcionam
+function exportarExcel() {
+    if (dadosFiltradosGlobal.length === 0) return alert("Busque os dados primeiro.");
+    let csv = '\uFEFFData;Hora;CPF;Nome;Empresa;Responsavel;Liberado;Motivo;Vigilante;Cracha;Acesso;Obs\n';
+    dadosFiltradosGlobal.forEach(row => {
+        csv += `${row.data};${row.hora};${row.cpf};${row.nome};${row.empresa};${row.responsavel};${row.liberado};${row.motivo};${row.vigilante};${row.cracha};${row.acesso};${row.obs}\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.setAttribute("href", URL.createObjectURL(blob));
+    link.setAttribute("download", "relatorio_p04.csv");
+    link.click();
+}
