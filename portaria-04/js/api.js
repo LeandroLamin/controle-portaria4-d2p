@@ -58,34 +58,31 @@ async function salvar() {
     }
 }
 
-// --- 3. BUSCAR RELATÓRIO (filtro por período — fetch direto pois usa data range) ---
+// --- 3. BUSCAR RELATÓRIO (filtro por período com data range) ---
 async function buscarRelatorio() {
-    const filtro = {
-        inicio: document.getElementById('filtro-inicio').value,
-        fim: document.getElementById('filtro-fim').value,
-        nome: document.getElementById('filtro-nome').value.trim()
+    const inicio = document.getElementById('filtro-inicio').value;
+    const fim = document.getElementById('filtro-fim').value;
+    const nome = document.getElementById('filtro-nome').value.trim();
+
+    if (!inicio || !fim) return alert("Selecione o período.");
+
+    // Monta filtros com sufixos _gte e _lte para intervalo de data
+    const filtros = {
+        data_gte: inicio,
+        data_lte: fim
     };
 
-    if (!filtro.inicio || !filtro.fim) return alert("Selecione o período.");
+    // Adiciona filtro de nome apenas se preenchido
+    if (nome) filtros.nome_like = nome;
 
-    try {
-        const res = await fetch(`${N8N_URL}/db-buscar`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tabela: 'acessos', filtros: filtro })
-        });
+    const data = await dbBuscar('acessos', filtros);
 
-        const data = await res.json();
-
-        if (data && data.length > 0) {
-            dadosFiltradosGlobal = data;
-            renderizarTabela(data);
-        } else {
-            alert("Nada encontrado.");
-            document.querySelector('#tabela-resultados tbody').innerHTML = '';
-        }
-    } catch (err) {
-        alert("Erro ao buscar dados.");
+    if (data && data.length > 0) {
+        dadosFiltradosGlobal = data;
+        renderizarTabela(data);
+    } else {
+        alert("Nada encontrado.");
+        document.querySelector('#tabela-resultados tbody').innerHTML = '';
     }
 }
 
