@@ -455,7 +455,7 @@ async function carregarTudo() {
 
   try {
     // Busca todos os registros ordenados por data/hora desc
-    const todos = await dbBuscar('relatorio_p04', {}, { order: 'id.desc' });
+    const todos = await dbBuscar('acessos', {}, { order: 'id.desc' });
 
     if (!todos || !Array.isArray(todos)) {
       mostrarErro();
