@@ -27,10 +27,8 @@
         </div>
     </div>
 
-    <div id="sistema-principal" style="display: none;">
-        <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a></div>
-        
-        <span id="relogio-topo" style="margin-right: 15px; font-weight: normal;"></span>
+   <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a></div>
+    <span id="relogio-topo" style="margin-right: 15px; font-weight: normal;"></span>
         Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a>
         <div class="container-corporativo">
             
@@ -130,24 +128,7 @@
             </div>
             <button class="btn-exportar" onclick="exportarExcel()">GERAR EXCEL (.CSV)</button>
         </div>
-    </div>
-
-    <script>
-    // Função para atualizar o relógio em tempo real
-    function atualizarRelogio() {
-        const spanRelogio = document.getElementById('relogio-topo');
-        if (spanRelogio) {
-            const agora = new Date();
-            const data = agora.toLocaleDateString('pt-BR');
-            const hora = agora.toLocaleTimeString('pt-BR');
-            spanRelogio.textContent = `${data} ${hora}`;
-        }
-    }
-    // Faz o relógio atualizar a cada 1 segundo (1000ms)
-    setInterval(atualizarRelogio, 1000);
-    // Executa a primeira vez assim que a página abre
-    atualizarRelogio();
-</script>
+    </div>   
    
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../conexao/config.js"></script>
