@@ -107,11 +107,11 @@
                     <label>DATA FINAL *:</label>
                     <input type="date" id="filtro-fim">
                 </div>
-                <div class="filtro-item" style="width: 300px;">
+                <div class="filtro-item" style="width: 350px;">
                     <label>NOME DO VISITANTE *:</label>
                     <input type="text" id="filtro-nome">
                 </div>
-                <div class="botoes-filtro">
+                <div class="botoes-filtro-modal">
                     <button class="btn-relatorio" onclick="buscarRelatorio()">FILTRAR</button>
                     <button class="btn-limpar-filtro" onclick="limparFiltrosBusca()">LIMPAR</button>
                 </div>
@@ -130,7 +130,7 @@
             <button class="btn-exportar" onclick="exportarExcel()">GERAR EXCEL (.CSV)</button>
         </div>
     </div>
-
+    
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../conexao/config.js"></script>
 <script src="../conexao/db.js"></script>
