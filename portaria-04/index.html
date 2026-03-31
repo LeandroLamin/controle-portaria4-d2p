@@ -30,8 +30,6 @@
     <div id="sistema-principal" style="display: none;">
         <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a></div>
         
-        <span id="relogio-topo" style="margin-right: 15px; font-weight: normal;"></span>
-        Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a>
         <div class="container-corporativo">
             
             <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; border-bottom: 2px solid #f1c40f; padding-bottom: 15px; min-height: 70px;">
@@ -132,28 +130,12 @@
         </div>
     </div>
 
-    <script>
-    // Função para atualizar o relógio em tempo real
-    function atualizarRelogio() {
-        const spanRelogio = document.getElementById('relogio-topo');
-        if (spanRelogio) {
-            const agora = new Date();
-            const data = agora.toLocaleDateString('pt-BR');
-            const hora = agora.toLocaleTimeString('pt-BR');
-            spanRelogio.textContent = `${data} ${hora}`;
-        }
-    }
-    // Faz o relógio atualizar a cada 1 segundo (1000ms)
-    setInterval(atualizarRelogio, 1000);
-    // Executa a primeira vez assim que a página abre
-    atualizarRelogio();
-</script>
-   
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../conexao/config.js"></script>
 <script src="../conexao/db.js"></script>
 <script src="../js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="../js/ui.js"></script>
+
 </body>
 </html>
