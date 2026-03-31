@@ -1,6 +1,6 @@
 /* ============================================================
    SISTEMA D2P-BRAZIL - PORTARIA 04
-   VERSÃO: 5.0 (PADRONIZAÇÃO VISUAL COMPLETA)
+   VERSÃO: 6.0 (MODAL ALINHADO & RESPONSIVO)
    ============================================================ */
 
 :root {
@@ -24,7 +24,6 @@ body {
     align-items: center; 
     min-height: 100vh; 
     margin: 0; 
-    transition: background 0.3s ease;
 }
 
 /* 2. TELA DE LOGIN RESPONSIVA */
@@ -40,14 +39,13 @@ body {
     box-sizing: border-box;
 }
 
-/* ESTILO PADRONIZADO PARA AS DUAS LINHAS DO TOPO */
 .logo-subtexto { 
     font-size: 14px; 
     color: var(--cor-primaria); 
     text-transform: uppercase; 
     letter-spacing: 2px; 
     font-weight: bold; 
-    margin-bottom: 5px; /* Espaço pequeno entre as duas linhas superiores */
+    margin-bottom: 5px; 
 }
 
 #tela-login h2 {
@@ -80,7 +78,6 @@ body {
     cursor: pointer; 
     font-weight: bold; 
     text-transform: uppercase;
-    font-size: 14px;
 }
 
 /* 3. LÓGICA DE TRANSIÇÃO (SISTEMA ABERTO) */
@@ -92,17 +89,14 @@ body.sistema-aberto {
     padding-top: 20px; 
 }
 
-body.sistema-aberto #tela-login { 
-    display: none !important; 
-}
-
+body.sistema-aberto #tela-login { display: none !important; }
 body.sistema-aberto #sistema-principal { 
     display: block; 
     width: 100%;
     animation: fadeIn 0.5s ease; 
 }
 
-/* 4. CONTAINER DO SISTEMA */
+/* 4. PAINEL PRINCIPAL */
 .container-corporativo { 
     border: 1px solid var(--cor-secundaria); 
     padding: 40px; 
@@ -114,17 +108,6 @@ body.sistema-aberto #sistema-principal {
     margin: 0 auto 30px auto;
 }
 
-h1 { 
-    text-align: center; 
-    font-size: 26px; 
-    margin-bottom: 35px; 
-    text-transform: uppercase; 
-    color: var(--cor-primaria); 
-    border-bottom: 3px solid var(--cor-destaque-amarelo); 
-    padding-bottom: 15px; 
-}
-
-/* GRID E CAMPOS */
 .grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
@@ -132,14 +115,7 @@ h1 {
 }
 
 .campo { display: flex; flex-direction: column; margin-bottom: 12px; }
-
-label { 
-    font-size: 11px; 
-    font-weight: bold; 
-    margin-bottom: 6px; 
-    text-transform: uppercase; 
-    color: var(--cor-primaria); 
-}
+label { font-size: 11px; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; color: var(--cor-primaria); }
 
 input, select { 
     padding: 12px; 
@@ -150,32 +126,16 @@ input, select {
     box-sizing: border-box; 
 }
 
-/* 5. BOTÕES COM AS CORES ORIGINAIS */
-.botoes { 
-    margin-top: 35px; 
-    display: flex; 
-    flex-wrap: wrap;
-    gap: 12px; 
-    justify-content: center; 
-}
-
-.botoes button { 
-    padding: 14px 25px; 
-    border: none; 
-    font-weight: bold; 
-    cursor: pointer; 
-    text-transform: uppercase; 
-    border-radius: 6px; 
-    font-size: 12px; 
-    min-width: 160px;
-}
+/* BOTÕES COLORIDOS */
+.botoes { margin-top: 35px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.botoes button { padding: 14px 25px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 6px; font-size: 12px; min-width: 160px; }
 
 .btn-limpar { background-color: #546e7a; color: #fff; }
 .btn-relatorio { background-color: #3498db; color: #fff; }
 .btn-localizar { background-color: var(--cor-destaque-laranja); color: #fff; }
 .btn-salvar { background-color: var(--cor-destaque-verde); color: #fff; }
 
-/* 6. MODAL DE BUSCA (FLUTUANTE) */
+/* 5. CORREÇÃO DO MODAL DE BUSCA (GRID ALINHADO) */
 #modal-busca { 
     display: none; 
     position: fixed; 
@@ -195,31 +155,35 @@ input, select {
     max-height: 95vh; 
     overflow-y: auto; 
     position: relative;
+    box-sizing: border-box;
 }
 
-/* TABELAS */
+/* O Segredo do Alinhamento está aqui: */
+.filtro-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 15px; 
+    align-items: flex-end; /* Alinha labels e botões por baixo */
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.filtro-item { display: flex; flex-direction: column; }
+.btn-filtro-container { display: flex; gap: 10px; }
+
+.btn-reset-busca { background-color: #95a5a6; color: white; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+/* TABELA */
 .tabela-container { overflow-x: auto; border: 1px solid #ddd; margin-top: 20px; }
 table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1200px; }
 table th, table td { border: 1px solid #ddd; padding: 10px; text-align: left; white-space: nowrap; }
 table th { background-color: var(--cor-primaria); color: white; position: sticky; top: 0; }
-table tr:nth-child(even) { background-color: #f9f9f9; }
 
 /* UTILITÁRIOS */
-.header-usuario { 
-    text-align: right; 
-    font-size: 12px; 
-    color: #777; 
-    margin-bottom: 15px; 
-    width: 100%;
-    max-width: 980px;
-    margin-left: auto;
-    margin-right: auto;
-}
+.header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 15px; width: 100%; max-width: 980px; margin: 0 auto; }
+.btn-fechar { background-color: #e74c3c; color: white; float: right; padding: 10px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+.btn-exportar { background-color: #27ae60; color: white; margin-top: 20px; padding: 12px 25px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-.btn-fechar { background-color: #e74c3c; color: white; float: right; }
-.btn-exportar { background-color: #27ae60; color: white; margin-top: 20px; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
