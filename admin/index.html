@@ -59,6 +59,8 @@
         .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; cursor: pointer; }
         .menu-item:hover, .menu-item.active { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
+        /* Estilo especial para o botão do Dashboard no menu */
+        .menu-item.dashboard-btn:hover { border-left-color: #2563eb; color: #3b82f6; }
         .btn-sair { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: auto; width: 100%; }
 
         /* CONTEUDO */
@@ -99,6 +101,7 @@
         <div style="flex-grow: 1;">
             <a href="#" class="menu-item active">➕ Novo Cadastro</a>
             <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
+            <a href="dashboard.html" class="menu-item dashboard-btn">📊 Dashboard de Acessos</a>
         </div>
         <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
     </nav>
