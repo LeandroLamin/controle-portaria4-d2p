@@ -3,403 +3,145 @@
 <head>
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Controle de Acesso — Portaria 04</title>
 <link rel="stylesheet" href="../css/style.css">
 <style>
-/* ── RESET & VARS ──────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2c3e50;--primary2:#34495e;--yellow:#f1c40f;
+  --bg:#f4f7f6;--white:#fff;--border:#dde1e7;
+  --text:#2c3e50;--muted:#7f8c8d;
+  --green:#27ae60;--green-bg:#e8f5e9;--green-brd:#a5d6a7;
+  --red:#e74c3c;--radius:8px;
+}
+html,body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-:root {
-  --bg:       #09090b;
-  --surface:  #18181b;
-  --surface2: #1f1f23;
-  --border:   #27272a;
-  --border2:  #3f3f46;
-  --muted:    #71717a;
-  --sub:      #52525b;
-  --text:     #f4f4f5;
-  --text2:    #d4d4d8;
-  --text3:    #a1a1aa;
-  --green:    #4ade80;
-  --green-bg: #22c55e1a;
-  --green-brd:#22c55e33;
-  --yellow:   #facc15;
-  --yellow-bg:#ca8a0415;
-  --yellow-brd:#ca8a0430;
-  --red:      #f87171;
-  --red-bg:   #ef44441a;
-  --blue:     #60a5fa;
-  --blue-bg:  #2563eb1a;
-  --radius:   10px;
-  --r-sm:     7px;
-}
+/* LOGIN */
+#tela-login{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,4vw,32px);background:var(--bg)}
+.login-card{background:var(--white);border-radius:14px;box-shadow:0 8px 32px rgba(44,62,80,.13);padding:clamp(24px,5vw,40px) clamp(20px,5vw,36px);width:100%;max-width:380px}
+.login-top{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:clamp(20px,4vw,28px)}
+.renault-wrap{width:52px;height:52px;background:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.renault-wrap svg{width:30px;height:30px}
+.login-marca{font-size:clamp(9px,1.5vw,10px);letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-top:4px;text-align:center}
+.login-titulo{font-size:clamp(15px,2.5vw,18px);font-weight:700;color:var(--primary)}
+.login-sub{font-size:clamp(11px,1.8vw,13px);color:var(--muted)}
+.login-card input[type=text],.login-card input[type=password]{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:clamp(9px,1.5vw,11px) 14px;font-size:clamp(13px,2vw,14px);color:var(--text);background:#f8fafc;margin-bottom:10px;outline:none;transition:border-color .15s}
+.login-card input:focus{border-color:var(--primary);background:white}
+.login-card input::placeholder{color:#b0bec5}
+.btn-entrar{width:100%;padding:clamp(10px,1.8vw,13px);background:var(--primary);color:white;border:none;border-radius:var(--radius);font-size:clamp(12px,1.8vw,14px);font-weight:700;letter-spacing:.06em;cursor:pointer;transition:background .15s;margin-top:4px}
+.btn-entrar:hover{background:var(--primary2)}
+.login-voltar{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:clamp(11px,1.8vw,12px);font-weight:600;text-decoration:none;letter-spacing:.04em;transition:color .15s}
+.login-voltar:hover{color:var(--primary)}
+.login-voltar svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
 
-body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
+/* SISTEMA */
+#sistema-principal{display:none}
+.sp-header{position:sticky;top:0;z-index:50;background:var(--primary);height:clamp(48px,7vw,56px);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3vw,28px)}
+.sp-header-left{display:flex;align-items:center;gap:10px}
+.sp-icon{width:clamp(28px,4vw,34px);height:clamp(28px,4vw,34px);background:rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sp-icon svg{width:clamp(14px,2.2vw,18px);height:clamp(14px,2.2vw,18px)}
+.sp-brand-title{font-size:clamp(12px,1.8vw,14px);font-weight:700;color:white}
+.sp-brand-sub{font-size:clamp(9px,1.3vw,11px);color:rgba(255,255,255,.5)}
+.sp-header-right{display:flex;align-items:center;gap:10px}
+.sp-usuario{font-size:clamp(11px,1.6vw,13px);color:white;font-weight:600}
+.sp-usuario span{color:rgba(255,255,255,.6);font-weight:400}
+.btn-sair{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:white;padding:clamp(5px,1vw,7px) clamp(10px,1.5vw,14px);border-radius:6px;font-size:clamp(11px,1.5vw,12px);font-weight:600;cursor:pointer;letter-spacing:.04em;transition:background .15s}
+.btn-sair:hover{background:rgba(231,76,60,.7)}
 
-/* ── TELA LOGIN ────────────────────────────────────────── */
-#tela-login {
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 24px;
-  background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(37,99,235,.12) 0%, transparent 70%),
-    var(--bg);
-}
+.sp-main{padding:clamp(16px,3vw,28px) clamp(16px,4vw,40px);max-width:1100px;margin:0 auto}
 
-.login-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 40px 36px;
-  width: 100%; max-width: 380px;
-  box-shadow: 0 24px 60px rgba(0,0,0,.5);
-}
+.sp-topo{display:flex;align-items:center;justify-content:center;position:relative;border-bottom:3px solid var(--yellow);padding-bottom:clamp(10px,2vw,16px);margin-bottom:clamp(16px,3vw,24px)}
+.sp-topo-logo{position:absolute;left:0;display:flex;align-items:center;gap:8px}
+.sp-topo-logo svg{width:clamp(20px,3.5vw,28px);height:auto}
+.sp-topo-logo-label{font-size:clamp(9px,1.2vw,11px);font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.sp-topo h1{font-size:clamp(14px,2.5vw,20px);font-weight:800;letter-spacing:.08em;color:var(--primary);text-transform:uppercase}
 
-.login-logo {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  margin-bottom: 32px;
-}
-.login-shield {
-  width: 52px; height: 52px;
-  background: var(--blue-bg);
-  border: 1px solid rgba(96,165,250,.2);
-  border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-}
-.login-shield svg { width: 26px; height: 26px; stroke: var(--blue); }
-.login-marca { font-size: 10px; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; }
-.login-titulo { font-size: 18px; font-weight: 700; color: var(--text); margin-top: 2px; }
-.login-sub { font-size: 12px; color: var(--muted); }
+.form-card{background:var(--white);border-radius:var(--radius);box-shadow:0 4px 16px rgba(44,62,80,.07);padding:clamp(16px,3vw,28px)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,2vw,16px) clamp(12px,2vw,20px)}
+.span-2{grid-column:span 2}.span-3{grid-column:span 3}
+.form-divider{grid-column:span 3;border:none;border-top:1px solid var(--border)}
+.campo{display:flex;flex-direction:column;gap:5px}
+.campo label{font-size:clamp(9px,1.2vw,11px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.campo input,.campo select{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:clamp(8px,1.2vw,10px) 12px;font-size:clamp(12px,1.6vw,14px);color:var(--text);background:#f8fafc;outline:none;transition:border-color .15s,background .15s}
+.campo input:focus,.campo select:focus{border-color:var(--primary);background:white}
+.campo input::placeholder{color:#b0bec5}
+#cpf{background:var(--green-bg)!important;border-color:var(--green-brd)!important;color:var(--green)!important;font-weight:700}
+#cpf:focus{border-color:var(--green)!important}
 
-.login-card input[type=text],
-.login-card input[type=password] {
-  width: 100%;
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  border-radius: var(--r-sm);
-  color: var(--text);
-  padding: 11px 14px;
-  font-size: 14px;
-  margin-bottom: 12px;
-  transition: border-color .15s;
-  outline: none;
-}
-.login-card input:focus { border-color: var(--blue); }
-.login-card input::placeholder { color: var(--sub); }
+.botoes{display:flex;gap:clamp(6px,1.2vw,10px);flex-wrap:wrap;justify-content:flex-end;margin-top:clamp(14px,2.5vw,22px)}
+.btn{padding:clamp(8px,1.3vw,10px) clamp(12px,2vw,20px);border:none;border-radius:var(--radius);font-size:clamp(11px,1.5vw,13px);font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .15s,transform .1s;text-transform:uppercase;white-space:nowrap}
+.btn:hover{opacity:.85;transform:translateY(-1px)}.btn:active{transform:translateY(0)}
+.btn-limpar{background:#ecf0f1;color:var(--muted)}
+.btn-relatorio{background:var(--primary2);color:white}
+.btn-localizar{background:#d5e8f7;color:#1a5276;border:1px solid #aed6f1}
+.btn-salvar{background:var(--green);color:white}
 
-.btn-entrar {
-  width: 100%; padding: 12px;
-  background: var(--blue);
-  color: #fff; border: none;
-  border-radius: var(--r-sm);
-  font-size: 14px; font-weight: 700;
-  letter-spacing: .05em; cursor: pointer;
-  transition: opacity .15s, transform .1s;
-  margin-top: 4px;
-}
-.btn-entrar:hover { opacity: .9; transform: translateY(-1px); }
-.btn-entrar:active { transform: translateY(0); }
+/* MODAL */
+#modal-busca{display:none;position:fixed;inset:0;z-index:200;background:rgba(44,62,80,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:clamp(12px,3vw,20px)}
+#modal-busca.aberto{display:flex}
+.modal-content{background:var(--white);border-radius:12px;padding:clamp(16px,3vw,28px);width:100%;max-width:1100px;max-height:92vh;display:flex;flex-direction:column;gap:clamp(12px,2vw,18px);box-shadow:0 24px 60px rgba(0,0,0,.2);overflow:hidden}
+.modal-top{display:flex;align-items:center;justify-content:space-between}
+.modal-top h2{font-size:clamp(14px,2vw,17px);color:var(--primary);font-weight:700}
+.btn-fechar{background:#fdecea;border:1px solid #f5b7b1;color:var(--red);padding:clamp(5px,1vw,7px) clamp(10px,1.5vw,16px);border-radius:var(--radius);font-size:clamp(11px,1.5vw,12px);font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn-fechar:hover{opacity:.8}
+.filtro-grid{display:flex;gap:clamp(8px,1.5vw,12px);flex-wrap:wrap;align-items:flex-end}
+.filtro-item{display:flex;flex-direction:column;gap:4px}
+.filtro-item label{font-size:clamp(9px,1.2vw,10px);font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.filtro-item input{border:1px solid var(--border);border-radius:var(--radius);padding:clamp(7px,1.2vw,9px) 12px;font-size:clamp(12px,1.6vw,13px);color:var(--text);background:#f8fafc;outline:none;transition:border-color .15s}
+.filtro-item input:focus{border-color:var(--primary)}
+.btn-filtro-container{display:flex;gap:8px}
+.btn-reset-busca{background:#ecf0f1;color:var(--muted);border:none;border-radius:var(--radius);padding:clamp(7px,1.2vw,9px) 14px;font-size:clamp(11px,1.5vw,12px);font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn-reset-busca:hover{opacity:.8}
+.tabela-container{overflow:auto;flex:1;border-radius:var(--radius);border:1px solid var(--border)}
+#tabela-resultados{width:100%;border-collapse:collapse;min-width:800px}
+#tabela-resultados thead th{background:#f8f9fa;color:var(--muted);padding:clamp(8px,1.2vw,11px) 12px;text-align:left;font-size:clamp(9px,1.2vw,11px);text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid var(--border);position:sticky;top:0}
+#tabela-resultados tbody td{padding:clamp(8px,1.2vw,10px) 12px;font-size:clamp(11px,1.4vw,13px);color:var(--text);border-bottom:1px solid #f0f0f0}
+#tabela-resultados tbody tr:last-child td{border-bottom:none}
+#tabela-resultados tbody tr:hover td{background:#f9fbfc}
+.btn-exportar{align-self:flex-start;background:#fef9e7;border:1px solid #f9e79f;color:#7d6608;padding:clamp(7px,1.2vw,9px) clamp(12px,2vw,18px);border-radius:var(--radius);font-size:clamp(11px,1.5vw,12px);font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn-exportar:hover{opacity:.8}
 
-.login-voltar {
-  display: flex; align-items: center; justify-content: center; gap: 7px;
-  margin-top: 24px; padding-top: 20px;
-  border-top: 1px solid var(--border);
-  color: var(--muted); font-size: 12px; font-weight: 600;
-  text-decoration: none; letter-spacing: .05em;
-  transition: color .15s;
-}
-.login-voltar:hover { color: var(--text2); }
-.login-voltar svg { width: 14px; height: 14px; }
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
 
-/* ── SISTEMA PRINCIPAL ─────────────────────────────────── */
-#sistema-principal { display: none; }
-
-/* Header */
-.sp-header {
-  position: sticky; top: 0; z-index: 50;
-  background: rgba(24,24,27,.9);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-  height: 54px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 24px;
-}
-.sp-header-left { display: flex; align-items: center; gap: 12px; }
-.sp-brand-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: var(--blue-bg);
-  border: 1px solid rgba(96,165,250,.15);
-  display: flex; align-items: center; justify-content: center;
-}
-.sp-brand-icon svg { width: 16px; height: 16px; stroke: var(--blue); }
-.sp-brand-title { font-size: 13px; font-weight: 700; }
-.sp-brand-sub   { font-size: 10px; color: var(--muted); }
-
-.sp-header-right { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text3); }
-.sp-usuario { color: var(--text2); font-weight: 600; }
-.btn-sair-header {
-  background: var(--border); border: none; color: var(--text3);
-  padding: 6px 12px; border-radius: 6px; cursor: pointer;
-  font-size: 12px; transition: background .15s, color .15s;
-}
-.btn-sair-header:hover { background: var(--red-bg); color: var(--red); }
-
-/* Main area */
-.sp-main { max-width: 1100px; margin: 0 auto; padding: 28px 24px; }
-
-/* Logotipo + título */
-.sp-topo {
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-  border-bottom: 2px solid var(--yellow);
-  padding-bottom: 18px;
-  margin-bottom: 28px;
-  min-height: 70px;
-}
-.sp-topo img {
-  position: absolute; left: 0; top: 50%;
-  transform: translateY(-55%);
-  height: 64px; width: auto;
-  filter: brightness(.9);
-}
-.sp-topo h1 {
-  font-size: 20px; font-weight: 800;
-  letter-spacing: .08em;
-  color: var(--text);
-  text-transform: uppercase;
-}
-
-/* Card do formulário */
-.form-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-}
-
-/* Grid de campos */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px 20px;
-}
-.campo { display: flex; flex-direction: column; gap: 6px; }
-.campo label {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: .1em; text-transform: uppercase;
-  color: var(--muted);
-}
-.campo input,
-.campo select {
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  border-radius: var(--r-sm);
-  color: var(--text);
-  padding: 10px 13px;
-  font-size: 13px;
-  transition: border-color .15s, box-shadow .15s;
-  outline: none;
-  width: 100%;
-}
-.campo input:focus,
-.campo select:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(96,165,250,.1);
-}
-.campo input::placeholder { color: var(--sub); }
-.campo select option { background: var(--surface2); color: var(--text); }
-
-/* CPF destaque */
-#cpf {
-  background: var(--green-bg) !important;
-  border-color: var(--green-brd) !important;
-  color: var(--green) !important;
-  font-weight: 700;
-}
-#cpf:focus {
-  border-color: var(--green) !important;
-  box-shadow: 0 0 0 3px rgba(74,222,128,.1) !important;
-}
-
-/* span col */
-.span-2 { grid-column: span 2; }
-.span-3 { grid-column: span 3; }
-
-/* Divider */
-.form-divider {
-  grid-column: span 3;
-  border: none; border-top: 1px solid var(--border);
-  margin: 4px 0;
-}
-
-/* Botões */
-.botoes {
-  display: flex; gap: 10px; flex-wrap: wrap;
-  margin-top: 24px; justify-content: flex-end;
-}
-
-.btn {
-  padding: 10px 20px; border: none; border-radius: var(--r-sm);
-  font-size: 12px; font-weight: 700; letter-spacing: .06em;
-  cursor: pointer; transition: opacity .15s, transform .1s;
-  text-transform: uppercase;
-}
-.btn:hover { opacity: .85; transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
-
-.btn-limpar    { background: var(--border2); color: var(--text3); }
-.btn-relatorio { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); }
-.btn-localizar { background: var(--blue-bg); border: 1px solid rgba(96,165,250,.3); color: var(--blue); }
-.btn-salvar    { background: var(--green); color: #000; }
-
-/* ── MODAL BUSCA ───────────────────────────────────────── */
-#modal-busca {
-  display: none;
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,.7);
-  backdrop-filter: blur(4px);
-  align-items: center; justify-content: center;
-  padding: 20px;
-}
-#modal-busca.aberto { display: flex; }
-
-.modal-content {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 28px;
-  width: 100%; max-width: 1100px;
-  max-height: 90vh;
-  display: flex; flex-direction: column; gap: 20px;
-  box-shadow: 0 32px 80px rgba(0,0,0,.6);
-}
-.modal-content h2 { font-size: 16px; color: var(--text); font-weight: 700; }
-
-.btn-fechar {
-  align-self: flex-end;
-  background: var(--red-bg); border: 1px solid rgba(248,113,113,.2);
-  color: var(--red); padding: 7px 16px; border-radius: var(--r-sm);
-  font-size: 12px; font-weight: 700; cursor: pointer;
-  transition: opacity .15s;
-}
-.btn-fechar:hover { opacity: .8; }
-
-.filtro-grid {
-  display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
-}
-.filtro-item { display: flex; flex-direction: column; gap: 5px; }
-.filtro-item label { font-size: 10px; font-weight: 700; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
-.filtro-item input {
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--r-sm); color: var(--text);
-  padding: 9px 12px; font-size: 13px; outline: none;
-  transition: border-color .15s;
-}
-.filtro-item input:focus { border-color: var(--blue); }
-
-.btn-filtro-container { display: flex; gap: 8px; }
-.btn-reset-busca {
-  background: var(--border2); color: var(--text3);
-  border: none; border-radius: var(--r-sm);
-  padding: 9px 14px; font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: opacity .15s;
-}
-.btn-reset-busca:hover { opacity: .8; }
-
-/* Tabela resultados */
-.tabela-container { overflow: auto; flex: 1; border-radius: var(--r-sm); border: 1px solid var(--border); }
-
-#tabela-resultados { width: 100%; border-collapse: collapse; min-width: 900px; }
-#tabela-resultados thead th {
-  background: var(--surface2); color: var(--muted);
-  padding: 10px 12px; text-align: left;
-  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0;
-}
-#tabela-resultados tbody td {
-  padding: 9px 12px; font-size: 12px; color: var(--text2);
-  border-bottom: 1px solid rgba(39,39,42,.5);
-}
-#tabela-resultados tbody tr:last-child td { border-bottom: none; }
-#tabela-resultados tbody tr:hover td { background: rgba(39,39,42,.4); }
-
-.btn-exportar {
-  align-self: flex-start;
-  background: var(--yellow-bg); border: 1px solid var(--yellow-brd);
-  color: var(--yellow); padding: 9px 18px;
-  border-radius: var(--r-sm); font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: opacity .15s;
-}
-.btn-exportar:hover { opacity: .8; }
-
-/* ── SCROLLBAR ─────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-/* ── RESPONSIVO ────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .form-grid { grid-template-columns: 1fr 1fr; }
-  .span-3 { grid-column: span 2; }
-  .form-divider { grid-column: span 2; }
-  .sp-main { padding: 16px; }
-  .sp-topo img { display: none; }
-}
-@media (max-width: 480px) {
-  .form-grid { grid-template-columns: 1fr; }
-  .span-2, .span-3 { grid-column: span 1; }
-  .form-divider { grid-column: span 1; }
-  .botoes { justify-content: stretch; }
-  .btn { flex: 1; text-align: center; }
-}
+@media(max-width:900px){.form-grid{grid-template-columns:1fr 1fr}.span-2,.span-3{grid-column:span 2}.form-divider{grid-column:span 2}.sp-topo-logo-label{display:none}}
+@media(max-width:560px){.form-grid{grid-template-columns:1fr}.span-2,.span-3{grid-column:span 1}.form-divider{grid-column:span 1}.sp-brand-sub{display:none}.botoes{justify-content:stretch}.btn{flex:1;text-align:center}.sp-topo-logo{display:none}.sp-topo h1{font-size:13px}}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════ TELA LOGIN ═══════════════════════ -->
 <div id="tela-login">
   <div class="login-card">
-    <div class="login-logo">
-      <div class="login-shield">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+    <div class="login-top">
+      <div class="renault-wrap">
+        <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,4 96,28 96,92 50,116 4,92 4,28" stroke="white" stroke-width="6" fill="none"/>
+          <polygon points="50,18 82,35 82,85 50,102 18,85 18,35" stroke="white" stroke-width="5" fill="none"/>
+          <polygon points="50,34 66,43 66,77 50,86 34,77 34,43" stroke="white" stroke-width="4" fill="none"/>
         </svg>
       </div>
       <span class="login-marca">Segurança Patrimonial D2P-Brazil</span>
       <span class="login-titulo">Acesso Restrito</span>
       <span class="login-sub">Portaria 04</span>
     </div>
-
-    <input type="text"     id="user-login" placeholder="Usuário"    autocomplete="off">
+    <input type="text"     id="user-login" placeholder="Usuário"  autocomplete="off">
     <input type="password" id="user-pass"  placeholder="Senha">
     <button class="btn-entrar" onclick="fazerLogin('p04')">ENTRAR</button>
-
     <a href="../index.html" class="login-voltar">
-      <svg fill="currentColor" viewBox="0 0 16 16">
-        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
-      </svg>
+      <svg viewBox="0 0 16 16"><path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/></svg>
       VOLTAR AO MENU PRINCIPAL
     </a>
   </div>
 </div>
 
-<!-- ═══════════════════ SISTEMA PRINCIPAL ════════════════ -->
 <div id="sistema-principal" style="display:none">
-
-  <!-- Header -->
   <header class="sp-header">
     <div class="sp-header-left">
-      <div class="sp-brand-icon">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+      <div class="sp-icon">
+        <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,4 96,28 96,92 50,116 4,92 4,28" stroke="white" stroke-width="8" fill="none"/>
+          <polygon points="50,22 78,37 78,83 50,98 22,83 22,37" stroke="white" stroke-width="7" fill="none"/>
+          <polygon points="50,40 64,48 64,72 50,80 36,72 36,48" stroke="white" stroke-width="6" fill="none"/>
         </svg>
       </div>
       <div>
@@ -408,28 +150,26 @@ body {
       </div>
     </div>
     <div class="sp-header-right">
-      <!-- header-usuario mantido para auth.js -->
-      <div class="header-usuario" style="display:flex;align-items:center;gap:8px">
-        Operador: <span class="sp-usuario" id="nome-logado"></span>
-      </div>
-      <button class="btn-sair-header" onclick="location.reload()">Sair</button>
+      <div class="header-usuario sp-usuario"><span>Operador: </span><b id="nome-logado"></b></div>
+      <button class="btn-sair" onclick="location.reload()">SAIR</button>
     </div>
   </header>
 
-  <!-- Main -->
   <div class="sp-main">
-
-    <!-- Topo com logo -->
     <div class="sp-topo">
-      <img src="../img/logo_horse.png" alt="Logo">
+      <div class="sp-topo-logo">
+        <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,4 96,28 96,92 50,116 4,92 4,28" stroke="#2c3e50" stroke-width="7" fill="none"/>
+          <polygon points="50,20 80,36 80,84 50,100 20,84 20,36" stroke="#2c3e50" stroke-width="6" fill="none"/>
+          <polygon points="50,36 66,45 66,75 50,84 34,75 34,45" stroke="#2c3e50" stroke-width="5" fill="none"/>
+        </svg>
+        <span class="sp-topo-logo-label">D2P Security</span>
+      </div>
       <h1>Controle de Acesso — P04</h1>
     </div>
 
-    <!-- Formulário -->
     <div class="form-card">
       <div class="form-grid">
-
-        <!-- Linha 1: CPF + Nome -->
         <div class="campo">
           <label>CPF</label>
           <input type="text" id="cpf" placeholder="000.000.000-00" autocomplete="off">
@@ -438,153 +178,93 @@ body {
           <label>Nome Completo</label>
           <input type="text" id="nome" placeholder="Nome do visitante / colaborador">
         </div>
-
         <hr class="form-divider">
-
-        <!-- Linha 2: Empresa + Responsável + Liberado -->
-        <div class="campo">
-          <label>Empresa</label>
-          <input type="text" id="empresa" placeholder="Empresa">
-        </div>
-        <div class="campo">
-          <label>Responsável</label>
-          <input type="text" id="responsavel" placeholder="Responsável interno">
-        </div>
+        <div class="campo"><label>Empresa</label><input type="text" id="empresa" placeholder="Empresa"></div>
+        <div class="campo"><label>Responsável</label><input type="text" id="responsavel" placeholder="Responsável interno"></div>
         <div class="campo">
           <label>Liberado Por</label>
           <select id="liberado">
             <option value="">Selecione</option>
-            <option value="ACESSOS">ACESSOS</option>
-            <option value="IDENTIFICAÇÃO">IDENTIFICAÇÃO</option>
-            <option value="INSPETOR DE VIGILANCIA">INSPETOR DE VIGILANCIA</option>
-            <option value="CENTRAL DE SEGURANÇA">CENTRAL DE SEGURANÇA</option>
-            <option value="SEGURANÇA PATRIMONIAL">SEGURANÇA PATRIMONIAL</option>
-            <option value="E-MAIL">E-MAIL</option>
-            <option value="GDV">GDV</option>
-            <option value="OUTROS">OUTROS</option>
+            <option>ACESSOS</option><option>IDENTIFICAÇÃO</option>
+            <option>INSPETOR DE VIGILANCIA</option><option>CENTRAL DE SEGURANÇA</option>
+            <option>SEGURANÇA PATRIMONIAL</option><option>E-MAIL</option>
+            <option>GDV</option><option>OUTROS</option>
           </select>
         </div>
-
-        <!-- Linha 3: Motivo + Vigilante + Crachá + Acesso -->
         <div class="campo span-2">
           <label>Motivo do Acesso</label>
           <select id="motivo">
             <option value="">Selecione</option>
-            <option value="VISITA">VISITA</option>
-            <option value="TRABALHO">TRABALHO</option>
-            <option value="ENTREGA">ENTREGA</option>
-            <option value="OUTROS">OUTROS</option>
-            <option value="Esqueceu crachá">Esqueceu crachá</option>
-            <option value="Perdeu crachá">Perdeu crachá</option>
-            <option value="Crachá não passa">Crachá não passa</option>
-            <option value="Crachá vencido">Crachá vencido</option>
-            <option value="Pendência SG3">Pendência SG3</option>
-            <option value="Não acessou">Não acessou</option>
-            <option value="Transbordo">Transbordo</option>
-            <option value="Visita técnica">Visita técnica</option>
-            <option value="Visita a Fábrica">Visita a Fábrica</option>
-            <option value="Perícia Trabalhista">Perícia Trabalhista</option>
-            <option value="Primeiro dia de trabalho">Primeiro dia de trabalho</option>
-            <option value="Ambulatório">Ambulatório</option>
+            <option>VISITA</option><option>TRABALHO</option><option>ENTREGA</option><option>OUTROS</option>
+            <option>Esqueceu crachá</option><option>Perdeu crachá</option><option>Crachá não passa</option>
+            <option>Crachá vencido</option><option>Pendência SG3</option><option>Não acessou</option>
+            <option>Transbordo</option><option>Visita técnica</option><option>Visita a Fábrica</option>
+            <option>Perícia Trabalhista</option><option>Primeiro dia de trabalho</option><option>Ambulatório</option>
           </select>
         </div>
         <div class="campo">
           <label>Tipo de Acesso</label>
           <select id="tipo">
             <option value="">Selecione</option>
-            <option value="ENTRADA">ENTRADA</option>
-            <option value="SAÍDA">SAÍDA</option>
+            <option>ENTRADA</option><option>SAÍDA</option>
           </select>
         </div>
-
-        <!-- Linha 4: Vigilante + Crachá -->
-        <div class="campo">
-          <label>Vigilante</label>
-          <input type="text" id="vigilante" placeholder="Nome do vigilante">
-        </div>
-        <div class="campo">
-          <label>Nº Crachá</label>
-          <input type="text" id="cracha" placeholder="Número">
-        </div>
-
+        <div class="campo"><label>Vigilante</label><input type="text" id="vigilante" placeholder="Nome do vigilante"></div>
+        <div class="campo"><label>Nº Crachá</label><input type="text" id="cracha" placeholder="Número"></div>
         <hr class="form-divider">
-
-        <!-- Obs -->
         <div class="campo span-3">
           <label>Observação</label>
           <input type="text" id="obs" maxlength="200" placeholder="Descreva detalhes importantes deste acesso...">
         </div>
-
-      </div><!-- /form-grid -->
-
-      <!-- Botões -->
+      </div>
       <div class="botoes">
         <button class="btn btn-limpar"    onclick="limpar()">Limpar</button>
         <button class="btn btn-relatorio" onclick="abrirBusca()">Relatório / Busca</button>
         <button class="btn btn-localizar" onclick="localizar()">Localizar CPF</button>
         <button class="btn btn-salvar"    onclick="salvar()">✓ Salvar Acesso</button>
       </div>
+    </div>
+  </div>
+</div>
 
-    </div><!-- /form-card -->
-  </div><!-- /sp-main -->
-</div><!-- /sistema-principal -->
-
-<!-- ═══════════════════ MODAL BUSCA ══════════════════════ -->
 <div id="modal-busca">
   <div class="modal-content">
-    <button class="btn-fechar" onclick="fecharBusca()">✕ Fechar</button>
-    <h2>Busca e Relatório Completo</h2>
-
+    <div class="modal-top">
+      <h2>Busca e Relatório Completo</h2>
+      <button class="btn-fechar" onclick="fecharBusca()">✕ Fechar</button>
+    </div>
     <div class="filtro-grid">
-      <div class="filtro-item">
-        <label>Data Inicial</label>
-        <input type="date" id="filtro-inicio">
-      </div>
-      <div class="filtro-item">
-        <label>Data Final</label>
-        <input type="date" id="filtro-fim">
-      </div>
-      <div class="filtro-item">
-        <label>Nome / CPF</label>
-        <input type="text" id="filtro-nome" placeholder="Buscar...">
-      </div>
+      <div class="filtro-item"><label>Data Inicial</label><input type="date" id="filtro-inicio"></div>
+      <div class="filtro-item"><label>Data Final</label><input type="date" id="filtro-fim"></div>
+      <div class="filtro-item"><label>Nome / CPF</label><input type="text" id="filtro-nome" placeholder="Buscar..."></div>
       <div class="btn-filtro-container">
-        <button class="btn btn-relatorio" style="height:41px" onclick="buscarRelatorio()">Filtrar</button>
-        <button class="btn-reset-busca"   style="height:41px" onclick="limparFiltrosBusca()">Limpar</button>
+        <button class="btn btn-relatorio" onclick="buscarRelatorio()">Filtrar</button>
+        <button class="btn-reset-busca"   onclick="limparFiltrosBusca()">Limpar</button>
       </div>
     </div>
-
     <div class="tabela-container">
       <table id="tabela-resultados">
-        <thead>
-          <tr>
-            <th>Data</th><th>Hora</th><th>CPF</th><th>Nome</th>
-            <th>Empresa</th><th>Responsável</th><th>Liberado Por</th>
-            <th>Motivo</th><th>Vigilante</th><th>Crachá</th>
-            <th>Acesso</th><th>Obs</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>Data</th><th>Hora</th><th>CPF</th><th>Nome</th>
+          <th>Empresa</th><th>Responsável</th><th>Liberado Por</th>
+          <th>Motivo</th><th>Vigilante</th><th>Crachá</th><th>Acesso</th><th>Obs</th>
+        </tr></thead>
         <tbody></tbody>
       </table>
     </div>
-
     <button class="btn-exportar" onclick="exportarExcel()">↓ Gerar Excel (.CSV)</button>
   </div>
 </div>
 
-<!-- ═══════════════════ SCRIPTS (ordem original) ═════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../conexao/config.js"></script>
 <script src="../conexao/db.js"></script>
 <script src="../js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="../js/ui.js"></script>
-
-<!-- Abre modal com flex ao invés de block -->
 <script>
   function abrirBusca()  { document.getElementById('modal-busca').classList.add('aberto'); }
   function fecharBusca() { document.getElementById('modal-busca').classList.remove('aberto'); }
 </script>
-
 </body>
 </html>
