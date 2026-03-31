@@ -57,3 +57,21 @@ async function dbDeletar(tabela, filtros) {
         return { ok: false };
     }
 }
+
+// --- ATUALIZAR ---
+// Exemplo: dbAtualizar('usuarios', { id: 5 }, { senha: 'nova123' })
+async function dbAtualizar(tabela, filtros, dados) {
+    try {
+        const res = await fetch(`${N8N_URL}/db-atualizar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tabela, filtros, dados })
+        });
+        const result = await res.json();
+        return result;
+    } catch (err) {
+        console.error(`[dbAtualizar] Erro na tabela '${tabela}':`, err);
+        alert("Erro de conexão ao atualizar dados.");
+        return { ok: false };
+    }
+}
