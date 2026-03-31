@@ -59,14 +59,6 @@
   .header-title { font-size: 13px; font-weight: 700; letter-spacing: .03em; }
   .header-sub   { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
-  .badge-demo {
-    font-size: 11px; font-weight: 600;
-    border: 1px solid rgba(202,138,4,.4);
-    color: #eab308;
-    background: rgba(234,179,8,.08);
-    padding: 2px 10px; border-radius: 20px;
-  }
-
   #relogio { font-size: 12px; font-family: monospace; font-weight: 700; color: var(--text2); }
   #data-hoje { font-size: 10px; color: var(--sub); text-align: right; text-transform: capitalize; }
 
@@ -81,7 +73,6 @@
   .btn-icon.girando svg { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Botão Home */
   .btn-home {
     display: flex; align-items: center; gap: 6px;
     background: var(--border); color: var(--text2);
@@ -97,7 +88,7 @@
   /* ── MAIN ── */
   main { max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-direction: column; gap: 24px; }
 
-  /* ── CARDS MÉTRICAS ── */
+  /* ── CARDS ── */
   .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
   .card {
@@ -107,10 +98,7 @@
     padding: 20px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .card-label {
-    font-size: 10px; text-transform: uppercase;
-    letter-spacing: .12em; color: var(--muted); margin-bottom: 6px;
-  }
+  .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 6px; }
   .card-value { font-size: 34px; font-weight: 700; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
   .card-icon {
     width: 44px; height: 44px; border-radius: 12px;
@@ -118,12 +106,12 @@
     position: relative; flex-shrink: 0;
   }
   .card-icon svg { width: 20px; height: 20px; }
-  .card-icon.blue   { background: var(--blue-bg); }
-  .card-icon.blue   svg { stroke: var(--blue); }
-  .card-icon.green  { background: var(--green-bg); }
-  .card-icon.green  svg { stroke: var(--green); }
-  .card-icon.amber  { background: var(--amber-bg); }
-  .card-icon.amber  svg { stroke: var(--amber); }
+  .card-icon.blue  { background: var(--blue-bg); }
+  .card-icon.blue  svg { stroke: var(--blue); }
+  .card-icon.green { background: var(--green-bg); }
+  .card-icon.green svg { stroke: var(--green); }
+  .card-icon.amber { background: var(--amber-bg); }
+  .card-icon.amber svg { stroke: var(--amber); }
   .pulse-dot {
     position: absolute; top: 4px; right: 4px;
     width: 8px; height: 8px; border-radius: 50%;
@@ -135,7 +123,7 @@
   /* ── PAINEL DUPLO ── */
   .painel-duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-  /* ── CAIXA GENÉRICA ── */
+  /* ── CAIXA ── */
   .caixa {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -161,7 +149,7 @@
 
   .scroll-area { overflow-y: auto; max-height: 260px; }
 
-  /* ── LISTA EVENTOS ── */
+  /* ── EVENTOS ── */
   .item-evento {
     display: flex; align-items: center; gap: 12px;
     padding: 10px 14px;
@@ -185,7 +173,7 @@
   .ev-sub  { font-size: 11px; color: var(--muted); margin-top: 1px; }
   .ev-hora { margin-left: auto; font-size: 11px; font-family: monospace; color: var(--text3); flex-shrink: 0; }
 
-  /* ── LISTA PRESENTES ── */
+  /* ── PRESENTES ── */
   .item-presente {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 14px;
@@ -201,14 +189,14 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 11px; font-weight: 700; color: var(--blue); flex-shrink: 0;
   }
-  .pr-nome  { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-  .pr-sub   { font-size: 11px; color: var(--muted); margin-top: 1px; }
-  .pr-hora  { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text3); flex-shrink: 0; }
+  .pr-nome { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+  .pr-sub  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .pr-hora { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text3); flex-shrink: 0; }
   .pr-hora svg { width: 11px; height: 11px; }
 
-  /* ── HISTÓRICO (tabela) ── */
+  /* ── HISTÓRICO ── */
   .hist-scroll { overflow-x: auto; max-height: 300px; overflow-y: auto; }
-  table.hist { width: 100%; border-collapse: collapse; min-width: 700px; }
+  table.hist { width: 100%; border-collapse: collapse; min-width: 900px; }
   table.hist th {
     position: sticky; top: 0;
     background: var(--surface); color: var(--muted);
@@ -221,7 +209,7 @@
   table.hist tr:hover td { background: rgba(39,39,42,.4); }
 
   .badge-ent { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:var(--green-bg); color:var(--green); }
-  .badge-sai { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:var(--red-bg);   color:var(--red);   }
+  .badge-sai { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:var(--red-bg); color:var(--red); }
 
   /* ── ESTADOS ── */
   .estado { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; }
@@ -258,13 +246,10 @@
   </div>
 
   <div class="header-right">
-    <span class="badge-demo" id="badge-demo" style="display:none">Demo</span>
     <div style="text-align:right">
       <div id="relogio">--:--:--</div>
       <div id="data-hoje"></div>
     </div>
-
-    <!-- Botão Refresh -->
     <button class="btn-icon" id="btn-refresh" title="Atualizar dados" onclick="carregarTudo()">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
@@ -273,8 +258,6 @@
         <path d="M8 16H3v5"/>
       </svg>
     </button>
-
-    <!-- Botão Home -->
     <a href="../administrador/gestao.html" class="btn-home" title="Voltar à Gestão">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -288,7 +271,7 @@
 <!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
 <main>
 
-  <!-- ── CARDS ── -->
+  <!-- CARDS -->
   <div class="cards">
     <div class="card">
       <div>
@@ -329,10 +312,9 @@
     </div>
   </div>
 
-  <!-- ── PAINEL DUPLO: Últimos Acessos + No Local ── -->
+  <!-- PAINEL DUPLO -->
   <div class="painel-duplo">
 
-    <!-- Últimos Acessos -->
     <div class="caixa">
       <div class="caixa-header">
         <h3>
@@ -351,7 +333,6 @@
       </div>
     </div>
 
-    <!-- No Local -->
     <div class="caixa">
       <div class="caixa-header">
         <h3>
@@ -373,7 +354,7 @@
 
   </div>
 
-  <!-- ── HISTÓRICO ── -->
+  <!-- HISTÓRICO -->
   <div class="caixa">
     <div class="caixa-header">
       <h3>
@@ -392,14 +373,16 @@
             <th>Hora</th>
             <th>Nome</th>
             <th>Empresa</th>
+            <th>Responsável</th>
             <th>Motivo</th>
             <th>Crachá</th>
             <th>Tipo</th>
+            <th>Liberado</th>
             <th>Vigilante</th>
           </tr>
         </thead>
         <tbody id="corpo-hist">
-          <tr><td colspan="8" class="estado">Carregando...</td></tr>
+          <tr><td colspan="10" class="estado">Carregando...</td></tr>
         </tbody>
       </table>
     </div>
@@ -454,8 +437,8 @@ async function carregarTudo() {
   btn.classList.add('girando');
 
   try {
-    // Busca todos os registros ordenados por data/hora desc
-    const todos = await dbBuscar('relatorio_p04', {}, { order: 'id.desc' });
+    // ← CORRIGIDO: tabela 'acessos' (era 'relatorio_p04')
+    const todos = await dbBuscar('acessos', {}, { order: 'id.desc' });
 
     if (!todos || !Array.isArray(todos)) {
       mostrarErro();
@@ -463,21 +446,19 @@ async function carregarTudo() {
     }
 
     const hoje = dataHoje();
-    const deHoje = todos.filter(r => r.Data === hoje);
+    // ← CORRIGIDO: campo 'data' minúsculo
+    const deHoje = todos.filter(r => r.data === hoje);
 
-    const entradas = deHoje.filter(r => (r.Acesso || '').toUpperCase() === 'ENTRADA');
-    const saidas   = deHoje.filter(r => (r.Acesso || '').toUpperCase() !== 'ENTRADA');
+    // ← CORRIGIDO: campo 'acesso' minúsculo
+    const entradas = deHoje.filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
+    const saidas   = deHoje.filter(r => (r.acesso || '').toUpperCase() !== 'ENTRADA');
 
-    // ── Métricas ──
-    document.getElementById('card-total').textContent   = deHoje.length;
+    document.getElementById('card-total').textContent    = deHoje.length;
     document.getElementById('card-entradas').textContent = entradas.length;
     document.getElementById('card-saidas').textContent   = saidas.length;
 
-    // ── Calcular quem está no local ──
-    // Pega todos os registros (não só hoje) para verificar entradas sem saída correspondente
     const presentes = calcularPresentes(todos);
 
-    // ── Renderizar listas ──
     renderEventos(deHoje.slice(0, 30));
     renderPresentes(presentes);
     renderHistorico(todos.slice(0, 50));
@@ -492,16 +473,13 @@ async function carregarTudo() {
 
 // ── Quem está no local ────────────────────────────────────
 function calcularPresentes(registros) {
-  // Para cada pessoa (CPF), verifica se o último registro é ENTRADA
   const mapa = {};
-  // Processa do mais antigo ao mais novo
   const ordenados = [...registros].reverse();
   ordenados.forEach(r => {
-    if (!r.CPF) return;
-    mapa[r.CPF] = r;
+    if (!r.cpf) return; // ← CORRIGIDO: campo 'cpf' minúsculo
+    mapa[r.cpf] = r;
   });
-  // Filtra só os que o último acesso foi ENTRADA
-  return Object.values(mapa).filter(r => (r.Acesso || '').toUpperCase() === 'ENTRADA');
+  return Object.values(mapa).filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
 }
 
 // ── Renderizar eventos ────────────────────────────────────
@@ -515,17 +493,17 @@ function renderEventos(lista) {
   }
 
   el.innerHTML = lista.map(r => {
-    const isEnt = (r.Acesso || '').toUpperCase() === 'ENTRADA';
+    const isEnt = (r.acesso || '').toUpperCase() === 'ENTRADA';
     const tipoClass = isEnt ? 'ent' : 'sai';
     const svg = isEnt ? svgEntrada() : svgSaida();
     return `
       <div class="item-evento">
         <div class="tipo-icon ${tipoClass}">${svg}</div>
         <div style="min-width:0;flex:1">
-          <div class="ev-nome" title="${r.Nome || ''}">${r.Nome || '—'}</div>
-          <div class="ev-sub">${r.Empresa || ''} ${r.Motivo ? '· ' + r.Motivo : ''}</div>
+          <div class="ev-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
+          <div class="ev-sub">${r.empresa || ''} ${r.motivo ? '· ' + r.motivo : ''}</div>
         </div>
-        <div class="ev-hora">${r.Hora || ''}</div>
+        <div class="ev-hora">${r.hora || ''}</div>
       </div>`;
   }).join('');
 }
@@ -543,14 +521,14 @@ function renderPresentes(lista) {
 
   el.innerHTML = lista.map(r => `
     <div class="item-presente">
-      <div class="avatar">${iniciais(r.Nome)}</div>
+      <div class="avatar">${iniciais(r.nome)}</div>
       <div style="min-width:0;flex:1">
-        <div class="pr-nome" title="${r.Nome || ''}">${r.Nome || '—'}</div>
-        <div class="pr-sub">${r.Empresa || ''} ${r.Crachá ? '· Crachá ' + r.Crachá : ''}</div>
+        <div class="pr-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
+        <div class="pr-sub">${r.empresa || ''} ${r.cracha ? '· Crachá ' + r.cracha : ''}</div>
       </div>
       <div class="pr-hora">
         ${svgClock()}
-        ${r.Hora || ''}
+        ${r.hora || ''}
       </div>
     </div>`).join('');
 }
@@ -561,25 +539,27 @@ function renderHistorico(lista) {
   document.getElementById('badge-hist').textContent = lista.length + ' registros';
 
   if (!lista.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="estado">Nenhum registro encontrado</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="estado">Nenhum registro encontrado</td></tr>';
     return;
   }
 
   tbody.innerHTML = lista.map(r => {
-    const isEnt = (r.Acesso || '').toUpperCase() === 'ENTRADA';
+    const isEnt = (r.acesso || '').toUpperCase() === 'ENTRADA';
     const badge = isEnt
       ? `<span class="badge-ent">↓ Entrada</span>`
       : `<span class="badge-sai">↑ Saída</span>`;
     return `
       <tr>
-        <td>${r.Data || '—'}</td>
-        <td style="font-family:monospace">${r.Hora || '—'}</td>
-        <td style="font-weight:500">${r.Nome || '—'}</td>
-        <td style="color:var(--text3)">${r.Empresa || '—'}</td>
-        <td style="color:var(--text3)">${r.Motivo || '—'}</td>
-        <td style="font-family:monospace;color:var(--text3)">${r.Cracha || r['Crachá'] || '—'}</td>
+        <td>${r.data || '—'}</td>
+        <td style="font-family:monospace">${r.hora || '—'}</td>
+        <td style="font-weight:500">${r.nome || '—'}</td>
+        <td style="color:var(--text3)">${r.empresa || '—'}</td>
+        <td style="color:var(--text3)">${r.responsavel || '—'}</td>
+        <td style="color:var(--text3)">${r.motivo || '—'}</td>
+        <td style="font-family:monospace;color:var(--text3)">${r.cracha || '—'}</td>
         <td>${badge}</td>
-        <td style="color:var(--text3)">${r.Vigilante || '—'}</td>
+        <td style="color:var(--text3)">${r.liberado || '—'}</td>
+        <td style="color:var(--text3)">${r.vigilante || '—'}</td>
       </tr>`;
   }).join('');
 }
@@ -588,13 +568,13 @@ function renderHistorico(lista) {
 function mostrarErro() {
   const msg = '<div class="estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Erro ao carregar dados</div>';
   ['lista-eventos','lista-presentes'].forEach(id => document.getElementById(id).innerHTML = msg);
-  document.getElementById('corpo-hist').innerHTML = '<tr><td colspan="8" class="estado">Erro ao carregar dados</td></tr>';
+  document.getElementById('corpo-hist').innerHTML = '<tr><td colspan="10" class="estado">Erro ao carregar dados</td></tr>';
 }
 
 // ── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   carregarTudo();
-  setInterval(carregarTudo, 30000); // auto-refresh a cada 30s
+  setInterval(carregarTudo, 30000);
 });
 
 </script>
