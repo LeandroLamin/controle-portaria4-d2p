@@ -106,18 +106,30 @@
     </div>
 
     <div id="modal-busca">
+<div id="modal-busca">
         <div class="modal-content">
             <button class="btn-fechar" onclick="fecharBusca()">X FECHAR</button>
-            <h2 style="color:var(--cor-primaria)">Busca e Relatório Completo</h2>
+            <h2 style="color:var(--cor-primaria); margin-top: 0;">Busca e Relatório Completo</h2>
+            
             <div class="filtro-grid">
-                <div class="filtro-item"><label>Data Inicial:</label><input type="date" id="filtro-inicio"></div>
-                <div class="filtro-item"><label>Data Final:</label><input type="date" id="filtro-fim"></div>
-                <div class="filtro-item"><label>Nome / CPF / BPU:</label><input type="text" id="filtro-nome"></div>
+                <div class="filtro-item">
+                    <label>DATA INICIAL:</label>
+                    <input type="date" id="filtro-inicio">
+                </div>
+                <div class="filtro-item">
+                    <label>DATA FINAL:</label>
+                    <input type="date" id="filtro-fim">
+                </div>
+                <div class="filtro-item">
+                    <label>NOME / CPF / BPU:</label>
+                    <input type="text" id="filtro-nome" placeholder="Digite para buscar...">
+                </div>
                 <div class="btn-filtro-container">
-                    <button class="btn-relatorio" style="height: 43px;" onclick="buscarRelatorio()">FILTRAR</button>
-                    <button class="btn-reset-busca" style="height: 43px;" onclick="limparFiltrosBusca()">LIMPAR</button>
+                    <button class="btn-relatorio" onclick="buscarRelatorio()">FILTRAR</button>
+                    <button class="btn-reset-busca" onclick="limparFiltrosBusca()">LIMPAR</button>
                 </div>
             </div>
+
             <div class="tabela-container">
                 <table id="tabela-resultados">
                     <thead>
