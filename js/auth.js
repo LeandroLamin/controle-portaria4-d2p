@@ -9,7 +9,6 @@ async function fazerLogin(portariaAtual) {
     }
 
     // --- PASSO 1: ENVIAR CREDENCIAIS AO SERVIDOR (n8n) ---
-    // Nenhuma senha fica exposta no frontend
     let resultado;
     try {
         const resposta = await fetch('https://n8n.laminlpp.com.br/webhook/login-portaria', {
@@ -34,8 +33,17 @@ async function fazerLogin(portariaAtual) {
         return;
     }
 
-    // --- PASSO 3: CHECAR NÍVEL DE ACESSO ---
-    if (resultado.nivel_acesso === 'administrador' || resultado.nivel_acesso === portariaAtual) {
+    // --- PASSO 3: CHECAR NÍVEL DE ACESSO E REDIRECIONAR ---
+    
+    // Se for administrador, redireciona para o dashboard global
+    if (resultado.nivel_acesso === 'administrador') {
+        localStorage.setItem('usuario_nome', 'administrador');
+        window.location.href = './admin/dashboard.html';
+        return;
+    }
+
+    // Se for o nível da portaria atual, abre o sistema na página
+    if (resultado.nivel_acesso === portariaAtual) {
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('sistema-principal').style.display = 'block';
         document.getElementById('nome-logado').innerText = resultado.nome_completo;
