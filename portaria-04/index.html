@@ -99,21 +99,21 @@
             </div>
             
             <div class="filtro-linha">
-                <div class="filtro-item" style="width: 250px;">
+                <div class="filtro-item" style="width: 200px;">
                     <label>DATA INICIAL *:</label>
                     <input type="date" id="filtro-inicio">
                 </div>
-                <div class="filtro-item" style="width: 250px;">
+                <div class="filtro-item" style="width: 200px;">
                     <label>DATA FINAL *:</label>
                     <input type="date" id="filtro-fim">
                 </div>
-                <div class="filtro-item" style="width: 350px;">
+                <div class="filtro-item" style="width: 400px;">
                     <label>NOME DO VISITANTE *:</label>
                     <input type="text" id="filtro-nome">
                 </div>
                 <div class="botoes-filtro-modal">
-                    <button class="btn-relatorio" onclick="buscarRelatorio()">FILTRAR</button>
-                    <button class="btn-limpar-filtro" onclick="limparFiltrosBusca()">LIMPAR</button>
+                    <button class="btn-relatorio-modal" onclick="buscarRelatorio()">FILTRAR</button>
+                    <button class="btn-limpar-modal" onclick="limparFiltrosBusca()">LIMPAR</button>
                 </div>
             </div>
 
@@ -130,7 +130,7 @@
             <button class="btn-exportar" onclick="exportarExcel()">GERAR EXCEL (.CSV)</button>
         </div>
     </div>
-    
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../conexao/config.js"></script>
 <script src="../conexao/db.js"></script>
