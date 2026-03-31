@@ -1,189 +1,102 @@
 /* ============================================================
-   SISTEMA D2P-BRAZIL - PORTARIA 04
-   VERSÃO: 6.0 (MODAL ALINHADO & RESPONSIVO)
+   ESTILO FINAL - PORTARIA 04 (CORES ORIGINAIS & RESPONSIVO)
    ============================================================ */
 
 :root {
-    --cor-fundo: #ffffff;
-    --cor-texto: #333333;
     --cor-primaria: #34495e;
     --cor-secundaria: #b0bec5;
-    --cor-destaque-amarelo: #f1c40f;
-    --cor-destaque-verde: #27ae60;
-    --cor-destaque-laranja: #f39c12;
-    --cor-fundo-login: #1a202c;
+    --cor-amarelo: #f1c40f;
+    --cor-verde: #27ae60;
+    --cor-laranja: #f39c12;
+    --cor-azul: #3498db;
+    --cor-cinza: #546e7a;
+    --fundo-dark: #1a202c;
 }
 
-/* 1. CONFIGURAÇÃO DO BODY */
 body { 
-    background-color: var(--cor-fundo-login); 
-    color: var(--cor-texto); 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    min-height: 100vh; 
-    margin: 0; 
+    background-color: var(--fundo-dark); 
+    margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
 }
 
-/* 2. TELA DE LOGIN RESPONSIVA */
+/* LOGIN */
 #tela-login { 
-    background: white; 
-    padding: 45px 35px; 
-    border-radius: 12px; 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
-    width: 90%;
-    max-width: 380px; 
-    text-align: center; 
-    border-top: 8px solid var(--cor-primaria); 
-    box-sizing: border-box;
+    background: white; padding: 45px 35px; border-radius: 12px; width: 90%; max-width: 380px; 
+    text-align: center; border-top: 8px solid var(--cor-primaria); box-sizing: border-box;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
 }
 
 .logo-subtexto { 
-    font-size: 14px; 
-    color: var(--cor-primaria); 
-    text-transform: uppercase; 
-    letter-spacing: 2px; 
-    font-weight: bold; 
-    margin-bottom: 5px; 
+    font-size: 14px; color: var(--cor-primaria); text-transform: uppercase; 
+    letter-spacing: 2px; font-weight: bold; margin-bottom: 5px; 
 }
 
-#tela-login h2 {
-    font-size: 24px;
-    color: var(--cor-primaria);
-    line-height: 1.2;
-    margin-top: 25px;
-    margin-bottom: 30px;
-    font-weight: 800;
-    text-transform: uppercase;
+#tela-login h2 { 
+    font-size: 24px; color: var(--cor-primaria); margin: 25px 0; font-weight: 800; line-height: 1.2; text-transform: uppercase;
 }
 
 #tela-login input { 
-    width: 100%; 
-    padding: 14px; 
-    margin-bottom: 18px; 
-    border: 1px solid var(--cor-secundaria); 
-    border-radius: 6px; 
-    box-sizing: border-box; 
-    font-size: 16px;
+    width: 100%; padding: 14px; margin-bottom: 18px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px;
 }
 
 #tela-login button { 
-    width: 100%; 
-    background: var(--cor-destaque-amarelo);
-    color: #1a202c; 
-    padding: 16px; 
-    border: none; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    font-weight: bold; 
-    text-transform: uppercase;
+    width: 100%; background: var(--cor-amarelo); color: #000; padding: 16px; border: none; border-radius: 6px; 
+    font-weight: bold; cursor: pointer; text-transform: uppercase; 
 }
 
-/* 3. LÓGICA DE TRANSIÇÃO (SISTEMA ABERTO) */
-#sistema-principal { display: none; }
-
-body.sistema-aberto { 
-    background-color: #f4f7f6; 
-    align-items: flex-start; 
-    padding-top: 20px; 
-}
-
+/* SISTEMA */
+body.sistema-aberto { background-color: #f4f7f6; align-items: flex-start; padding-top: 20px; }
 body.sistema-aberto #tela-login { display: none !important; }
-body.sistema-aberto #sistema-principal { 
-    display: block; 
-    width: 100%;
-    animation: fadeIn 0.5s ease; 
-}
+#sistema-principal { width: 100%; display: none; }
 
-/* 4. PAINEL PRINCIPAL */
 .container-corporativo { 
-    border: 1px solid var(--cor-secundaria); 
-    padding: 40px; 
-    width: 95%;
-    max-width: 980px; 
-    background-color: var(--cor-fundo); 
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); 
-    border-radius: 8px; 
-    margin: 0 auto 30px auto;
+    background: white; border: 1px solid #ddd; padding: 40px; width: 95%; max-width: 1000px; 
+    margin: 0 auto 30px auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
 }
 
-.grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 18px; 
-}
+h1 { font-size: 24px; color: var(--cor-primaria); margin: 0; text-transform: uppercase; }
 
-.campo { display: flex; flex-direction: column; margin-bottom: 12px; }
-label { font-size: 11px; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; color: var(--cor-primaria); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
+.campo { display: flex; flex-direction: column; margin-bottom: 10px; }
+label { font-size: 11px; font-weight: bold; margin-bottom: 6px; color: var(--cor-primaria); text-transform: uppercase; }
+input, select { padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
 
-input, select { 
-    padding: 12px; 
-    border: 1px solid var(--cor-secundaria); 
-    font-size: 14px; 
-    border-radius: 6px; 
-    outline: none; 
-    box-sizing: border-box; 
-}
-
-/* BOTÕES COLORIDOS */
+/* BOTÕES COM CORES ORIGINAIS RESTAURADAS */
 .botoes { margin-top: 35px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-.botoes button { padding: 14px 25px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 6px; font-size: 12px; min-width: 160px; }
+.botoes button { 
+    padding: 14px 25px; border: none; border-radius: 6px; color: white; font-weight: bold; 
+    cursor: pointer; text-transform: uppercase; font-size: 12px; min-width: 160px; flex: 1;
+}
 
-.btn-limpar { background-color: #546e7a; color: #fff; }
-.btn-relatorio { background-color: #3498db; color: #fff; }
-.btn-localizar { background-color: var(--cor-destaque-laranja); color: #fff; }
-.btn-salvar { background-color: var(--cor-destaque-verde); color: #fff; }
+.btn-limpar { background-color: var(--cor-cinza) !important; }
+.btn-relatorio { background-color: var(--cor-azul) !important; }
+.btn-localizar { background-color: var(--cor-laranja) !important; }
+.btn-salvar { background-color: var(--cor-verde) !important; }
 
-/* 5. CORREÇÃO DO MODAL DE BUSCA (GRID ALINHADO) */
+/* MODAL SEGURO (SEM DESFOCAR) */
 #modal-busca { 
-    display: none; 
-    position: fixed; 
-    z-index: 9999; 
-    left: 0; top: 0; 
-    width: 100%; height: 100%; 
-    background-color: rgba(0,0,0,0.7); 
+    display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); 
 }
-
 .modal-content { 
-    background-color: #fff; 
-    margin: 2% auto; 
-    padding: 30px; 
-    border-radius: 8px; 
-    width: 95%; 
-    max-width: 1300px; 
-    max-height: 95vh; 
-    overflow-y: auto; 
-    position: relative;
-    box-sizing: border-box;
+    background-color: #fff; margin: 2% auto; padding: 30px; border-radius: 8px; width: 95%; max-width: 1300px; 
+    max-height: 90vh; overflow-y: auto; position: relative; box-sizing: border-box;
 }
 
-/* O Segredo do Alinhamento está aqui: */
 .filtro-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-    gap: 15px; 
-    align-items: flex-end; /* Alinha labels e botões por baixo */
-    background: #f8fafc;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; 
+    align-items: flex-end; background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #ddd;
 }
 
-.filtro-item { display: flex; flex-direction: column; }
 .btn-filtro-container { display: flex; gap: 10px; }
+.btn-reset-busca { background-color: #95a5a6; color: white; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-.btn-reset-busca { background-color: #95a5a6; color: white; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-
-/* TABELA */
+/* TABELAS */
 .tabela-container { overflow-x: auto; border: 1px solid #ddd; margin-top: 20px; }
 table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1200px; }
-table th, table td { border: 1px solid #ddd; padding: 10px; text-align: left; white-space: nowrap; }
-table th { background-color: var(--cor-primaria); color: white; position: sticky; top: 0; }
+table th { background-color: var(--cor-primaria); color: white; padding: 12px; text-align: left; position: sticky; top: 0; }
+table td { border-bottom: 1px solid #eee; padding: 10px; }
 
 /* UTILITÁRIOS */
-.header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 15px; width: 100%; max-width: 980px; margin: 0 auto; }
+.header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 10px; width: 95%; max-width: 1000px; margin: 0 auto 10px auto; }
 .btn-fechar { background-color: #e74c3c; color: white; float: right; padding: 10px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-.btn-exportar { background-color: #27ae60; color: white; margin-top: 20px; padding: 12px 25px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.btn-exportar { background-color: var(--cor-verde); color: white; margin-top: 20px; padding: 12px 25px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
