@@ -7,12 +7,61 @@
     <style>
         * { box-sizing: border-box; }
         body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; min-height: 100vh; overflow-x: hidden; }
-        #wrapper-login { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f4f7f6; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+
+        /* LOGIN OVERLAY */
+        #wrapper-login {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(135deg, #1a252f 0%, #2c3e50 50%, #1a252f 100%);
+            display: flex; justify-content: center; align-items: center; z-index: 9999;
+        }
+        .login-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        }
+        .login-logo { text-align: center; margin-bottom: 32px; }
+        .login-logo .titulo { color: #f1c40f; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 8px; }
+        .login-logo h2 { color: white; font-size: 22px; margin: 0; font-weight: 700; letter-spacing: 1px; }
+        .login-logo small { color: rgba(255,255,255,0.4); font-size: 12px; }
+        .login-divider { width: 40px; height: 2px; background: #f1c40f; margin: 16px auto; border-radius: 2px; }
+        .login-campo { margin-bottom: 16px; }
+        .login-campo input {
+            width: 100%; padding: 14px 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px; color: white; font-size: 14px;
+            font-family: 'Segoe UI', sans-serif; outline: none; transition: border 0.2s;
+        }
+        .login-campo input::placeholder { color: rgba(255,255,255,0.3); }
+        .login-campo input:focus { border-color: #f1c40f; }
+        .btn-entrar {
+            width: 100%; padding: 14px; background: #f1c40f; color: #1a252f;
+            border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+            letter-spacing: 2px; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 0.1s;
+        }
+        .btn-entrar:hover { background: #f39c12; transform: translateY(-1px); }
+        .btn-entrar:active { transform: translateY(0); }
+        .btn-voltar {
+            width: 100%; padding: 12px; background: transparent;
+            color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; font-size: 13px; cursor: pointer; margin-top: 10px;
+            transition: all 0.2s; font-family: 'Segoe UI', sans-serif;
+        }
+        .btn-voltar:hover { color: white; border-color: rgba(255,255,255,0.3); }
+
+        /* SIDEBAR */
         .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; background-color: #2c3e50; color: white; display: flex; flex-direction: column; padding: 20px; }
         .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; cursor: pointer; }
         .menu-item:hover, .menu-item.active { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
         .btn-sair { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: auto; width: 100%; }
+
+        /* CONTEUDO */
         .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; display: flex; flex-direction: column; align-items: center; }
         .caixa-branca { background: white; width: 100%; max-width: 700px; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; max-width: 700px; }
@@ -24,15 +73,21 @@
 <body>
 
     <div id="wrapper-login">
-        <div class="container-corporativo" style="max-width: 350px;">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h2 style="color: #2c3e50; margin: 0;">ACESSO MASTER</h2>
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="titulo">Segurança D2P</div>
+                <h2>ACESSO MASTER</h2>
+                <div class="login-divider"></div>
                 <small>Autenticação Obrigatória</small>
             </div>
-            <input type="text" id="user-admin" placeholder="Usuário Admin">
-            <input type="password" id="pass-admin" placeholder="Senha">
-            <button class="btn-salvar" style="width: 100%;" onclick="autenticarAdmin()">ENTRAR</button>
-            <button class="btn-limpar" style="width: 100%; margin-top: 10px;" onclick="location.href='../index.html'">VOLTAR</button>
+            <div class="login-campo">
+                <input type="text" id="user-admin" placeholder="Usuário Admin" autocomplete="off">
+            </div>
+            <div class="login-campo">
+                <input type="password" id="pass-admin" placeholder="Senha">
+            </div>
+            <button class="btn-entrar" onclick="autenticarAdmin()">ENTRAR</button>
+            <button class="btn-voltar" onclick="location.href='../index.html'">VOLTAR</button>
         </div>
     </div>
 
@@ -58,10 +113,10 @@
             <h3 style="margin-top:0; color: #34495e; border-bottom: 1px solid #eee; padding-bottom: 10px;">Dados do Novo Vigilante</h3>
             <div class="campo">
                 <label>NOME COMPLETO:</label>
-                <input type="text" id="cad-nome" placeholder="Ex: JOÃO DA SILVA">
+                <input type="text" id="cad-nome" placeholder="Ex: JOAO DA SILVA">
             </div>
             <div class="campo">
-                <label>LOGIN (ÚNICO):</label>
+                <label>LOGIN (UNICO):</label>
                 <input type="text" id="cad-login" placeholder="Ex: joao.p04">
             </div>
             <div class="campo">
@@ -69,7 +124,7 @@
                 <input type="password" id="cad-senha" placeholder="SENHA">
             </div>
             <div class="campo">
-                <label>NÍVEL DE PERMISSÃO / UNIDADE:</label>
+                <label>NIVEL DE PERMISSAO / UNIDADE:</label>
                 <select id="cad-nivel">
                     <option value="p01">Portaria 01</option>
                     <option value="p02">Portaria 02</option>
@@ -95,7 +150,7 @@
                 document.getElementById('wrapper-login').style.display = 'none';
                 document.getElementById('nome-admin-logado').innerText = data[0].nome_completo;
             } else {
-                alert("Acesso Negado: Usuário não é Administrador ou senha incorreta.");
+                alert("Acesso Negado: Usuario nao e Administrador ou senha incorreta.");
             }
         }
 
@@ -105,15 +160,15 @@
             const senha = document.getElementById('cad-senha').value.trim();
             const nivel = document.getElementById('cad-nivel').value;
 
-            if (!nome || !login || !senha) return alert("Atenção: Preencha todos os campos!");
+            if (!nome || !login || !senha) return alert("Atencao: Preencha todos os campos!");
 
             const result = await dbSalvar('usuarios', { nome_completo: nome, login: login, senha: senha, nivel_acesso: nivel });
 
             if (result && result.ok) {
-                alert("Usuário " + nome + " cadastrado com sucesso!");
+                alert("Usuario " + nome + " cadastrado com sucesso!");
                 location.reload();
             } else {
-                alert("Erro ao cadastrar usuário.");
+                alert("Erro ao cadastrar usuario.");
             }
         }
     </script>
