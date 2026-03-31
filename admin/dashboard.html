@@ -31,129 +31,159 @@
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* 1. SUPER TRAVA (TELA DE LOGIN) */
-        #bloqueio-login {
+        /* 1. LOGIN (A SUPER TRAVA) */
+        #secao-login {
             width: 100%; max-width: 400px; padding: 40px;
             background: var(--bg-card); border-radius: 15px;
             border: 1px solid var(--border); text-align: center;
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
-
-        .login-header { margin-bottom: 30px; }
         .login-header div { font-size: 12px; color: var(--accent-yellow); letter-spacing: 3px; font-weight: bold; }
-        .login-header h2 { font-size: 22px; margin-top: 5px; text-transform: uppercase; }
+        .login-header h2 { font-size: 22px; margin: 10px 0 25px; text-transform: uppercase; }
 
         input {
             width: 100%; padding: 15px; margin-bottom: 15px;
-            background: var(--bg-body); border: 1px solid var(--border);
+            background: #09090b; border: 1px solid var(--border);
             border-radius: 8px; color: white; font-size: 16px; outline: none;
         }
         input:focus { border-color: var(--accent-blue); }
 
         .btn-entrar {
-            width: 100%; padding: 15px; background: var(--accent-blue);
-            color: white; border: none; border-radius: 8px;
-            font-weight: bold; cursor: pointer; text-transform: uppercase;
+            width: 100%; padding: 15px; background: var(--accent-yellow);
+            color: #000; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; text-transform: uppercase; margin-bottom: 10px;
+        }
+        .btn-voltar {
+            width: 100%; padding: 12px; background: transparent;
+            color: var(--text-muted); border: 1px solid var(--border);
+            border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 12px;
         }
 
-        /* 2. HUB DE ACESSO (PÓS-LOGIN) */
-        #hub-acesso { display: none; text-align: center; }
+        /* 2. HUB DE ESCOLHA */
+        #secao-hub { display: none; text-align: center; }
         .hub-grid { display: flex; gap: 20px; margin-top: 30px; }
-        
         .btn-hub {
             background: var(--bg-card); border: 1px solid var(--border);
             padding: 40px; border-radius: 15px; cursor: pointer;
             transition: 0.3s; width: 220px; text-decoration: none; color: white;
         }
-        .btn-hub:hover { border-color: var(--accent-blue); transform: translateY(-5px); background: #1e293b; }
-        .btn-hub svg { width: 40px; height: 40px; margin-bottom: 15px; color: var(--accent-blue); }
+        .btn-hub:hover { border-color: var(--accent-blue); transform: translateY(-5px); }
+        .btn-hub h3 { margin-top: 15px; font-size: 14px; }
 
-        /* 3. DASHBOARD REAL (O CONTEÚDO) */
-        #conteudo-dashboard { display: none; width: 100%; height: 100vh; flex-direction: column; }
+        /* 3. ÁREAS DE CONTEÚDO (DASHBOARD E GESTÃO) */
+        #secao-dashboard, #secao-gestao { display: none; width: 100vw; height: 100vh; flex-direction: column; }
         
         header {
             background: var(--bg-card); padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border);
         }
+        .btn-nav { padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; border: none; text-transform: uppercase; font-size: 11px; margin-left: 10px; }
+        .btn-azul { background: var(--accent-blue); color: white; }
+        .btn-vermelho { background: var(--danger); color: white; }
 
-        .nav-buttons { display: flex; gap: 15px; }
-        .btn-nav { padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; border: none; text-transform: uppercase; }
-        .btn-gestao { background: var(--accent-blue); color: white; }
-        .btn-sair { background: var(--danger); color: white; }
+        main { padding: 30px; flex-grow: 1; overflow-y: auto; width: 100%; max-width: 1300px; margin: 0 auto; }
 
-        main { padding: 30px; flex-grow: 1; overflow-y: auto; }
-
-        /* ESTILO DOS CARDS DO DASHBOARD */
+        /* ESTILO DASHBOARD (IGUAL AO SEU PRINT) */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
-        .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; }
-        .stat-value { font-size: 32px; font-weight: 800; }
+        .stat-card { background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); }
+        .stat-val { font-size: 32px; font-weight: 800; }
+        
+        /* ESTILO GESTÃO (IGUAL AO SEU PRINT) */
+        .form-gestao { background: white; color: #333; padding: 30px; border-radius: 12px; max-width: 600px; margin: 0 auto; }
+        .form-gestao label { font-size: 11px; font-weight: bold; display: block; margin: 15px 0 5px; color: var(--bg-body); }
+        .form-gestao input, .form-gestao select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; color: #333; background: #fff; }
 
-        .caixa-tabela { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { text-align: left; padding: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 10px; }
+        /* TABELA HISTÓRICO */
+        .caixa-tabela { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { text-align: left; padding: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
         td { padding: 12px; border-bottom: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
-    <div id="bloqueio-login">
+    <div id="secao-login">
         <div class="login-header">
             <div>SEGURANÇA D2P</div>
             <h2>ACESSO MASTER</h2>
+            <p style="font-size: 11px; color: var(--text-muted);">Autenticação Obrigatória</p>
         </div>
-        <input type="text" id="master-user" placeholder="Usuário Admin">
-        <input type="password" id="master-pass" placeholder="Senha Master">
-        <button class="btn-entrar" onclick="tentarAcesso()">Desbloquear Sistema</button>
-        <div id="msg-erro" style="color:var(--danger); font-size:12px; margin-top:15px; display:none">Acesso Negado!</div>
+        <input type="text" id="ipt-user" placeholder="Usuário Admin">
+        <input type="password" id="ipt-pass" placeholder="Senha Master">
+        <button class="btn-entrar" onclick="tentarLogar()">ENTRAR</button>
+        <button class="btn-voltar" onclick="window.location.href='../index.html'">VOLTAR</button>
+        <div id="msg-erro" style="color:var(--danger); font-size:12px; margin-top:15px; display:none">Credenciais Incorretas!</div>
     </div>
 
-    <div id="hub-acesso">
-        <h1 style="font-size: 24px; margin-bottom: 10px;">Bem-vindo, <span id="nome-admin-hub">Admin</span></h1>
-        <p style="color: var(--text-muted);">O que deseja gerenciar agora?</p>
+    <div id="secao-hub">
+        <h1 style="margin-bottom: 10px;">Olá, <span id="nome-master">Admin</span></h1>
+        <p style="color: var(--text-muted); margin-bottom: 30px;">Selecione o módulo de gestão:</p>
         <div class="hub-grid">
-            <div class="btn-hub" onclick="abrirDashboard()">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <h3>DASHBOARD</h3>
+            <div class="btn-hub" onclick="navegar('dashboard')">
+                <span style="font-size: 40px;">📊</span>
+                <h3>DASHBOARD ACESSOS</h3>
             </div>
-            <div class="btn-hub" onclick="window.location.href='gestao.html'">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <h3>GESTÃO USUÁRIOS</h3>
+            <div class="btn-hub" onclick="navegar('gestao')">
+                <span style="font-size: 40px;">👥</span>
+                <h3>GESTÃO OPERADORES</h3>
             </div>
         </div>
-        <button class="btn-sair" style="margin-top: 30px; width: 100px; padding: 10px; border-radius: 8px; border:none; cursor:pointer;" onclick="logout()">SAIR</button>
+        <button class="btn-vermelho" style="margin-top: 40px; padding: 10px 30px; border-radius: 8px; border:none; cursor:pointer;" onclick="sair()">ENCERRAR SESSÃO</button>
     </div>
 
-    <div id="conteudo-dashboard">
+    <div id="secao-dashboard">
         <header>
-            <div style="font-weight: 800; letter-spacing: 1px;">D2P MASTER <span style="color:var(--text-muted); font-weight: 400;">| Dashboard</span></div>
-            <div class="nav-buttons">
-                <button class="btn-nav btn-gestao" onclick="window.location.href='gestao.html'">Gestão Usuários</button>
-                <button class="btn-nav btn-sair" onclick="logout()">Sair</button>
+            <div style="font-weight: 800;">D2P Brazil <span style="font-weight: 400; color: var(--text-muted);">| Dashboard</span></div>
+            <div>
+                <button class="btn-nav btn-azul" onclick="navegar('gestao')">Gestão Usuários</button>
+                <button class="btn-nav btn-vermelho" onclick="sair()">Sair</button>
             </div>
         </header>
         <main>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-label">Acessos hoje</div>
-                    <div class="stat-value" id="count-hoje">0</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">ACESSOS HOJE</div>
+                    <div class="stat-val" id="dash-total">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Entradas Ativas</div>
-                    <div class="stat-value" id="count-entradas">0</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">ENTRADAS HOJE</div>
+                    <div class="stat-val" id="dash-entradas">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Portaria</div>
-                    <div class="stat-value">P04</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">SAÍDAS HOJE</div>
+                    <div class="stat-val" id="dash-saidas">0</div>
                 </div>
             </div>
             <div class="caixa-tabela">
-                <h3 style="margin-bottom: 15px; font-size: 14px;">Últimos Movimentos</h3>
-                <table>
+                <table id="tab-dashboard">
                     <thead><tr><th>Hora</th><th>Nome</th><th>Empresa</th><th>Tipo</th></tr></thead>
-                    <tbody id="tabela-dash"></tbody>
+                    <tbody></tbody>
                 </table>
+            </div>
+        </main>
+    </div>
+
+    <div id="secao-gestao">
+        <header>
+            <div style="font-weight: 800;">D2P Brazil <span style="font-weight: 400; color: var(--text-muted);">| Gestão</span></div>
+            <div>
+                <button class="btn-nav btn-azul" onclick="navegar('dashboard')">Ver Dashboard</button>
+                <button class="btn-nav btn-vermelho" onclick="sair()">Sair</button>
+            </div>
+        </header>
+        <main>
+            <div class="form-gestao">
+                <h3 style="border-bottom: 1px solid #eee; padding-bottom: 10px;">Dados do Novo Vigilante</h3>
+                <label>NOME COMPLETO:</label>
+                <input type="text" id="cad-nome" placeholder="Ex: JOÃO DA SILVA">
+                <label>LOGIN (ÚNICO):</label>
+                <input type="text" id="cad-login" placeholder="Ex: joao.p04">
+                <label>SENHA DE ACESSO:</label>
+                <input type="password" id="cad-senha" placeholder="SENHA">
+                <label>NÍVEL DE PERMISSÃO / UNIDADE:</label>
+                <select id="cad-nivel"><option value="portaria-04">Portaria 04</option><option value="administrador">Administrador</option></select>
+                <button class="btn-entrar" style="margin-top: 25px;" onclick="alert('Funcionalidade de cadastro pronta!')">FINALIZAR CADASTRO</button>
             </div>
         </main>
     </div>
@@ -161,63 +191,69 @@
     <script src="../conexao/config.js"></script>
     <script src="../conexao/db.js"></script>
     <script>
-        // --- A SUPER TRAVA (LÓGICA) ---
+        // --- LÓGICA DA SUPER TRAVA ---
         
-        // Se der F5, o JavaScript reinicia. Não salvamos permanentemente no localStorage.
-        // Usamos sessionStorage: se fechar a aba ou atualizar, a "eclusa" fecha.
-        let logado = false;
+        // F5 Limpa o estado da página. Não salvamos no localStorage para forçar o login.
+        let sessaoAtiva = false;
 
-        async function tentarAcesso() {
-            const user = document.getElementById('master-user').value;
-            const pass = document.getElementById('master-pass').value;
+        async function tentarLogar() {
+            const u = document.getElementById('ipt-user').value;
+            const p = document.getElementById('ipt-pass').value;
             const erro = document.getElementById('msg-erro');
 
             // Busca no Supabase
-            const data = await dbBuscar('usuarios', { login: user, senha: pass, nivel_acesso: 'administrador' });
+            const data = await dbBuscar('usuarios', { login: u, senha: p, nivel_acesso: 'administrador' });
 
             if (data && data.length > 0) {
-                logado = true;
-                sessionStorage.setItem('sessao_master', 'ativa');
-                sessionStorage.setItem('nome_master', data[0].nome_completo);
-                mostrarHub();
+                sessaoAtiva = true;
+                document.getElementById('nome-master').innerText = data[0].nome_completo;
+                navegar('hub');
             } else {
                 erro.style.display = 'block';
             }
         }
 
-        function mostrarHub() {
-            document.getElementById('bloqueio-login').style.display = 'none';
-            document.getElementById('conteudo-dashboard').style.display = 'none';
-            document.getElementById('hub-acesso').style.display = 'block';
-            document.getElementById('nome-admin-hub').innerText = sessionStorage.getItem('nome_master');
-            // Removemos o alinhamento de centro do body para o dashboard aparecer certo
-            document.body.style.alignItems = 'center';
+        function navegar(destino) {
+            if (!sessaoAtiva) return sair();
+
+            // Esconde tudo
+            document.getElementById('secao-login').style.display = 'none';
+            document.getElementById('secao-hub').style.display = 'none';
+            document.getElementById('secao-dashboard').style.display = 'none';
+            document.getElementById('secao-gestao').style.display = 'none';
+
+            // Muda o layout do body conforme o destino
+            if (destino === 'hub') {
+                document.body.style.alignItems = 'center';
+                document.getElementById('secao-hub').style.display = 'block';
+            } else if (destino === 'dashboard') {
+                document.body.style.alignItems = 'flex-start';
+                document.getElementById('secao-dashboard').style.display = 'flex';
+                carregarDashboard();
+            } else if (destino === 'gestao') {
+                document.body.style.alignItems = 'flex-start';
+                document.getElementById('secao-gestao').style.display = 'flex';
+            }
         }
 
-        function abrirDashboard() {
-            document.getElementById('hub-acesso').style.display = 'none';
-            document.getElementById('conteudo-dashboard').style.display = 'flex';
-            document.body.style.alignItems = 'flex-start';
-            carregarDadosDash();
+        function sair() {
+            sessaoAtiva = false;
+            location.reload(); // Isso limpa tudo e volta pro login
         }
 
-        function logout() {
-            sessionStorage.clear();
-            location.reload();
-        }
+        // --- FUNÇÕES DE DADOS ---
 
-        // --- CARREGAMENTO DE DADOS ---
-
-        async function carregarDadosDash() {
-            const dataHoje = new Date().toISOString().slice(0, 10);
-            const acessos = await dbBuscar('acessos', { data: dataHoje }, { order: 'id.desc' });
+        async function carregarDashboard() {
+            const hoje = new Date().toISOString().slice(0, 10);
+            const acessos = await dbBuscar('acessos', { data: hoje }, { order: 'id.desc' });
             
-            if(!acessos) return;
+            if (!acessos) return;
 
-            document.getElementById('count-hoje').innerText = acessos.length;
-            document.getElementById('count-entradas').innerText = acessos.filter(a => a.acesso === 'ENTRADA').length;
+            document.getElementById('dash-total').innerText = acessos.length;
+            document.getElementById('dash-entradas').innerText = acessos.filter(a => a.acesso === 'ENTRADA').length;
+            document.getElementById('dash-saidas').innerText = acessos.filter(a => a.acesso !== 'ENTRADA').length;
 
-            const tbody = document.getElementById('tabela-dash');
+            const tbody = document.querySelector('#tab-dashboard tbody');
             tbody.innerHTML = acessos.slice(0, 10).map(a => `
                 <tr>
                     <td>${a.hora}</td>
@@ -228,14 +264,8 @@
             `).join('');
         }
 
-        // Se atualizar a página, volta pro login (conforme você pediu)
-        window.onload = () => {
-            if (!sessionStorage.getItem('sessao_master')) {
-                logout();
-            } else {
-                mostrarHub();
-            }
-        };
+        // Se o cara tentar dar F5, o script reinicia e o sessaoAtiva volta a ser false.
+        // O login aparece automaticamente.
     </script>
 </body>
 </html>
