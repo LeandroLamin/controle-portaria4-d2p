@@ -2,7 +2,7 @@
  * ================================================================================
  * PROJETO: SISTEMA DE CONTROLE DE ACESSO - D2P-BRAZIL (PORTARIA 04)
  * ARQUIVO: portaria-04/js/api.js
- * DEPENDE: /conexao/config.js e /conexao/db.js
+ * DEPENDE: /conexao/config.js, /conexao/db.js e /js/ui.js
  * ================================================================================
  */
 
@@ -11,7 +11,7 @@ let dadosFiltradosGlobal = [];
 // --- 1. LOCALIZAR ---
 async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
-    if (!cpfVal) return alert("Digite um CPF");
+    if (!cpfVal) return notify("Digite um CPF.", 'aviso');
 
     const data = await dbBuscar('acessos', { cpf: cpfVal }, { order: 'id.desc', limit: 1 });
 
@@ -20,8 +20,9 @@ async function localizar() {
         document.getElementById('nome').value = ultimo.nome;
         document.getElementById('empresa').value = ultimo.empresa;
         document.getElementById('responsavel').value = ultimo.responsavel;
+        notify("CPF localizado!", 'sucesso');
     } else {
-        alert("CPF não localizado na base.");
+        notify("CPF não localizado na base.", 'aviso');
     }
 }
 
@@ -40,17 +41,17 @@ async function salvar() {
         obs: document.getElementById('obs').value.trim().toUpperCase()
     };
 
-    if (!dados.cpf || !dados.nome || dados.obs.length < 2) {
-        return alert("⚠️ Preencha todos os campos obrigatórios.");
+    if (!dados.cpf || !dados.nome || !dados.obs) {
+        return notify("Preencha todos os campos obrigatórios.", 'aviso');
     }
 
     const result = await dbSalvar('acessos', dados);
 
     if (result && result.ok) {
-        alert("✅ Registrado com sucesso!");
+        notify("Acesso registrado com sucesso!", 'sucesso');
         limpar();
     } else {
-        alert("Erro ao salvar no servidor.");
+        notify("Erro ao salvar no servidor.", 'erro');
     }
 }
 
@@ -60,7 +61,7 @@ async function buscarRelatorio() {
     const fim = document.getElementById('filtro-fim').value;
     const nome = document.getElementById('filtro-nome').value.trim();
 
-    if (!inicio || !fim) return alert("Selecione o período.");
+    if (!inicio || !fim) return notify("Selecione o período.", 'aviso');
 
     const filtros = { data_gte: inicio, data_lte: fim };
 
@@ -74,12 +75,12 @@ async function buscarRelatorio() {
 
     const data = await dbBuscar('acessos', filtros);
 
-    if (data === null) return; // erro já foi alertado pelo db.js
+    if (data === null) return;
     if (data.length > 0) {
         dadosFiltradosGlobal = data;
         renderizarTabela(data);
     } else {
-        alert("Nada encontrado.");
+        notify("Nada encontrado.", 'aviso');
         document.querySelector('#tabela-resultados tbody').innerHTML = '';
     }
 }
@@ -100,7 +101,7 @@ function renderizarTabela(lista) {
 
 // --- EXPORTAR EXCEL ---
 function exportarExcel() {
-    if (dadosFiltradosGlobal.length === 0) return alert("Busque os dados primeiro.");
+    if (dadosFiltradosGlobal.length === 0) return notify("Busque os dados primeiro.", 'aviso');
     let csv = '\uFEFFData;Hora;CPF;Nome;Empresa;Responsavel;Liberado;Motivo;Vigilante;Cracha;Acesso;Obs\n';
     dadosFiltradosGlobal.forEach(row => {
         csv += `${row.data};${row.hora};${row.cpf};${row.nome};${row.empresa};${row.responsavel};${row.liberado};${row.motivo};${row.vigilante};${row.cracha};${row.acesso};${row.obs}\n`;
