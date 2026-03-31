@@ -8,11 +8,11 @@
 </head>
 <body>
 
-<div id="tela-login">
-    <div class="logo-subtexto">D2P Do Brasil</div>
-    <div class="logo-subtexto" style="margin-bottom: 30px;">SEGURANÇA PATRIMONIAL</div>
-    
-    <h2>Acesso Restrito<br>Portaria 04</h2>
+    <div id="tela-login">
+        <div class="logo-subtexto">D2P-BRAZIL</div>
+        <div class="logo-subtexto" style="margin-bottom: 25px;">SEGURANÇA PATRIMONIAL</div>
+        
+        <h2>ACESSO RESTRITO<br>PORTARIA 04</h2>
         
         <input type="text" id="user-login" placeholder="Usuário" autocomplete="off">
         <input type="password" id="user-pass" placeholder="Senha">
@@ -33,9 +33,8 @@
         <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="location.reload()">Sair</a></div>
         
         <div class="container-corporativo">
-            
             <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; border-bottom: 2px solid #f1c40f; padding-bottom: 15px; min-height: 70px;">
-                <img src="../img/logo_horse.png" alt="Logo Horse" style="position: absolute; left: 0; top: 50%; transform: translateY(-60%); height: 70px; width: auto;">
+                <img src="../img/logo_horse.png" alt="Logo Horse" style="position: absolute; left: 0; height: 70px; width: auto;">
                 <h1 style="margin: 0; color: #2c3e50; font-size: 24px; text-transform: uppercase;">CONTROLE DE ACESSO - P04</h1>
             </div>
 
@@ -50,12 +49,9 @@
                         <option value="">SELECIONE</option>
                         <option value="ACESSOS">ACESSOS</option>
                         <option value="IDENTIFICAÇÃO">IDENTIFICAÇÃO</option>
-                        <option value="INSPETOR DE VIGILANCIA">INSPETOR DE VIGILANCIA</option>
-                        <option value="CENTRAL DE SEGURANÇA">CENTRAL DE SEGURANÇA</option>
-                        <option value="SEGURANÇA PATRIMONIAL">SEGURANÇA PATRIMONIAL</option>
-                        <option value="E-MAIL">E-MAIL</option>
-                        <option value="GDV">GDV</option>
-                        <option value="OUTROS">OUTROS</option>
+                        <option value="INSPETOR">INSPETOR</option>
+                        <option value="CENTRAL">CENTRAL</option>
+                        <option value="SEGURANÇA">SEGURANÇA</option>
                     </select>
                 </div>
                 <div class="campo">
@@ -66,22 +62,12 @@
                         <option value="TRABALHO">TRABALHO</option>
                         <option value="ENTREGA">ENTREGA</option>
                         <option value="OUTROS">OUTROS</option>
-                        <option value="Esqueceu crachá">Esqueceu crachá</option>
-                        <option value="Perdeu crachá">Perdeu crachá</option>
-                        <option value="Crachá não passa">Crachá não passa</option>
-                        <option value="Crachá vencido">Crachá vencido</option>
-                        <option value="Pendência SG3">Pendência SG3</option>
-                        <option value="Não acessou">Não acessou</option>
-                        <option value="Transbordo">Transbordo</option>
-                        <option value="Visita técnica">Visita técnica</option>
-                        <option value="Visita a Fábrica">Visita a Fábrica</option>
-                        <option value="Perícia Trabalhista">Perícia Trabalhista</option>
-                        <option value="Primeiro dia de trabalho">Primeiro dia de trabalho</option>
-                        <option value="Ambulatório">Ambulatório</option>
                     </select>
                 </div>
+
                 <div class="campo"><label>Nº CRACHÁ:</label><input type="text" id="cracha"></div>
                 <div class="campo"><label>VIGILANTE:</label><input type="text" id="vigilante"></div>
+                
                 <div class="campo">
                     <label>ACESSO:</label>
                     <select id="tipo">
@@ -92,7 +78,7 @@
                 </div>
                 <div class="campo" style="grid-column: span 3;">
                     <label>OBSERVAÇÃO:</label>
-                    <input type="text" id="obs" maxlength="200" placeholder="Descreva os detalhes importantes deste acesso...">
+                    <input type="text" id="obs" placeholder="Detalhes importantes do acesso...">
                 </div>
             </div>
 
@@ -106,24 +92,14 @@
     </div>
 
     <div id="modal-busca">
-<div id="modal-busca">
         <div class="modal-content">
             <button class="btn-fechar" onclick="fecharBusca()">X FECHAR</button>
-            <h2 style="color:var(--cor-primaria); margin-top: 0;">Busca e Relatório Completo</h2>
+            <h2 style="color:#34495e; margin-bottom: 20px;">Busca e Relatório Completo</h2>
             
             <div class="filtro-grid">
-                <div class="filtro-item">
-                    <label>DATA INICIAL:</label>
-                    <input type="date" id="filtro-inicio">
-                </div>
-                <div class="filtro-item">
-                    <label>DATA FINAL:</label>
-                    <input type="date" id="filtro-fim">
-                </div>
-                <div class="filtro-item">
-                    <label>NOME / CPF / BPU:</label>
-                    <input type="text" id="filtro-nome" placeholder="Digite para buscar...">
-                </div>
+                <div class="filtro-item"><label>DATA INICIAL:</label><input type="date" id="filtro-inicio"></div>
+                <div class="filtro-item"><label>DATA FINAL:</label><input type="date" id="filtro-fim"></div>
+                <div class="filtro-item"><label>NOME / CPF / BPU:</label><input type="text" id="filtro-nome"></div>
                 <div class="btn-filtro-container">
                     <button class="btn-relatorio" onclick="buscarRelatorio()">FILTRAR</button>
                     <button class="btn-reset-busca" onclick="limparFiltrosBusca()">LIMPAR</button>
@@ -150,6 +126,5 @@
 <script src="../js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="../js/ui.js"></script>
-
 </body>
 </html>
