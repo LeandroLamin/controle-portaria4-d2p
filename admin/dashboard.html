@@ -463,10 +463,10 @@ async function carregarTudo() {
     }
 
     const hoje = dataHoje();
-    const deHoje = todos.filter(r => r.Data === hoje);
+    const deHoje = todos.filter(r => r.data === hoje);
 
-    const entradas = deHoje.filter(r => (r.Acesso || '').toUpperCase() === 'ENTRADA');
-    const saidas   = deHoje.filter(r => (r.Acesso || '').toUpperCase() !== 'ENTRADA');
+    const entradas = deHoje.filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
+    const saidas   = deHoje.filter(r => (r.acesso || '').toUpperCase() !== 'ENTRADA');
 
     // ── Métricas ──
     document.getElementById('card-total').textContent   = deHoje.length;
@@ -497,11 +497,11 @@ function calcularPresentes(registros) {
   // Processa do mais antigo ao mais novo
   const ordenados = [...registros].reverse();
   ordenados.forEach(r => {
-    if (!r.CPF) return;
-    mapa[r.CPF] = r;
+    if (!r.cpf) return;
+    mapa[r.cpf] = r;
   });
   // Filtra só os que o último acesso foi ENTRADA
-  return Object.values(mapa).filter(r => (r.Acesso || '').toUpperCase() === 'ENTRADA');
+  return Object.values(mapa).filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
 }
 
 // ── Renderizar eventos ────────────────────────────────────
@@ -515,17 +515,17 @@ function renderEventos(lista) {
   }
 
   el.innerHTML = lista.map(r => {
-    const isEnt = (r.Acesso || '').toUpperCase() === 'ENTRADA';
+    const isEnt = (r.acesso || '').toUpperCase() === 'ENTRADA';
     const tipoClass = isEnt ? 'ent' : 'sai';
     const svg = isEnt ? svgEntrada() : svgSaida();
     return `
       <div class="item-evento">
         <div class="tipo-icon ${tipoClass}">${svg}</div>
         <div style="min-width:0;flex:1">
-          <div class="ev-nome" title="${r.Nome || ''}">${r.Nome || '—'}</div>
-          <div class="ev-sub">${r.Empresa || ''} ${r.Motivo ? '· ' + r.Motivo : ''}</div>
+          <div class="ev-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
+          <div class="ev-sub">${r.empresa || ''} ${r.motivo ? '· ' + r.motivo : ''}</div>
         </div>
-        <div class="ev-hora">${r.Hora || ''}</div>
+        <div class="ev-hora">${r.hora || ''}</div>
       </div>`;
   }).join('');
 }
@@ -543,14 +543,14 @@ function renderPresentes(lista) {
 
   el.innerHTML = lista.map(r => `
     <div class="item-presente">
-      <div class="avatar">${iniciais(r.Nome)}</div>
+      <div class="avatar">${iniciais(r.nome)}</div>
       <div style="min-width:0;flex:1">
-        <div class="pr-nome" title="${r.Nome || ''}">${r.Nome || '—'}</div>
-        <div class="pr-sub">${r.Empresa || ''} ${r.Crachá ? '· Crachá ' + r.Crachá : ''}</div>
+        <div class="pr-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
+        <div class="pr-sub">${r.empresa || ''} ${r.cracha ? '· Crachá ' + r.cracha : ''}</div>
       </div>
       <div class="pr-hora">
         ${svgClock()}
-        ${r.Hora || ''}
+        ${r.hora || ''}
       </div>
     </div>`).join('');
 }
@@ -566,20 +566,20 @@ function renderHistorico(lista) {
   }
 
   tbody.innerHTML = lista.map(r => {
-    const isEnt = (r.Acesso || '').toUpperCase() === 'ENTRADA';
+    const isEnt = (r.acesso || '').toUpperCase() === 'ENTRADA';
     const badge = isEnt
       ? `<span class="badge-ent">↓ Entrada</span>`
       : `<span class="badge-sai">↑ Saída</span>`;
     return `
       <tr>
-        <td>${r.Data || '—'}</td>
-        <td style="font-family:monospace">${r.Hora || '—'}</td>
-        <td style="font-weight:500">${r.Nome || '—'}</td>
-        <td style="color:var(--text3)">${r.Empresa || '—'}</td>
-        <td style="color:var(--text3)">${r.Motivo || '—'}</td>
-        <td style="font-family:monospace;color:var(--text3)">${r.Cracha || r['Crachá'] || '—'}</td>
+        <td>${r.data || '—'}</td>
+        <td style="font-family:monospace">${r.hora || '—'}</td>
+        <td style="font-weight:500">${r.nome || '—'}</td>
+        <td style="color:var(--text3)">${r.empresa || '—'}</td>
+        <td style="color:var(--text3)">${r.motivo || '—'}</td>
+        <td style="font-family:monospace;color:var(--text3)">${r.cracha || r.cracha || '—'}</td>
         <td>${badge}</td>
-        <td style="color:var(--text3)">${r.Vigilante || '—'}</td>
+        <td style="color:var(--text3)">${r.vigilante || '—'}</td>
       </tr>`;
   }).join('');
 }
