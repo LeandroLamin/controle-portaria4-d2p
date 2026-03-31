@@ -2,16 +2,35 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel MASTER - Novo Cadastro - D2P</title>
+    <!-- Mantendo suas referências de estilo externas -->
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; min-height: 100vh; overflow-x: hidden; }
+        :root {
+            --primary-dark: #1a252f;
+            --secondary-dark: #2c3e50;
+            --accent-gold: #f1c40f;
+            --accent-hover: #f39c12;
+            --bg-light: #f4f7f6;
+            --sidebar-item: #34495e;
+            --text-muted: #bdc3c7;
+        }
 
-        /* LOGIN OVERLAY */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-light); 
+            display: flex; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+
+        /* --- LOGIN OVERLAY (PALETA ESCURA) --- */
         #wrapper-login {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(135deg, #1a252f 0%, #2c3e50 50%, #1a252f 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 50%, var(--primary-dark) 100%);
             display: flex; justify-content: center; align-items: center; z-index: 9999;
         }
         .login-card {
@@ -20,60 +39,113 @@
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 16px;
             padding: 48px 40px;
-            width: 100%;
+            width: 90%;
             max-width: 380px;
             box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+            text-align: center;
         }
-        .login-logo { text-align: center; margin-bottom: 32px; }
-        .login-logo .titulo { color: #f1c40f; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 8px; }
+        .login-logo .titulo { 
+            color: var(--accent-gold); 
+            font-size: 11px; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            margin-bottom: 8px; 
+        }
         .login-logo h2 { color: white; font-size: 22px; margin: 0; font-weight: 700; letter-spacing: 1px; }
         .login-logo small { color: rgba(255,255,255,0.4); font-size: 12px; }
-        .login-divider { width: 40px; height: 2px; background: #f1c40f; margin: 16px auto; border-radius: 2px; }
+        .login-divider { width: 40px; height: 2px; background: var(--accent-gold); margin: 16px auto; border-radius: 2px; }
+        
         .login-campo { margin-bottom: 16px; }
         .login-campo input {
             width: 100%; padding: 14px 16px;
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 8px; color: white; font-size: 14px;
-            font-family: 'Segoe UI', sans-serif; outline: none; transition: border 0.2s;
+            outline: none; transition: border 0.2s;
         }
         .login-campo input::placeholder { color: rgba(255,255,255,0.3); }
-        .login-campo input:focus { border-color: #f1c40f; }
+        .login-campo input:focus { border-color: var(--accent-gold); }
+
         .btn-entrar {
-            width: 100%; padding: 14px; background: #f1c40f; color: #1a252f;
+            width: 100%; padding: 14px; background: var(--accent-gold); color: var(--primary-dark);
             border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
-            letter-spacing: 2px; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 0.1s;
+            letter-spacing: 2px; cursor: pointer; margin-top: 8px; transition: all 0.2s;
         }
-        .btn-entrar:hover { background: #f39c12; transform: translateY(-1px); }
-        .btn-entrar:active { transform: translateY(0); }
+        .btn-entrar:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        
         .btn-voltar {
             width: 100%; padding: 12px; background: transparent;
             color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px; font-size: 13px; cursor: pointer; margin-top: 10px;
-            transition: all 0.2s; font-family: 'Segoe UI', sans-serif;
+            transition: all 0.2s;
         }
         .btn-voltar:hover { color: white; border-color: rgba(255,255,255,0.3); }
 
-        /* SIDEBAR */
-        .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; background-color: #2c3e50; color: white; display: flex; flex-direction: column; padding: 20px; }
-        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; cursor: pointer; }
-        .menu-item:hover, .menu-item.active { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
-        /* Estilo especial para o botão do Dashboard no menu */
+        /* --- SIDEBAR --- */
+        .sidebar { 
+            width: 260px; height: 100vh; position: fixed; left: 0; top: 0; 
+            background-color: var(--secondary-dark); color: white; 
+            display: flex; flex-direction: column; padding: 20px; 
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--sidebar-item); padding-bottom: 20px; }
+        
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; padding: 15px; 
+            color: var(--text-muted); text-decoration: none; border-radius: 8px; 
+            margin-bottom: 10px; transition: 0.3s; 
+        }
+        .menu-item:hover, .menu-item.active { background-color: var(--sidebar-item); color: white; border-left: 4px solid var(--accent-gold); }
         .menu-item.dashboard-btn:hover { border-left-color: #2563eb; color: #3b82f6; }
-        .btn-sair { background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: auto; width: 100%; }
+        
+        .btn-sair { 
+            background: var(--sidebar-item); color: white; border: none; padding: 12px; 
+            border-radius: 8px; cursor: pointer; margin-top: auto; width: 100%; 
+            transition: background 0.3s;
+        }
+        .btn-sair:hover { background: #c0392b; }
 
-        /* CONTEUDO */
+        /* --- CONTEUDO PRINCIPAL --- */
         .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; display: flex; flex-direction: column; align-items: center; }
-        .caixa-branca { background: white; width: 100%; max-width: 700px; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; max-width: 700px; }
-        .campo { margin-bottom: 15px; width: 100%; }
-        .campo label { display: block; font-size: 13px; font-weight: bold; color: #34495e; margin-bottom: 5px; }
-        .campo input, .campo select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; }
+        
+        .page-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 25px; width: 100%; max-width: 700px; 
+        }
+
+        .caixa-branca { 
+            background: white; width: 100%; max-width: 700px; padding: 30px; 
+            border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        }
+        
+        .campo { margin-bottom: 20px; width: 100%; }
+        .campo label { display: block; font-size: 13px; font-weight: bold; color: var(--secondary-dark); margin-bottom: 8px; }
+        .campo input, .campo select { 
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; 
+            font-size: 14px; transition: border-color 0.2s;
+        }
+        .campo input:focus { border-color: var(--accent-gold); outline: none; }
+
+        /* Estilização para o botão de salvar conforme a paleta */
+        .btn-salvar {
+            width: 100%; height: 50px; margin-top: 15px;
+            background: var(--accent-gold); color: var(--primary-dark);
+            border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(241, 196, 15, 0.2);
+        }
+        .btn-salvar:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(241, 196, 15, 0.3); }
+        .btn-salvar:active { transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; padding: 10px; }
+            .sidebar-header, .menu-item span, .btn-sair { display: none; }
+            .main-content { margin-left: 70px; width: calc(100% - 70px); padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- OVERLAY DE AUTENTICAÇÃO MASTER -->
     <div id="wrapper-login">
         <div class="login-card">
             <div class="login-logo">
@@ -93,41 +165,49 @@
         </div>
     </div>
 
+    <!-- NAVEGAÇÃO LATERAL -->
     <nav class="sidebar">
         <div class="sidebar-header">
-            <div style="font-size: 10px; color: #95a5a6; letter-spacing: 2px;">SEGURANÇA D2P</div>
+            <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 2px;">SEGURANÇA D2P</div>
             <h2 style="color: white; font-size: 18px; margin-top: 5px;">PAINEL MASTER</h2>
         </div>
         <div style="flex-grow: 1;">
-            <a href="#" class="menu-item active">➕ Novo Cadastro</a>
-            <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
-            <a href="dashboard.html" class="menu-item dashboard-btn">📊 Dashboard de Acessos</a>
+            <a href="#" class="menu-item active">➕ <span>Novo Cadastro</span></a>
+            <a href="gestao.html" class="menu-item">👥 <span>Gestão de Usuários</span></a>
+            <a href="dashboard.html" class="menu-item dashboard-btn">📊 <span>Dashboard de Acessos</span></a>
         </div>
         <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
     </nav>
 
+    <!-- ÁREA DE CONTEÚDO -->
     <main class="main-content">
         <div class="page-header">
-            <h1 style="margin:0; color:#2c3e50; font-size: 24px;">CADASTRO DE OPERADORES</h1>
-            <div style="font-size: 13px;">Admin: <b id="nome-admin-logado">---</b></div>
+            <h1 style="margin:0; color:var(--secondary-dark); font-size: 24px;">CADASTRO DE OPERADORES</h1>
+            <div style="font-size: 13px; color: #7f8c8d;">Admin: <b id="nome-admin-logado" style="color: var(--secondary-dark);">---</b></div>
         </div>
 
         <div class="caixa-branca">
-            <h3 style="margin-top:0; color: #34495e; border-bottom: 1px solid #eee; padding-bottom: 10px;">Dados do Novo Vigilante</h3>
+            <h3 style="margin-top:0; color: var(--secondary-dark); border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                Dados do Novo Vigilante
+            </h3>
+            
             <div class="campo">
                 <label>NOME COMPLETO:</label>
                 <input type="text" id="cad-nome" placeholder="Ex: JOAO DA SILVA">
             </div>
+            
             <div class="campo">
-                <label>LOGIN (UNICO):</label>
+                <label>LOGIN (ÚNICO):</label>
                 <input type="text" id="cad-login" placeholder="Ex: joao.p04">
             </div>
+            
             <div class="campo">
                 <label>SENHA DE ACESSO:</label>
                 <input type="password" id="cad-senha" placeholder="SENHA">
             </div>
+            
             <div class="campo">
-                <label>NIVEL DE PERMISSAO / UNIDADE:</label>
+                <label>NÍVEL DE PERMISSÃO / UNIDADE:</label>
                 <select id="cad-nivel">
                     <option value="p01">Portaria 01</option>
                     <option value="p02">Portaria 02</option>
@@ -136,42 +216,74 @@
                     <option value="administrador">Administrador (Master)</option>
                 </select>
             </div>
-            <button class="btn-salvar" style="width: 100%; height: 50px; margin-top: 15px;" onclick="cadastrarUsuario()">FINALIZAR CADASTRO</button>
+            
+            <button class="btn-salvar" onclick="cadastrarUsuario()">FINALIZAR CADASTRO</button>
         </div>
     </main>
 
+    <!-- SCRIPTS DE CONEXÃO -->
     <script src="../conexao/config.js"></script>
     <script src="../conexao/db.js"></script>
     <script>
+        /**
+         * Lógica de Autenticação para acesso ao Painel Master
+         */
         async function autenticarAdmin() {
             const user = document.getElementById('user-admin').value.trim();
             const pass = document.getElementById('pass-admin').value.trim();
 
-            const data = await dbBuscar('usuarios', { login: user, senha: pass });
+            if (!user || !pass) {
+                return; // Evita processamento sem dados
+            }
 
-            if (data && data.length > 0 && data[0].nivel_acesso === 'administrador') {
-                document.getElementById('wrapper-login').style.display = 'none';
-                document.getElementById('nome-admin-logado').innerText = data[0].nome_completo;
-            } else {
-                alert("Acesso Negado: Usuario nao e Administrador ou senha incorreta.");
+            try {
+                // Busca no banco preservando a lógica de campos pré-existente
+                const data = await dbBuscar('usuarios', { login: user, senha: pass });
+
+                if (data && data.length > 0 && data[0].nivel_acesso === 'administrador') {
+                    document.getElementById('wrapper-login').style.display = 'none';
+                    document.getElementById('nome-admin-logado').innerText = data[0].nome_completo;
+                } else {
+                    // Substituindo alert por mensagem visual poderia ser melhor, 
+                    // mas mantive conforme sua estrutura original
+                    alert("Acesso Negado: Usuário não é Administrador ou senha incorreta.");
+                }
+            } catch (error) {
+                console.error("Erro na autenticação:", error);
+                alert("Erro ao conectar com o servidor.");
             }
         }
 
+        /**
+         * Lógica para Salvar Novo Usuário no Banco
+         */
         async function cadastrarUsuario() {
             const nome = document.getElementById('cad-nome').value.trim().toUpperCase();
             const login = document.getElementById('cad-login').value.trim();
             const senha = document.getElementById('cad-senha').value.trim();
             const nivel = document.getElementById('cad-nivel').value;
 
-            if (!nome || !login || !senha) return alert("Atencao: Preencha todos os campos!");
+            if (!nome || !login || !senha) {
+                return alert("Atenção: Preencha todos os campos!");
+            }
 
-            const result = await dbSalvar('usuarios', { nome_completo: nome, login: login, senha: senha, nivel_acesso: nivel });
+            try {
+                const result = await dbSalvar('usuarios', { 
+                    nome_completo: nome, 
+                    login: login, 
+                    senha: senha, 
+                    nivel_acesso: nivel 
+                });
 
-            if (result && result.ok) {
-                alert("Usuario " + nome + " cadastrado com sucesso!");
-                location.reload();
-            } else {
-                alert("Erro ao cadastrar usuario.");
+                if (result && result.ok) {
+                    alert("Usuário " + nome + " cadastrado com sucesso!");
+                    location.reload();
+                } else {
+                    alert("Erro ao cadastrar usuário.");
+                }
+            } catch (error) {
+                console.error("Erro no cadastro:", error);
+                alert("Falha técnica ao realizar cadastro.");
             }
         }
     </script>
