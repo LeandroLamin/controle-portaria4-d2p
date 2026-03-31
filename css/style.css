@@ -1,5 +1,5 @@
 /* ============================================================
-   ESTILO PORTARIA 04 - ALINHADO E SEM RESPONSIVO CHATO
+   ESTILO FINAL PORTARIA 04 - ALINHAMENTO FIXO HORIZONTAL
    ============================================================ */
 
 :root {
@@ -9,7 +9,7 @@
     --cor-verde: #27ae60;
     --cor-laranja: #f39c12;
     --cor-azul: #3498db;
-    --cor-cinza: #546e7a;
+    --cor-cinza: #95a5a6;
     --fundo-dark: #1a202c;
 }
 
@@ -29,7 +29,7 @@ body {
 #tela-login input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
 #tela-login button { width: 100%; background: var(--cor-amarelo); color: #000; padding: 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
 
-/* SISTEMA */
+/* SISTEMA PRINCIPAL */
 body.sistema-aberto { background-color: #f4f7f6; align-items: flex-start; padding-top: 20px; }
 body.sistema-aberto #tela-login { display: none !important; }
 #sistema-principal { display: none; width: 100%; }
@@ -44,30 +44,49 @@ body.sistema-aberto #tela-login { display: none !important; }
 label { font-size: 11px; font-weight: bold; margin-bottom: 5px; color: var(--cor-primaria); text-transform: uppercase; }
 input, select { padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
 
-/* BOTÕES COLORIDOS */
+/* BOTÕES DO PAINEL */
 .botoes { margin-top: 30px; display: flex; gap: 12px; justify-content: center; }
 .botoes button { padding: 14px 25px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
-.btn-limpar { background-color: var(--cor-cinza); }
+.btn-limpar { background-color: #546e7a; }
 .btn-relatorio { background-color: var(--cor-azul); }
 .btn-localizar { background-color: var(--cor-laranja); }
 .btn-salvar { background-color: var(--cor-verde); }
 
-/* MODAL DE BUSCA (ALINHADO COM O SEU PRINT) */
+/* MODAL DE BUSCA (ESTILO FIXO DO PRINT) */
 #modal-busca { 
     display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); 
 }
 .modal-content { 
-    background: white; margin: 1% auto; padding: 30px; border-radius: 8px; width: 1300px; max-height: 95vh; overflow-y: auto; 
+    background: white; margin: 1% auto; padding: 30px; border-radius: 8px; width: 1250px; max-height: 95vh; overflow-y: auto; 
 }
 
-.filtro-linha { display: flex; align-items: flex-end; gap: 15px; margin-bottom: 30px; }
-.filtro-item { display: flex; flex-direction: column; }
-.filtro-item label { font-size: 10px; margin-bottom: 8px; }
-.filtro-item input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+/* Trava tudo em uma linha horizontal */
+.filtro-linha { 
+    display: flex; 
+    align-items: flex-end; 
+    gap: 15px; 
+    margin-bottom: 25px; 
+}
 
-.botoes-filtro { display: flex; gap: 10px; }
-.botoes-filtro button { padding: 12px 25px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
-.btn-limpar-filtro { background-color: #95a5a6; color: white; }
+.filtro-item { display: flex; flex-direction: column; }
+.filtro-item label { font-size: 10px; margin-bottom: 8px; font-weight: bold; }
+.filtro-item input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; height: 40px; box-sizing: border-box; }
+
+/* BOTÕES DO MODAL (AZUL E CINZA) */
+.botoes-filtro-modal { display: flex; gap: 8px; }
+.botoes-filtro-modal button { 
+    height: 40px; 
+    padding: 0 25px; 
+    border: none; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    font-size: 12px; 
+    color: white;
+}
+.btn-relatorio-modal { background-color: var(--cor-azul); }
+.btn-limpar-modal { background-color: var(--cor-cinza); }
 
 .btn-fechar { background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
