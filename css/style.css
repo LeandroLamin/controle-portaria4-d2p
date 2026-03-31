@@ -1,6 +1,6 @@
 /* ============================================================
    SISTEMA D2P-BRAZIL - PORTARIA 04
-   VERSÃO: FINAL REVISADA (CORES RESTAURADAS & RESPONSIVO)
+   VERSÃO: 5.0 (PADRONIZAÇÃO VISUAL COMPLETA)
    ============================================================ */
 
 :root {
@@ -9,9 +9,9 @@
     --cor-primaria: #34495e;
     --cor-secundaria: #b0bec5;
     --cor-destaque-amarelo: #f1c40f;
-    --cor-destaque-verde: #27ae60;   /* Verde Original */
-    --cor-destaque-laranja: #f39c12; /* Laranja Original */
-    --cor-fundo-login: #1a202c;     /* Fundo escuro do Login */
+    --cor-destaque-verde: #27ae60;
+    --cor-destaque-laranja: #f39c12;
+    --cor-fundo-login: #1a202c;
 }
 
 /* 1. CONFIGURAÇÃO DO BODY */
@@ -30,23 +30,34 @@ body {
 /* 2. TELA DE LOGIN RESPONSIVA */
 #tela-login { 
     background: white; 
-    padding: 40px; 
+    padding: 45px 35px; 
     border-radius: 12px; 
     box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
     width: 90%;
     max-width: 380px; 
     text-align: center; 
-    border-top: 6px solid var(--cor-primaria); 
+    border-top: 8px solid var(--cor-primaria); 
     box-sizing: border-box;
 }
 
+/* ESTILO PADRONIZADO PARA AS DUAS LINHAS DO TOPO */
 .logo-subtexto { 
     font-size: 14px; 
     color: var(--cor-primaria); 
     text-transform: uppercase; 
     letter-spacing: 2px; 
     font-weight: bold; 
-    margin-bottom: 25px; 
+    margin-bottom: 5px; /* Espaço pequeno entre as duas linhas superiores */
+}
+
+#tela-login h2 {
+    font-size: 24px;
+    color: var(--cor-primaria);
+    line-height: 1.2;
+    margin-top: 25px;
+    margin-bottom: 30px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 #tela-login input { 
@@ -56,18 +67,20 @@ body {
     border: 1px solid var(--cor-secundaria); 
     border-radius: 6px; 
     box-sizing: border-box; 
+    font-size: 16px;
 }
 
 #tela-login button { 
     width: 100%; 
-    background: var(--cor-destaque-amarelo); /* Botão Entrar em Amarelo */
+    background: var(--cor-destaque-amarelo);
     color: #1a202c; 
-    padding: 14px; 
+    padding: 16px; 
     border: none; 
     border-radius: 6px; 
     cursor: pointer; 
     font-weight: bold; 
     text-transform: uppercase;
+    font-size: 14px;
 }
 
 /* 3. LÓGICA DE TRANSIÇÃO (SISTEMA ABERTO) */
@@ -137,7 +150,7 @@ input, select {
     box-sizing: border-box; 
 }
 
-/* 5. BOTÕES COM AS CORES ORIGINAIS RESTAURADAS */
+/* 5. BOTÕES COM AS CORES ORIGINAIS */
 .botoes { 
     margin-top: 35px; 
     display: flex; 
@@ -167,10 +180,8 @@ input, select {
     display: none; 
     position: fixed; 
     z-index: 9999; 
-    left: 0; 
-    top: 0; 
-    width: 100%; 
-    height: 100%; 
+    left: 0; top: 0; 
+    width: 100%; height: 100%; 
     background-color: rgba(0,0,0,0.7); 
 }
 
