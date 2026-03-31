@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="notranslate">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="google" content="notranslate">
 <title>Dashboard D2P — Portaria 04</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,7 +25,7 @@
     --blue-bg: #2563eb33;
     --amber:   #fbbf24;
     --amber-bg:#f59e0b33;
-    --radius:  12px;
+    --radius:  10px;
   }
 
   body {
@@ -36,162 +35,568 @@
     min-height: 100vh;
   }
 
+  /* ── HEADER ── */
   header {
     position: sticky; top: 0; z-index: 50;
     background: rgba(24,24,27,.85);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
     padding: 0 24px;
-    height: 60px;
+    height: 56px;
     display: flex; align-items: center; justify-content: space-between;
   }
+  .header-left  { display: flex; align-items: center; gap: 12px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
 
-  .header-left { display: flex; align-items: center; gap: 12px; }
-  .header-title { font-size: 14px; font-weight: 700; letter-spacing: .05em; }
-  .header-sub { font-size: 11px; color: var(--muted); }
+  .shield-icon {
+    width: 34px; height: 34px;
+    background: rgba(37,99,235,.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .shield-icon svg { width: 18px; height: 18px; color: var(--blue); stroke: var(--blue); }
 
-  #relogio { font-size: 13px; font-family: monospace; font-weight: 700; color: var(--text2); }
+  .header-title { font-size: 13px; font-weight: 700; letter-spacing: .03em; }
+  .header-sub   { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
-  .btn-nav {
+  .badge-demo {
+    font-size: 11px; font-weight: 600;
+    border: 1px solid rgba(202,138,4,.4);
+    color: #eab308;
+    background: rgba(234,179,8,.08);
+    padding: 2px 10px; border-radius: 20px;
+  }
+
+  #relogio { font-size: 12px; font-family: monospace; font-weight: 700; color: var(--text2); }
+  #data-hoje { font-size: 10px; color: var(--sub); text-align: right; text-transform: capitalize; }
+
+  .btn-icon {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--text3); width: 32px; height: 32px;
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    transition: background .15s, color .15s;
+  }
+  .btn-icon:hover { background: var(--border); color: var(--text); }
+  .btn-icon svg { width: 16px; height: 16px; }
+  .btn-icon.girando svg { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Botão Home */
+  .btn-home {
+    display: flex; align-items: center; gap: 6px;
     background: var(--border); color: var(--text2);
-    border: none; cursor: pointer; padding: 8px 16px; border-radius: 6px;
-    font-size: 12px; font-weight: 600; text-decoration: none; transition: 0.2s;
+    border: none; cursor: pointer;
+    padding: 6px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 500;
+    transition: background .15s, color .15s;
+    text-decoration: none;
   }
-  .btn-nav:hover { background: var(--border2); color: white; }
+  .btn-home:hover { background: var(--border2); color: var(--text); }
+  .btn-home svg { width: 14px; height: 14px; }
 
-  main { max-width: 1300px; margin: 0 auto; padding: 30px; display: flex; flex-direction: column; gap: 25px; }
+  /* ── MAIN ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-direction: column; gap: 24px; }
 
-  /* MÉTRICAS */
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  /* ── CARDS MÉTRICAS ── */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
   .card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 25px; display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .card-label { font-size: 11px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .card-value { font-size: 38px; font-weight: 800; color: var(--text); }
-  .card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-  .card-icon.blue { background: var(--blue-bg); color: var(--blue); }
-  .card-icon.green { background: var(--green-bg); color: var(--green); }
-  .card-icon.amber { background: var(--amber-bg); color: var(--amber); }
+  .card-label {
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: .12em; color: var(--muted); margin-bottom: 6px;
+  }
+  .card-value { font-size: 34px; font-weight: 700; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; flex-shrink: 0;
+  }
+  .card-icon svg { width: 20px; height: 20px; }
+  .card-icon.blue   { background: var(--blue-bg); }
+  .card-icon.blue   svg { stroke: var(--blue); }
+  .card-icon.green  { background: var(--green-bg); }
+  .card-icon.green  svg { stroke: var(--green); }
+  .card-icon.amber  { background: var(--amber-bg); }
+  .card-icon.amber  svg { stroke: var(--amber); }
+  .pulse-dot {
+    position: absolute; top: 4px; right: 4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    animation: ping 1s cubic-bezier(0,0,.2,1) infinite;
+  }
+  @keyframes ping { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
 
-  /* PAINEL DUPLO */
-  .painel-duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .caixa { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-  .caixa-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .caixa-header h3 { font-size: 14px; font-weight: 600; }
+  /* ── PAINEL DUPLO ── */
+  .painel-duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-  .scroll-area { overflow-y: auto; max-height: 300px; }
-  .item { display: flex; align-items: center; gap: 15px; padding: 12px 20px; border-bottom: 1px solid rgba(39,39,42,.5); }
-  .item:last-child { border-bottom: none; }
-  .item:hover { background: rgba(39,39,42,.4); }
+  /* ── CAIXA GENÉRICA ── */
+  .caixa {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .caixa-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .caixa-header h3 {
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .caixa-header h3 svg { width: 16px; height: 16px; }
+  .count-badge {
+    font-size: 11px; background: var(--border); color: var(--text3);
+    padding: 2px 9px; border-radius: 20px;
+  }
+  .count-badge.verde { background: var(--green-bg); color: var(--green); }
 
-  /* TABELA */
-  .tabela-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
-  table { width: 100%; border-collapse: collapse; min-width: 800px; }
-  th { text-align: left; padding: 15px; font-size: 11px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
-  td { padding: 12px 15px; font-size: 13px; border-bottom: 1px solid rgba(39,39,42,.5); }
+  .scroll-area { overflow-y: auto; max-height: 260px; }
 
-  .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
-  .badge-ent { background: var(--green-bg); color: var(--green); }
-  .badge-sai { background: var(--red-bg); color: var(--red); }
+  /* ── LISTA EVENTOS ── */
+  .item-evento {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(39,39,42,.5);
+    transition: background .12s;
+  }
+  .item-evento:hover { background: rgba(39,39,42,.6); }
+  .item-evento:last-child { border-bottom: none; }
 
+  .tipo-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .tipo-icon.ent { background: var(--green-bg); }
+  .tipo-icon.ent svg { stroke: var(--green); }
+  .tipo-icon.sai { background: var(--red-bg); }
+  .tipo-icon.sai svg { stroke: var(--red); }
+  .tipo-icon svg { width: 14px; height: 14px; }
+
+  .ev-nome { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+  .ev-sub  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .ev-hora { margin-left: auto; font-size: 11px; font-family: monospace; color: var(--text3); flex-shrink: 0; }
+
+  /* ── LISTA PRESENTES ── */
+  .item-presente {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(39,39,42,.5);
+    transition: background .12s;
+  }
+  .item-presente:hover { background: rgba(39,39,42,.6); }
+  .item-presente:last-child { border-bottom: none; }
+
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--blue-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--blue); flex-shrink: 0;
+  }
+  .pr-nome  { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+  .pr-sub   { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .pr-hora  { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text3); flex-shrink: 0; }
+  .pr-hora svg { width: 11px; height: 11px; }
+
+  /* ── HISTÓRICO (tabela) ── */
+  .hist-scroll { overflow-x: auto; max-height: 300px; overflow-y: auto; }
+  table.hist { width: 100%; border-collapse: collapse; min-width: 700px; }
+  table.hist th {
+    position: sticky; top: 0;
+    background: var(--surface); color: var(--muted);
+    text-align: left; padding: 10px 14px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    border-bottom: 1px solid var(--border);
+  }
+  table.hist td { padding: 10px 14px; border-bottom: 1px solid rgba(39,39,42,.5); font-size: 12px; color: var(--text2); }
+  table.hist tr:last-child td { border-bottom: none; }
+  table.hist tr:hover td { background: rgba(39,39,42,.4); }
+
+  .badge-ent { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:var(--green-bg); color:var(--green); }
+  .badge-sai { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:var(--red-bg);   color:var(--red);   }
+
+  /* ── ESTADOS ── */
+  .estado { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; }
+  .estado svg { width:32px; height:32px; margin:0 auto 10px; display:block; stroke:var(--border2); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .cards { grid-template-columns: 1fr; }
+    .painel-duplo { grid-template-columns: 1fr; }
+    main { padding: 16px; }
+    header { padding: 0 16px; }
+    #relogio, #data-hoje { display: none; }
+  }
 </style>
 </head>
 <body>
 
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
 <header>
   <div class="header-left">
+    <div class="shield-icon">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+      </svg>
+    </div>
     <div>
-      <div class="header-title">D2P-BRAZIL</div>
-      <div class="header-sub">Painel Administrativo Master</div>
+      <div class="header-title">Segurança D2P</div>
+      <div class="header-sub">Dashboard de Acessos — Portaria 04</div>
     </div>
   </div>
-  <div style="display: flex; align-items: center; gap: 20px;">
-    <div id="relogio">00:00:00</div>
-    <a href="gestao.html" class="btn-nav">GESTÃO USUÁRIOS</a>
-    <a href="../index.html" class="btn-nav" style="background: var(--red-bg); color: var(--red);">SAIR</a>
+
+  <div class="header-right">
+    <span class="badge-demo" id="badge-demo" style="display:none">Demo</span>
+    <div style="text-align:right">
+      <div id="relogio">--:--:--</div>
+      <div id="data-hoje"></div>
+    </div>
+
+    <!-- Botão Refresh -->
+    <button class="btn-icon" id="btn-refresh" title="Atualizar dados" onclick="carregarTudo()">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+        <path d="M21 3v5h-5"/>
+        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+        <path d="M8 16H3v5"/>
+      </svg>
+    </button>
+
+    <!-- Botão Home -->
+    <a href="../administrador/gestao.html" class="btn-home" title="Voltar à Gestão">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Gestão
+    </a>
   </div>
 </header>
 
+<!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
 <main>
+
+  <!-- ── CARDS ── -->
   <div class="cards">
     <div class="card">
-      <div><div class="card-label">Total Acessos Hoje</div><div class="card-value" id="card-total">0</div></div>
-      <div class="card-icon blue">📊</div>
+      <div>
+        <div class="card-label">Total de acessos hoje</div>
+        <div class="card-value" id="card-total">—</div>
+      </div>
+      <div class="card-icon blue">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+        </svg>
+      </div>
     </div>
+
     <div class="card">
-      <div><div class="card-label">Entradas Ativas</div><div class="card-value" id="card-entradas">0</div></div>
-      <div class="card-icon green">↓</div>
+      <div>
+        <div class="card-label">Entradas hoje</div>
+        <div class="card-value" id="card-entradas">—</div>
+      </div>
+      <div class="card-icon green">
+        <div class="pulse-dot"></div>
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 17V3M6 11l6 6 6-6M19 21H5"/>
+        </svg>
+      </div>
     </div>
+
     <div class="card">
-      <div><div class="card-label">Saídas Registradas</div><div class="card-value" id="card-saidas">0</div></div>
-      <div class="card-icon amber">↑</div>
+      <div>
+        <div class="card-label">Saídas hoje</div>
+        <div class="card-value" id="card-saidas">—</div>
+      </div>
+      <div class="card-icon amber">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="m18 9-6-6-6 6M12 3v14M5 21h14"/>
+        </svg>
+      </div>
     </div>
   </div>
 
+  <!-- ── PAINEL DUPLO: Últimos Acessos + No Local ── -->
   <div class="painel-duplo">
+
+    <!-- Últimos Acessos -->
     <div class="caixa">
-      <div class="caixa-header"><h3>Movimentação em Tempo Real</h3></div>
-      <div class="scroll-area" id="lista-eventos"></div>
+      <div class="caixa-header">
+        <h3>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="stroke:var(--green);fill:var(--green)">
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+          Entradas e Saídas — Tempo Real
+        </h3>
+        <span class="count-badge" id="badge-eventos">0 eventos</span>
+      </div>
+      <div class="scroll-area" id="lista-eventos">
+        <div class="estado">
+          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Carregando...
+        </div>
+      </div>
     </div>
+
+    <!-- No Local -->
     <div class="caixa">
-      <div class="caixa-header"><h3>No Local Agora</h3></div>
-      <div class="scroll-area" id="lista-presentes"></div>
+      <div class="caixa-header">
+        <h3>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="stroke:var(--green)">
+            <path d="m16 11 2 2 4-4M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+          </svg>
+          No Local Agora
+        </h3>
+        <span class="count-badge verde" id="badge-presentes">0 presentes</span>
+      </div>
+      <div class="scroll-area" id="lista-presentes">
+        <div class="estado">
+          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Carregando...
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── HISTÓRICO ── -->
+  <div class="caixa">
+    <div class="caixa-header">
+      <h3>
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="stroke:var(--text3)">
+          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+        </svg>
+        Histórico de Acessos
+      </h3>
+      <span class="count-badge" id="badge-hist">0 registros</span>
+    </div>
+    <div class="hist-scroll">
+      <table class="hist">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Nome</th>
+            <th>Empresa</th>
+            <th>Motivo</th>
+            <th>Crachá</th>
+            <th>Tipo</th>
+            <th>Vigilante</th>
+          </tr>
+        </thead>
+        <tbody id="corpo-hist">
+          <tr><td colspan="8" class="estado">Carregando...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="tabela-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Data</th><th>Hora</th><th>Nome</th><th>Empresa</th><th>Tipo</th><th>Vigilante</th>
-        </tr>
-      </thead>
-      <tbody id="corpo-tabela"></tbody>
-    </table>
-  </div>
 </main>
 
+<!-- ═══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
 <script src="../conexao/config.js"></script>
 <script src="../conexao/db.js"></script>
 <script>
-  // Atualiza Relógio
-  setInterval(() => {
-    document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR');
-  }, 1000);
 
-  // Carrega Dados
-  async function carregarDados() {
-    const dados = await dbBuscar('acessos', {}, { order: 'id.desc' });
-    if (!dados) return;
+// ── Relógio ──────────────────────────────────────────────
+function atualizarRelogio() {
+  const agora = new Date();
+  document.getElementById('relogio').textContent =
+    agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  document.getElementById('data-hoje').textContent =
+    agora.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+}
+setInterval(atualizarRelogio, 1000);
+atualizarRelogio();
 
-    const hoje = new Date().toISOString().slice(0, 10);
-    const deHoje = dados.filter(x => x.data === hoje);
+// ── Helpers ──────────────────────────────────────────────
+function dataHoje() {
+  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+}
 
-    document.getElementById('card-total').innerText = deHoje.length;
-    document.getElementById('card-entradas').innerText = deHoje.filter(x => x.acesso === 'ENTRADA').length;
-    document.getElementById('card-saidas').innerText = deHoje.filter(x => x.acesso !== 'ENTRADA').length;
+function iniciais(nome = '') {
+  return nome.trim().split(' ').filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+}
 
-    // Renderiza Tempo Real
-    document.getElementById('lista-eventos').innerHTML = deHoje.slice(0, 10).map(x => `
-      <div class="item">
-        <div style="flex:1"><b>${x.nome}</b><br><small style="color:var(--muted)">${x.empresa}</small></div>
-        <div class="status-badge ${x.acesso === 'ENTRADA' ? 'badge-ent' : 'badge-sai'}">${x.acesso}</div>
-        <div style="font-family:monospace; font-size:11px;">${x.hora}</div>
-      </div>
-    `).join('');
+function svgEntrada() {
+  return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:14px;height:14px">
+    <path d="M12 17V3M6 11l6 6 6-6M19 21H5"/>
+  </svg>`;
+}
+function svgSaida() {
+  return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:14px;height:14px">
+    <path d="m18 9-6-6-6 6M12 3v14M5 21h14"/>
+  </svg>`;
+}
+function svgClock() {
+  return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+  </svg>`;
+}
 
-    // Renderiza Histórico
-    document.getElementById('corpo-tabela').innerHTML = dados.slice(0, 20).map(x => `
-      <tr>
-        <td>${x.data}</td><td>${x.hora}</td><td><b>${x.nome}</b></td>
-        <td>${x.empresa}</td><td><span class="status-badge ${x.acesso === 'ENTRADA' ? 'badge-ent' : 'badge-sai'}">${x.acesso}</span></td>
-        <td>${x.vigilante || ''}</td>
-      </tr>
-    `).join('');
+// ── Carregar tudo ─────────────────────────────────────────
+async function carregarTudo() {
+  const btn = document.getElementById('btn-refresh');
+  btn.classList.add('girando');
+
+  try {
+    // Busca todos os registros ordenados por data/hora desc
+    const todos = await dbBuscar('relatorio_p04', {}, { order: 'id.desc' });
+
+    if (!todos || !Array.isArray(todos)) {
+      mostrarErro();
+      return;
+    }
+
+    const hoje = dataHoje();
+    const deHoje = todos.filter(r => r.Data === hoje);
+
+    const entradas = deHoje.filter(r => (r.Acesso || '').toUpperCase() === 'ENTRADA');
+    const saidas   = deHoje.filter(r => (r.Acesso || '').toUpperCase() !== 'ENTRADA');
+
+    // ── Métricas ──
+    document.getElementById('card-total').textContent   = deHoje.length;
+    document.getElementById('card-entradas').textContent = entradas.length;
+    document.getElementById('card-saidas').textContent   = saidas.length;
+
+    // ── Calcular quem está no local ──
+    // Pega todos os registros (não só hoje) para verificar entradas sem saída correspondente
+    const presentes = calcularPresentes(todos);
+
+    // ── Renderizar listas ──
+    renderEventos(deHoje.slice(0, 30));
+    renderPresentes(presentes);
+    renderHistorico(todos.slice(0, 50));
+
+  } catch (e) {
+    console.error(e);
+    mostrarErro();
+  } finally {
+    btn.classList.remove('girando');
+  }
+}
+
+// ── Quem está no local ────────────────────────────────────
+function calcularPresentes(registros) {
+  // Para cada pessoa (CPF), verifica se o último registro é ENTRADA
+  const mapa = {};
+  // Processa do mais antigo ao mais novo
+  const ordenados = [...registros].reverse();
+  ordenados.forEach(r => {
+    if (!r.CPF) return;
+    mapa[r.CPF] = r;
+  });
+  // Filtra só os que o último acesso foi ENTRADA
+  return Object.values(mapa).filter(r => (r.Acesso || '').toUpperCase() === 'ENTRADA');
+}
+
+// ── Renderizar eventos ────────────────────────────────────
+function renderEventos(lista) {
+  const el = document.getElementById('lista-eventos');
+  document.getElementById('badge-eventos').textContent = lista.length + ' eventos';
+
+  if (!lista.length) {
+    el.innerHTML = '<div class="estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Nenhum evento hoje</div>';
+    return;
   }
 
-  document.addEventListener('DOMContentLoaded', carregarDados);
+  el.innerHTML = lista.map(r => {
+    const isEnt = (r.Acesso || '').toUpperCase() === 'ENTRADA';
+    const tipoClass = isEnt ? 'ent' : 'sai';
+    const svg = isEnt ? svgEntrada() : svgSaida();
+    return `
+      <div class="item-evento">
+        <div class="tipo-icon ${tipoClass}">${svg}</div>
+        <div style="min-width:0;flex:1">
+          <div class="ev-nome" title="${r.Nome || ''}">${r.Nome || '—'}</div>
+          <div class="ev-sub">${r.Empresa || ''} ${r.Motivo ? '· ' + r.Motivo : ''}</div>
+        </div>
+        <div class="ev-hora">${r.Hora || ''}</div>
+      </div>`;
+  }).join('');
+}
+
+// ── Renderizar presentes ──────────────────────────────────
+function renderPresentes(lista) {
+  const el = document.getElementById('lista-presentes');
+  const badge = document.getElementById('badge-presentes');
+  badge.textContent = lista.length + ' presentes';
+
+  if (!lista.length) {
+    el.innerHTML = '<div class="estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Nenhum registro no local</div>';
+    return;
+  }
+
+  el.innerHTML = lista.map(r => `
+    <div class="item-presente">
+      <div class="avatar">${iniciais(r.Nome)}</div>
+      <div style="min-width:0;flex:1">
+        <div class="pr-nome" title="${r.Nome || ''}">${r.Nome || '—'}</div>
+        <div class="pr-sub">${r.Empresa || ''} ${r.Crachá ? '· Crachá ' + r.Crachá : ''}</div>
+      </div>
+      <div class="pr-hora">
+        ${svgClock()}
+        ${r.Hora || ''}
+      </div>
+    </div>`).join('');
+}
+
+// ── Renderizar histórico ──────────────────────────────────
+function renderHistorico(lista) {
+  const tbody = document.getElementById('corpo-hist');
+  document.getElementById('badge-hist').textContent = lista.length + ' registros';
+
+  if (!lista.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="estado">Nenhum registro encontrado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = lista.map(r => {
+    const isEnt = (r.Acesso || '').toUpperCase() === 'ENTRADA';
+    const badge = isEnt
+      ? `<span class="badge-ent">↓ Entrada</span>`
+      : `<span class="badge-sai">↑ Saída</span>`;
+    return `
+      <tr>
+        <td>${r.Data || '—'}</td>
+        <td style="font-family:monospace">${r.Hora || '—'}</td>
+        <td style="font-weight:500">${r.Nome || '—'}</td>
+        <td style="color:var(--text3)">${r.Empresa || '—'}</td>
+        <td style="color:var(--text3)">${r.Motivo || '—'}</td>
+        <td style="font-family:monospace;color:var(--text3)">${r.Cracha || r['Crachá'] || '—'}</td>
+        <td>${badge}</td>
+        <td style="color:var(--text3)">${r.Vigilante || '—'}</td>
+      </tr>`;
+  }).join('');
+}
+
+// ── Erro ──────────────────────────────────────────────────
+function mostrarErro() {
+  const msg = '<div class="estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Erro ao carregar dados</div>';
+  ['lista-eventos','lista-presentes'].forEach(id => document.getElementById(id).innerHTML = msg);
+  document.getElementById('corpo-hist').innerHTML = '<tr><td colspan="8" class="estado">Erro ao carregar dados</td></tr>';
+}
+
+// ── Init ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  carregarTudo();
+  setInterval(carregarTudo, 30000); // auto-refresh a cada 30s
+});
+
 </script>
 </body>
 </html>
