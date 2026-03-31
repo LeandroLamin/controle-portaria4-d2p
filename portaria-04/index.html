@@ -93,16 +93,27 @@
 
     <div id="modal-busca">
         <div class="modal-content">
-            <button class="btn-fechar" onclick="fecharBusca()">X FECHAR</button>
-            <h2 style="color:#34495e; margin-bottom: 20px;">Busca e Relatório Completo</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color:#34495e; margin: 0;">Busca e Relatório Completo</h2>
+                <button class="btn-fechar" onclick="fecharBusca()">X FECHAR</button>
+            </div>
             
-            <div class="filtro-grid">
-                <div class="filtro-item"><label>DATA INICIAL:</label><input type="date" id="filtro-inicio"></div>
-                <div class="filtro-item"><label>DATA FINAL:</label><input type="date" id="filtro-fim"></div>
-                <div class="filtro-item"><label>NOME / CPF / BPU:</label><input type="text" id="filtro-nome"></div>
-                <div class="btn-filtro-container">
+            <div class="filtro-linha">
+                <div class="filtro-item" style="width: 250px;">
+                    <label>DATA INICIAL *:</label>
+                    <input type="date" id="filtro-inicio">
+                </div>
+                <div class="filtro-item" style="width: 250px;">
+                    <label>DATA FINAL *:</label>
+                    <input type="date" id="filtro-fim">
+                </div>
+                <div class="filtro-item" style="width: 300px;">
+                    <label>NOME DO VISITANTE *:</label>
+                    <input type="text" id="filtro-nome">
+                </div>
+                <div class="botoes-filtro">
                     <button class="btn-relatorio" onclick="buscarRelatorio()">FILTRAR</button>
-                    <button class="btn-reset-busca" onclick="limparFiltrosBusca()">LIMPAR</button>
+                    <button class="btn-limpar-filtro" onclick="limparFiltrosBusca()">LIMPAR</button>
                 </div>
             </div>
 
