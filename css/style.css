@@ -1,5 +1,5 @@
 /* ============================================================
-   ESTILO FINAL - PORTARIA 04 (CORES ORIGINAIS & RESPONSIVO)
+   ESTILO PORTARIA 04 - ALINHADO E SEM RESPONSIVO CHATO
    ============================================================ */
 
 :root {
@@ -21,82 +21,61 @@ body {
 
 /* LOGIN */
 #tela-login { 
-    background: white; padding: 45px 35px; border-radius: 12px; width: 90%; max-width: 380px; 
-    text-align: center; border-top: 8px solid var(--cor-primaria); box-sizing: border-box;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    background: white; padding: 40px; border-radius: 12px; width: 380px; 
+    text-align: center; border-top: 8px solid var(--cor-primaria);
 }
-
-.logo-subtexto { 
-    font-size: 14px; color: var(--cor-primaria); text-transform: uppercase; 
-    letter-spacing: 2px; font-weight: bold; margin-bottom: 5px; 
-}
-
-#tela-login h2 { 
-    font-size: 24px; color: var(--cor-primaria); margin: 25px 0; font-weight: 800; line-height: 1.2; text-transform: uppercase;
-}
-
-#tela-login input { 
-    width: 100%; padding: 14px; margin-bottom: 18px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px;
-}
-
-#tela-login button { 
-    width: 100%; background: var(--cor-amarelo); color: #000; padding: 16px; border: none; border-radius: 6px; 
-    font-weight: bold; cursor: pointer; text-transform: uppercase; 
-}
+.logo-subtexto { font-size: 14px; color: var(--cor-primaria); text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-bottom: 5px; }
+#tela-login h2 { font-size: 24px; color: var(--cor-primaria); margin: 25px 0; font-weight: 800; text-transform: uppercase; }
+#tela-login input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+#tela-login button { width: 100%; background: var(--cor-amarelo); color: #000; padding: 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
 
 /* SISTEMA */
 body.sistema-aberto { background-color: #f4f7f6; align-items: flex-start; padding-top: 20px; }
 body.sistema-aberto #tela-login { display: none !important; }
-#sistema-principal { width: 100%; display: none; }
+#sistema-principal { display: none; width: 100%; }
 
 .container-corporativo { 
-    background: white; border: 1px solid #ddd; padding: 40px; width: 95%; max-width: 1000px; 
-    margin: 0 auto 30px auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    background: white; border: 1px solid #ddd; padding: 40px; width: 950px; 
+    margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
 }
 
-h1 { font-size: 24px; color: var(--cor-primaria); margin: 0; text-transform: uppercase; }
-
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
 .campo { display: flex; flex-direction: column; margin-bottom: 10px; }
-label { font-size: 11px; font-weight: bold; margin-bottom: 6px; color: var(--cor-primaria); text-transform: uppercase; }
-input, select { padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+label { font-size: 11px; font-weight: bold; margin-bottom: 5px; color: var(--cor-primaria); text-transform: uppercase; }
+input, select { padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
 
-/* BOTÕES COM CORES ORIGINAIS RESTAURADAS */
-.botoes { margin-top: 35px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-.botoes button { 
-    padding: 14px 25px; border: none; border-radius: 6px; color: white; font-weight: bold; 
-    cursor: pointer; text-transform: uppercase; font-size: 12px; min-width: 160px; flex: 1;
-}
+/* BOTÕES COLORIDOS */
+.botoes { margin-top: 30px; display: flex; gap: 12px; justify-content: center; }
+.botoes button { padding: 14px 25px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+.btn-limpar { background-color: var(--cor-cinza); }
+.btn-relatorio { background-color: var(--cor-azul); }
+.btn-localizar { background-color: var(--cor-laranja); }
+.btn-salvar { background-color: var(--cor-verde); }
 
-.btn-limpar { background-color: var(--cor-cinza) !important; }
-.btn-relatorio { background-color: var(--cor-azul) !important; }
-.btn-localizar { background-color: var(--cor-laranja) !important; }
-.btn-salvar { background-color: var(--cor-verde) !important; }
-
-/* MODAL SEGURO (SEM DESFOCAR) */
+/* MODAL DE BUSCA (ALINHADO COM O SEU PRINT) */
 #modal-busca { 
-    display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); 
+    display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); 
 }
 .modal-content { 
-    background-color: #fff; margin: 2% auto; padding: 30px; border-radius: 8px; width: 95%; max-width: 1300px; 
-    max-height: 90vh; overflow-y: auto; position: relative; box-sizing: border-box;
+    background: white; margin: 1% auto; padding: 30px; border-radius: 8px; width: 1300px; max-height: 95vh; overflow-y: auto; 
 }
 
-.filtro-grid { 
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; 
-    align-items: flex-end; background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #ddd;
-}
+.filtro-linha { display: flex; align-items: flex-end; gap: 15px; margin-bottom: 30px; }
+.filtro-item { display: flex; flex-direction: column; }
+.filtro-item label { font-size: 10px; margin-bottom: 8px; }
+.filtro-item input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
 
-.btn-filtro-container { display: flex; gap: 10px; }
-.btn-reset-busca { background-color: #95a5a6; color: white; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.botoes-filtro { display: flex; gap: 10px; }
+.botoes-filtro button { padding: 12px 25px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+.btn-limpar-filtro { background-color: #95a5a6; color: white; }
 
-/* TABELAS */
+.btn-fechar { background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+/* TABELA */
 .tabela-container { overflow-x: auto; border: 1px solid #ddd; margin-top: 20px; }
 table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1200px; }
-table th { background-color: var(--cor-primaria); color: white; padding: 12px; text-align: left; position: sticky; top: 0; }
-table td { border-bottom: 1px solid #eee; padding: 10px; }
+table th { background-color: var(--cor-primaria); color: white; padding: 10px; text-align: left; }
+table td { border: 1px solid #ddd; padding: 8px; }
 
-/* UTILITÁRIOS */
-.header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 10px; width: 95%; max-width: 1000px; margin: 0 auto 10px auto; }
-.btn-fechar { background-color: #e74c3c; color: white; float: right; padding: 10px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-.btn-exportar { background-color: var(--cor-verde); color: white; margin-top: 20px; padding: 12px 25px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.btn-exportar { background-color: var(--cor-verde); color: white; margin-top: 20px; padding: 12px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+.header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 10px; width: 950px; margin: 0 auto 10px auto; }
