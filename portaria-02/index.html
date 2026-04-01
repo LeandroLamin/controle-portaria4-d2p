@@ -1,347 +1,168 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Acesso - Portaria 2</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root {
-  --teal:#1a8a7a; --teal-dk:#136b5e; --teal-lt:#e8f5f3;
-  --yellow:#f5c518; --yellow-dk:#d4a800;
-  --red:#e03030; --red-dk:#b82020;
-  --gray-bg:#f0f2f5; --white:#ffffff;
-  --border:#d0d8e0; --text:#1a2a38;
-  --label:#4a6070; --green-field:#d4f5d4;
-}
-body { font-family:'Segoe UI',Arial,sans-serif; background:var(--gray-bg); color:var(--text); min-height:100vh; }
+    <meta charset="UTF-8">
+    <title>Sistemas D2P - Seleção de Unidade</title>
+    <style>
+        :root {
+            --cor-primaria: #34495e;
+            --cor-destaque: #f1c40f;
+            --cor-fundo: #f4f7f6;
+            --cor-admin: #546e7a;
+            --cor-ativo: #1a8a7a;
+        }
 
-/* LOGIN */
-#pagina-login { display:flex; align-items:center; justify-content:center; min-height:100vh; background:#1a2535; }
-.login-card { background:#fff; border-radius:10px; padding:44px 40px 36px; width:340px; text-align:center; box-shadow:0 8px 40px rgba(0,0,0,0.4); }
-.login-marca { font-size:11px; color:#6a8090; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:2px; }
-.login-titulo { font-size:20px; font-weight:800; color:var(--teal-dk); margin:14px 0 28px; letter-spacing:.5px; line-height:1.3; }
-.login-input { width:100%; padding:12px 14px; border:1.5px solid #d0dce8; border-radius:6px; font-size:14px; color:var(--text); background:#f2f6fa; margin-bottom:12px; outline:none; transition:border .2s; }
-.login-input:focus { border-color:var(--teal); background:#fff; }
-.btn-login { width:100%; padding:13px; background:var(--yellow); border:none; border-radius:6px; font-size:15px; font-weight:800; color:#1a2535; cursor:pointer; letter-spacing:1px; margin-top:6px; transition:background .2s; }
-.btn-login:hover { background:var(--yellow-dk); }
-.login-voltar { display:block; margin-top:18px; font-size:12px; color:var(--teal); text-decoration:none; cursor:pointer; }
-.login-voltar:hover { text-decoration:underline; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--cor-fundo);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-/* SISTEMA */
-#pagina-sistema { display:none; }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
 
-/* TOPBAR */
-.topbar { background:var(--teal); display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:52px; box-shadow:0 2px 8px rgba(0,0,0,.15); }
-.topbar-logo { font-size:11px; font-weight:800; color:rgba(255,255,255,.7); letter-spacing:3px; text-transform:uppercase; }
-.topbar-titulo { font-size:16px; font-weight:700; color:#fff; letter-spacing:1px; }
-.topbar-user { font-size:12px; color:rgba(255,255,255,.85); }
-.topbar-user span { font-weight:700; color:#fff; }
-.topbar-user a { color:var(--yellow); cursor:pointer; margin-left:8px; text-decoration:none; font-weight:600; }
-.topbar-user a:hover { text-decoration:underline; }
-.divisor-top { height:3px; background:linear-gradient(to right,var(--yellow),var(--teal-lt)); }
+        .logo-texto {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--cor-primaria);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
 
-/* LAYOUT */
-.layout { display:flex; min-height:calc(100vh - 55px); }
+        h1 { color: var(--cor-primaria); margin-top: 10px; }
 
-/* SIDEBAR */
-.sidebar { width:130px; background:#fff; border-right:1px solid var(--border); padding:20px 10px; display:flex; flex-direction:column; gap:6px; }
-.nav-btn { background:none; border:none; border-radius:6px; padding:11px 8px; font-size:12px; font-weight:700; color:var(--label); cursor:pointer; text-align:center; letter-spacing:.5px; transition:all .15s; }
-.nav-btn:hover { background:var(--teal-lt); color:var(--teal-dk); }
-.nav-btn.active { background:var(--teal); color:#fff; box-shadow:0 2px 8px rgba(26,138,122,.3); }
+        .grid-portarias {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            width: 90%;
+            max-width: 800px;
+        }
 
-/* CONTENT */
-.content { flex:1; padding:28px 32px; }
+        .card-portaria {
+            background: white;
+            border-bottom: 5px solid var(--cor-primaria);
+            padding: 40px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-/* CARD */
-.card { background:#fff; border-radius:10px; padding:28px 32px 32px; box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border); max-width:860px; }
+        .card-portaria:hover {
+            transform: translateY(-10px);
+            border-bottom-color: var(--cor-destaque);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
 
-/* TELAS */
-.tela { display:none; }
-.tela.ativa { display:block; }
+        /* Card ativo tem borda teal e hover especial */
+        .card-portaria.ativo {
+            border-bottom-color: var(--cor-ativo);
+        }
+        .card-portaria.ativo:hover {
+            border-bottom-color: var(--cor-destaque);
+        }
 
-/* HEADER SEÇÃO */
-.sec-header { font-size:13px; font-weight:700; color:var(--teal-dk); letter-spacing:1.5px; text-transform:uppercase; padding-bottom:10px; border-bottom:2px solid var(--yellow); margin-bottom:24px; }
+        .card-portaria h3 { margin: 0; color: var(--cor-primaria); font-size: 24px; }
+        .card-portaria p  { color: #7f8c8d; margin-top: 10px; font-size: 14px; }
 
-/* GRUPO */
-.grupo-titulo { font-size:11px; font-weight:700; color:var(--label); letter-spacing:1.5px; text-transform:uppercase; margin:20px 0 12px; padding-left:2px; }
+        .status {
+            font-size: 10px;
+            background: var(--cor-ativo);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
 
-/* CAMPOS */
-.campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
-.campo-group { display:flex; flex-direction:column; gap:4px; }
-.campo-label { font-size:11px; font-weight:600; color:var(--label); letter-spacing:.5px; text-transform:uppercase; }
-input[type="text"], select { border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; transition:border .2s; height:36px; }
-input[type="text"]:focus, select:focus { border-color:var(--teal); }
-input.rg-field { background:var(--green-field); }
-select { cursor:pointer; }
+        .status.breve    { background: #95a5a6; }
+        .status.p04      { background: #27ae60; }
 
-/* BOTÕES */
-.acoes { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; align-items:center; }
-.btn-acao { padding:9px 22px; border-radius:6px; font-size:13px; font-weight:700; border:none; cursor:pointer; letter-spacing:.5px; transition:all .15s; }
-.btn-filtro { background:#4a7080; color:#fff; }
-.btn-filtro:hover { background:#385868; }
-.btn-limpar { background:#607080; color:#fff; }
-.btn-limpar:hover { background:#4a5a68; }
-.btn-pesquisar { background:var(--teal); color:#fff; }
-.btn-pesquisar:hover { background:var(--teal-dk); }
-.btn-entrada { background:var(--yellow); color:#1a2535; }
-.btn-entrada:hover { background:var(--yellow-dk); }
-.btn-saida { background:var(--red); color:#fff; }
-.btn-saida:hover { background:var(--red-dk); }
+        /* Rodapé administrativo */
+        .footer-admin {
+            margin-top: 60px;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            border-top: 1px solid #ddd;
+        }
 
-/* SÉRIE */
-.serie-linha { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+        .btn-admin {
+            background-color: var(--cor-admin);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
 
-/* OBS */
-.obs-input { width:100%; height:36px; border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; }
-.obs-input:focus { border-color:var(--teal); }
-
-/* NOTAS */
-.notas-card { background:#fff; border-radius:10px; border:1px solid var(--border); box-shadow:0 2px 12px rgba(0,0,0,.07); overflow:hidden; max-width:860px; }
-.notas-titulo-bar { background:var(--teal); color:#fff; font-size:12px; font-weight:600; padding:8px 16px; display:flex; justify-content:space-between; align-items:center; }
-.btn-fechar-notas { background:var(--red); border:none; color:#fff; border-radius:4px; cursor:pointer; padding:2px 8px; font-size:12px; font-weight:700; }
-.notas-body { background:linear-gradient(135deg,#c85015 0%,#e06020 50%,#d04010 100%); padding:20px 24px 24px; min-height:380px; position:relative; overflow:hidden; }
-.notas-body::before { content:''; position:absolute; width:300px; height:300px; border-radius:50%; background:rgba(255,255,255,.06); top:-80px; left:-60px; }
-.notas-body::after { content:''; position:absolute; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,.05); bottom:20px; right:-40px; }
-.notas-filtro-titulo { font-size:11px; font-weight:700; color:rgba(255,255,255,.8); letter-spacing:2px; margin-bottom:10px; }
-.notas-filtro-linha { display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap; position:relative; z-index:2; }
-.notas-data-label { font-size:11px; color:rgba(255,255,255,.85); font-weight:600; display:block; margin-bottom:4px; }
-.notas-filtro-linha input { background:rgba(255,255,255,.92); border:none; border-radius:5px; height:34px; width:130px; padding:0 10px; font-size:13px; }
-.btn-lupa { background:rgba(255,255,255,.92); border:none; border-radius:5px; height:34px; padding:0 12px; cursor:pointer; font-size:15px; }
-.btn-habilitar { background:var(--yellow); border:none; border-radius:5px; height:34px; padding:0 16px; cursor:pointer; font-size:12px; font-weight:700; color:#1a2535; }
-.btn-habilitar:hover { background:var(--yellow-dk); }
-.notas-center-img { display:flex; justify-content:center; align-items:center; padding:20px; position:relative; z-index:2; }
-.notas-bottom-input { position:relative; z-index:2; }
-.notas-bottom-input input { width:100%; height:32px; background:rgba(255,255,255,.92); border:none; border-radius:5px; padding:0 10px; font-size:13px; outline:none; }
-</style>
+        .btn-admin:hover { background-color: #37474f; }
+    </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="pagina-login">
-  <div class="login-card">
-    <div class="login-marca">D2P-BRAZIL<br>Segurança Patrimonial</div>
-    <div class="login-titulo">ACESSO RESTRITO<br>PORTARIA 02</div>
-    <input type="text" class="login-input" id="login-user" placeholder="Usuário">
-    <input type="password" class="login-input" id="login-pass" placeholder="Senha">
-    <button class="btn-login" onclick="fazerLogin()">ENTRAR</button>
-    <a class="login-voltar" href="#">🏠 VOLTAR AO MENU PRINCIPAL</a>
-  </div>
-</div>
-
-<!-- SISTEMA -->
-<div id="pagina-sistema">
-  <div class="topbar">
-    <div class="topbar-logo">D2P·BRAZIL</div>
-    <div class="topbar-titulo">CONTROLE DE ACESSO — P02</div>
-    <div class="topbar-user">Usuário: <span id="nome-usuario">—</span> <a onclick="fazerLogout()">| Sair</a></div>
-  </div>
-  <div class="divisor-top"></div>
-
-  <div class="layout">
-    <div class="sidebar">
-      <button class="nav-btn active" onclick="mudarTela('conteiner',this)">CONTÊINER</button>
-      <button class="nav-btn" onclick="mudarTela('acessos',this)">ACESSOS</button>
-      <button class="nav-btn" onclick="mudarTela('romaneio',this)">ROMANEIO</button>
-      <button class="nav-btn" onclick="mudarTela('jit',this)">JIT</button>
-      <button class="nav-btn" onclick="mudarTela('notas',this)">NOTAS</button>
+    <div class="header">
+        <div class="logo-texto">SEGURANÇA PATRIMONIAL D2P-BRAZIL</div>
+        <h1>Selecione a Portaria de Trabalho</h1>
     </div>
 
-    <div class="content">
+    <div class="grid-portarias">
 
-      <!-- CONTÊINER -->
-      <div id="tela-conteiner" class="tela ativa">
-        <div class="card">
-          <div class="sec-header">Cadastro Contêiner</div>
-          <div class="grupo-titulo">Dados Motorista</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" style="width:230px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" class="rg-field" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Transp/</span><select style="width:190px"><option value="">Selecione</option><option>Transportadora A</option><option>Transportadora B</option></select></div>
-          </div>
-          <div class="grupo-titulo">Dados Veículo</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta-1</span><input type="text" style="width:150px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta-2</span><input type="text" style="width:150px"></div>
-          </div>
-          <div class="grupo-titulo">Dados Contêiner</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Contêiner 1</span><input type="text" style="width:210px"></div>
-            <div class="campo-group"><span class="campo-label">Nº Lacre 1</span><input type="text" style="width:180px"></div>
-          </div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Contêiner 2</span><input type="text" style="width:210px"></div>
-            <div class="campo-group"><span class="campo-label">Nº Lacre 2</span><input type="text" style="width:180px"></div>
-          </div>
-          <div class="acoes">
-            <button class="btn-acao btn-filtro">FILTRO</button>
-            <button class="btn-acao btn-limpar" onclick="limparCampos('tela-conteiner')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar">PESQUISAR</button>
-            <button class="btn-acao btn-entrada">ENTRADA</button>
-            <button class="btn-acao btn-saida">SAÍDA</button>
-          </div>
-        </div>
-      </div>
+        <a href="portaria-01/index.html" class="card-portaria">
+            <div class="status breve">EM BREVE</div>
+            <h3>PORTARIA 01</h3>
+            <p>Acesso Principal</p>
+        </a>
 
-      <!-- ACESSOS -->
-      <div id="tela-acessos" class="tela">
-        <div class="card">
-          <div class="sec-header">Cadastro Acessos</div>
-          <div class="grupo-titulo">Dados Motorista</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" style="width:230px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" class="rg-field" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Empresa</span><select style="width:190px"><option value="">Selecione</option><option>Empresa A</option><option>Empresa B</option></select></div>
-          </div>
-          <div class="grupo-titulo">Dados do Veículo</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Veículo</span><input type="text" style="width:210px"></div>
-            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Motivo</span><select style="width:200px"><option value="">Selecione</option><option>Entrega</option><option>Coleta</option><option>Visita</option></select></div>
-          </div>
-          <div class="acoes">
-            <button class="btn-acao btn-filtro">FILTRO</button>
-            <button class="btn-acao btn-limpar" onclick="limparCampos('tela-acessos')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar">PESQUISAR</button>
-            <button class="btn-acao btn-entrada">ENTRADA</button>
-            <button class="btn-acao btn-saida">SAÍDA</button>
-          </div>
-        </div>
-      </div>
+        <a href="portaria-02/index.html" class="card-portaria ativo">
+            <div class="status">SISTEMA ATIVO</div>
+            <h3>PORTARIA 02</h3>
+            <p>Expedição</p>
+        </a>
 
-      <!-- ROMANEIO -->
-      <div id="tela-romaneio" class="tela">
-        <div class="card">
-          <div class="sec-header">Cadastro Romaneio</div>
-          <div class="grupo-titulo">Dados do Motorista</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" style="width:220px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" class="rg-field" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" style="width:260px"></div>
-          </div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Placa/Cavalo</span><input type="text" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta-1</span><input type="text" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta-2</span><input type="text" style="width:130px"></div>
-          </div>
-          <div class="grupo-titulo">Número de Série</div>
-          <div class="serie-linha">
-            <div class="campo-group"><span class="campo-label">1</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">2</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">3</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">4</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">5</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">6</span><input type="text" style="width:100px"></div>
-          </div>
-          <div class="grupo-titulo">Observação</div>
-          <input type="text" class="obs-input" placeholder="Detalhes importantes do romaneio...">
-          <div class="acoes">
-            <button class="btn-acao btn-filtro">FILTRO</button>
-            <button class="btn-acao btn-limpar" onclick="limparCampos('tela-romaneio')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar">PESQUISAR</button>
-            <button class="btn-acao btn-entrada">ENTRADA</button>
-            <button class="btn-acao btn-saida">SAÍDA</button>
-          </div>
-        </div>
-      </div>
+        <a href="portaria-03/index.html" class="card-portaria">
+            <div class="status breve">EM BREVE</div>
+            <h3>PORTARIA 03</h3>
+            <p>Funcionários</p>
+        </a>
 
-      <!-- JIT -->
-      <div id="tela-jit" class="tela">
-        <div class="card">
-          <div class="sec-header">Cadastro JIT — Rota Paraná</div>
-          <div class="grupo-titulo">Dados Motorista</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" style="width:220px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" class="rg-field" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" style="width:220px"></div>
-          </div>
-          <div class="grupo-titulo">Dados Veículo</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" style="width:140px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta</span><input type="text" style="width:160px"></div>
-            <div class="campo-group"><span class="campo-label">Transp/</span><select style="width:190px"><option value="">Selecione</option><option>Transportadora A</option><option>Transportadora B</option></select></div>
-          </div>
-          <div class="acoes">
-            <button class="btn-acao btn-filtro">FILTRO</button>
-            <button class="btn-acao btn-limpar" onclick="limparCampos('tela-jit')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar">PESQUISAR</button>
-            <button class="btn-acao btn-entrada">ENTRADA</button>
-            <button class="btn-acao btn-saida">SAÍDA</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- NOTAS -->
-      <div id="tela-notas" class="tela">
-        <div class="notas-card">
-          <div class="notas-titulo-bar">
-            <span>Baixa de Notas Fiscais — Portaria 2</span>
-            <button class="btn-fechar-notas">✕</button>
-          </div>
-          <div class="notas-body">
-            <div class="notas-filtro-titulo">FILTRO</div>
-            <div class="notas-filtro-linha">
-              <div><span class="notas-data-label">Data Inicial</span><input type="text" placeholder="dd/mm/aaaa"></div>
-              <div><span class="notas-data-label">Data Final</span><input type="text" placeholder="dd/mm/aaaa"></div>
-              <button class="btn-lupa">🔍</button>
-              <button class="btn-habilitar">Habilitar Filtro?</button>
-            </div>
-            <div class="notas-center-img">
-              <svg width="180" height="180" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="100,28 162,72 162,162 38,162 38,72" fill="rgba(255,255,255,0.18)"/>
-                <polygon points="100,16 172,68 28,68" fill="rgba(255,255,255,0.12)"/>
-                <rect x="78" y="112" width="44" height="50" fill="rgba(26,138,122,0.7)" rx="3"/>
-                <rect x="53" y="90" width="30" height="26" fill="rgba(255,255,255,0.3)" rx="3"/>
-                <rect x="117" y="90" width="30" height="26" fill="rgba(255,255,255,0.3)" rx="3"/>
-                <circle cx="58" cy="147" r="15" fill="rgba(60,100,180,0.8)"/>
-                <circle cx="58" cy="128" r="11" fill="#f5c9a0"/>
-                <rect x="48" y="118" width="20" height="5" fill="rgba(30,60,140,0.9)" rx="1"/>
-                <rect x="52" y="111" width="12" height="9" fill="rgba(30,60,140,0.9)" rx="2"/>
-                <text x="57" y="119" font-size="5" fill="#FFD700" text-anchor="middle">★</text>
-                <circle cx="150" cy="52" r="9" fill="none" stroke="#FFD700" stroke-width="3"/>
-                <line x1="156" y1="58" x2="170" y2="72" stroke="#FFD700" stroke-width="3"/>
-                <ellipse cx="36" cy="122" rx="13" ry="9" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-                <circle cx="36" cy="122" r="4" fill="rgba(255,255,255,0.35)"/>
-              </svg>
-            </div>
-            <div class="notas-bottom-input">
-              <input type="text" placeholder="Número da nota fiscal...">
-            </div>
-          </div>
-        </div>
-      </div>
+        <a href="portaria-04/index.html" class="card-portaria" style="border-bottom-color:#27ae60;">
+            <div class="status p04">SISTEMA ATIVO</div>
+            <h3>PORTARIA 04</h3>
+            <p>Visitantes e Terceiros</p>
+        </a>
 
     </div>
-  </div>
-</div>
 
-<script>
-function fazerLogin() {
-  const user = document.getElementById('login-user').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  if (!user || !pass) { alert('Preencha usuário e senha.'); return; }
-  document.getElementById('nome-usuario').textContent = user.toUpperCase();
-  document.getElementById('pagina-login').style.display = 'none';
-  document.getElementById('pagina-sistema').style.display = 'block';
-}
-function fazerLogout() {
-  document.getElementById('login-pass').value = '';
-  document.getElementById('pagina-sistema').style.display = 'none';
-  document.getElementById('pagina-login').style.display = 'flex';
-}
-document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') fazerLogin(); });
-function mudarTela(id, btn) {
-  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tela-'+id).classList.add('ativa');
-  btn.classList.add('active');
-}
-function limparCampos(telaId) {
-  const t = document.getElementById(telaId);
-  t.querySelectorAll('input[type="text"]').forEach(i => i.value='');
-  t.querySelectorAll('select').forEach(s => s.selectedIndex=0);
-}
-</script>
+    <footer class="footer-admin">
+        <a href="./administrador/index.html" class="btn-admin">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.292-.16c.764-.415 1.585.405 1.17.17l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.292c.415.764-.406 1.585-1.17 1.17l-.292-.159a1.873 1.873 0 0 0-2.692 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.693-1.115l-.292.16c-.764.415-1.585-.406-1.17-1.17l.159-.292a1.873 1.873 0 0 0-1.116-2.693l-.318-.094c-.835-.246-.835-1.428 0-1.674l.319-.094a1.873 1.873 0 0 0 1.115-2.692l-.16-.292c-.415-.764.406-1.585 1.17-1.17l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+            </svg>
+            PAINEL DE GESTÃO (MASTER)
+        </a>
+    </footer>
+
 </body>
 </html>
