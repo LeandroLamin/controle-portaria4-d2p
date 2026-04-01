@@ -22,6 +22,25 @@
         .badge { font-size: 10px; font-weight: bold; padding: 5px 12px; border-radius: 15px; color: white; text-transform: uppercase; }
         .bg-admin { background-color: #27ae60 !important; }
         .bg-p04 { background-color: #3498db !important; }
+
+        .btn-editar { background-color: #3498db !important; color: white !important; border: none !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .btn-editar:hover { background-color: #2980b9 !important; transform: scale(1.1); }
+        .acoes-cell { display: flex; gap: 8px; justify-content: center; align-items: center; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-overlay.ativo { display: flex; }
+        .modal-box { background: white; border-radius: 12px; padding: 30px; width: 90%; max-width: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        .modal-box h3 { margin: 0 0 20px; color: #2c3e50; font-size: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .modal-campo { margin-bottom: 15px; }
+        .modal-campo label { display: block; font-size: 12px; font-weight: bold; color: #2c3e50; margin-bottom: 5px; text-transform: uppercase; }
+        .modal-campo input, .modal-campo select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .modal-botoes { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-botoes button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .btn-modal-salvar { background: #27ae60; color: white; }
+        .btn-modal-salvar:hover { background: #219a52; }
+        .btn-modal-cancelar { background: #e0e0e0; color: #333; }
+        .btn-modal-cancelar:hover { background: #ccc; }
     </style>
 </head>
 <body>
@@ -52,7 +71,7 @@
                         <th>LOGIN</th>
                         <th>NOME COMPLETO</th>
                         <th>NÍVEL</th>
-                        <th style="text-align: center; width: 90px;">REMOVER</th>
+                        <th style="text-align: center; width: 120px;">AÇÕES</th>
                     </tr>
                 </thead>
                 <tbody id="corpo-tabela-usuarios">
@@ -61,6 +80,36 @@
             </table>
         </div>
     </main>
+
+    <!-- MODAL DE EDIÇÃO -->
+    <div class="modal-overlay" id="modal-editar">
+        <div class="modal-box">
+            <h3>EDITAR OPERADOR</h3>
+            <input type="hidden" id="edit-id">
+            <div class="modal-campo">
+                <label>Nome Completo:</label>
+                <input type="text" id="edit-nome">
+            </div>
+            <div class="modal-campo">
+                <label>Login:</label>
+                <input type="text" id="edit-login">
+            </div>
+            <div class="modal-campo">
+                <label>Nível de Acesso:</label>
+                <select id="edit-nivel">
+                    <option value="p01">Portaria 01</option>
+                    <option value="p02">Portaria 02</option>
+                    <option value="p03">Portaria 03</option>
+                    <option value="p04">Portaria 04</option>
+                    <option value="administrador">Administrador (Master)</option>
+                </select>
+            </div>
+            <div class="modal-botoes">
+                <button class="btn-modal-cancelar" onclick="fecharModal()">CANCELAR</button>
+                <button class="btn-modal-salvar" onclick="salvarEdicao()">SALVAR</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../conexao/config.js"></script>
     <script src="../conexao/db.js"></script>
@@ -81,8 +130,9 @@
             if (data.length > 0) {
                 data.forEach(user => {
                     const classeBadge = user.nivel_acesso === 'administrador' ? 'bg-admin' : 'bg-p04';
+                    const btnEditar = `<button class="btn-editar" onclick="abrirModal(${user.id}, '${user.nome_completo}', '${user.login}', '${user.nivel_acesso}')" title="Editar">✎</button>`;
                     const btnRemover = user.login !== 'Leandro' ?
-                        `<button class="btn-x" onclick="solicitarExclusao(${user.id}, '${user.login}')">X</button>` :
+                        `<button class="btn-x" onclick="solicitarExclusao(${user.id}, '${user.login}')" title="Remover">X</button>` :
                         `<span style="color:#bdc3c7; font-size:12px;">(Master)</span>`;
 
                     corpoTabela.insertAdjacentHTML('beforeend', `
@@ -91,12 +141,42 @@
                             <td><b>${user.login}</b></td>
                             <td>${user.nome_completo}</td>
                             <td><span class="badge ${classeBadge}">${user.nivel_acesso}</span></td>
-                            <td style="text-align: center;">${btnRemover}</td>
+                            <td><div class="acoes-cell">${btnEditar} ${btnRemover}</div></td>
                         </tr>
                     `);
                 });
             } else {
                 corpoTabela.innerHTML = '<tr><td colspan="5" style="text-align:center">Nenhum usuário cadastrado.</td></tr>';
+            }
+        }
+
+        function abrirModal(id, nome, login, nivel) {
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-nome').value = nome;
+            document.getElementById('edit-login').value = login;
+            document.getElementById('edit-nivel').value = nivel;
+            document.getElementById('modal-editar').classList.add('ativo');
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-editar').classList.remove('ativo');
+        }
+
+        async function salvarEdicao() {
+            const id = document.getElementById('edit-id').value;
+            const nome = document.getElementById('edit-nome').value.trim().toUpperCase();
+            const login = document.getElementById('edit-login').value.trim();
+            const nivel = document.getElementById('edit-nivel').value;
+
+            if (!nome || !login) return alert("Preencha todos os campos!");
+
+            const result = await dbAtualizar('usuarios', { id: Number(id) }, { nome_completo: nome, login: login, nivel_acesso: nivel });
+            if (result && result.ok) {
+                alert("Operador atualizado com sucesso!");
+                fecharModal();
+                buscarUsuarios();
+            } else {
+                alert("Erro ao atualizar operador.");
             }
         }
 
