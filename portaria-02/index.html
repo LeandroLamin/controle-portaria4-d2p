@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Controle de Acesso - Portaria 2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TÍTULO */
+  .titulo {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 18px 0 10px 0;
+    letter-spacing: 1px;
+  }
+
+  /* LAYOUT PRINCIPAL */
+  .layout {
+    display: flex;
+    flex: 1;
+    padding: 0 10px 10px 10px;
+    gap: 12px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 115px;
+    padding-top: 10px;
+  }
+
+  .nav-btn {
+    background: #FF8C00;
+    color: #000;
+    font-weight: bold;
+    font-size: 13px;
+    border: none;
+    padding: 12px 6px;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transition: background 0.15s;
+  }
+
+  .nav-btn:hover { background: #e07800; }
+  .nav-btn.active { background: #cc6600; border: 2px solid #fff; }
+
+  /* CONTENT */
+  .content {
+    flex: 1;
+  }
+
+  /* TELA */
+  .tela { display: none; }
+  .tela.ativa { display: block; }
+
+  /* HEADER DA SEÇÃO */
+  .sec-header {
+    background: #FF8C00;
+    color: #000;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    padding: 7px 0;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+  }
+
+  /* GRUPO DE CAMPOS */
+  .grupo-titulo {
+    color: #fff;
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+
+  .campos-linha {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .campo-label {
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  input[type="text"], select {
+    background: #fff;
+    border: 1px solid #ccc;
+    color: #000;
+    font-size: 13px;
+    padding: 4px 6px;
+    height: 26px;
+  }
+
+  input.rg-field {
+    background: #00cc00;
+    color: #000;
+  }
+
+  select {
+    cursor: pointer;
+  }
+
+  /* BOTÕES DE AÇÃO */
+  .acoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+    padding-left: 30px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-acao {
+    font-weight: bold;
+    font-size: 13px;
+    padding: 8px 18px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-padrao {
+    background: #d0d0d0;
+    color: #000;
+    border: 1px solid #999;
+  }
+  .btn-padrao:hover { background: #b0b0b0; }
+
+  .btn-entrada {
+    background: #ffff00;
+    color: #000;
+    border: 1px solid #ccc;
+  }
+  .btn-entrada:hover { background: #e0e000; }
+
+  .btn-saida {
+    background: #cc0000;
+    color: #fff;
+    border: 1px solid #900;
+  }
+  .btn-saida:hover { background: #aa0000; }
+
+  /* ===== TELA CONTÊINER ===== */
+  .container-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 380px;
+    color: #FF8C00;
+    font-size: 18px;
+    font-weight: bold;
+    gap: 16px;
+    border: 2px dashed #FF8C00;
+    margin-top: 10px;
+  }
+  .container-placeholder span { font-size: 48px; }
+
+  /* ===== TELA NOTAS ===== */
+  .notas-wrap {
+    background: #c0521a;
+    border-radius: 4px;
+    padding: 0;
+    min-height: 420px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .notas-filtro {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px 10px 18px;
+  }
+
+  .notas-filtro-titulo {
+    font-weight: bold;
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 4px;
+    padding-left: 18px;
+    padding-top: 10px;
+  }
+
+  .notas-filtro input[type="text"] {
+    width: 130px;
+    height: 28px;
+  }
+
+  .btn-lupa {
+    background: #e8e8e8;
+    border: 1px solid #999;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 14px;
+    height: 28px;
+  }
+
+  .btn-habilitar {
+    background: #e8e8e8;
+    border: 1px solid #999;
+    cursor: pointer;
+    padding: 4px 14px;
+    font-size: 12px;
+    height: 28px;
+    font-weight: bold;
+  }
+
+  .notas-data-label {
+    font-size: 12px;
+    color: #fff;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Imagem decorativa da portaria */
+  .notas-imagem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    height: 260px;
+  }
+
+  .portaria-svg {
+    width: 200px;
+    height: 200px;
+    opacity: 0.9;
+  }
+
+  .notas-input-bottom {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+  }
+
+  .notas-input-bottom input {
+    width: 100%;
+    height: 28px;
+    background: #fff;
+    border: 1px solid #aaa;
+  }
+
+  /* OBSERVAÇÃO textarea */
+  .obs-input {
+    width: 100%;
+    height: 28px;
+    background: #e8e8e8;
+    border: 1px solid #aaa;
+    font-size: 13px;
+    padding: 4px 6px;
+    color: #000;
+  }
+
+  /* NÚMERO DE SÉRIE */
+  .serie-linha {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .serie-item {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .serie-item .campo-label {
+    font-size: 13px;
+  }
+
+  .serie-item input {
+    width: 95px;
+  }
+
+  /* DECORAÇÕES DE FUNDO NA TELA NOTAS */
+  .notas-decoracao {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+
+  /* Título da janela (tela NOTAS) */
+  .janela-titulo {
+    background: #444;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .janela-fechar {
+    background: #cc3333;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 1px 7px;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="titulo">SISTEMA DE CONTROLE DE ACESSO - PORTARIA 2</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <button class="nav-btn" onclick="mudarTela('conteiner', this)">CONTÊINER</button>
+    <button class="nav-btn" onclick="mudarTela('acessos', this)">ACESSOS</button>
+    <button class="nav-btn" onclick="mudarTela('romaneio', this)">ROMANEIO</button>
+    <button class="nav-btn" onclick="mudarTela('jit', this)">JIT</button>
+    <button class="nav-btn" onclick="mudarTela('notas', this)">NOTAS</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ===== TELA CONTÊINER ===== -->
+    <div id="tela-conteiner" class="tela ativa">
+      <div class="sec-header">CADASTRO CONTÊINER</div>
+
+      <div class="grupo-titulo">DADOS MOTORISTA</div>
+      <div class="campos-linha">
+        <span class="campo-label">NOME</span>
+        <input type="text" style="width:200px">
+        <span class="campo-label">RG</span>
+        <input type="text" class="rg-field" style="width:110px">
+        <span class="campo-label">TRANSP/</span>
+        <select style="width:180px">
+          <option value=""></option>
+          <option>Transportadora A</option>
+          <option>Transportadora B</option>
+        </select>
+      </div>
+
+      <div class="grupo-titulo">DADOS VEÍCULO</div>
+      <div class="campos-linha">
+        <span class="campo-label">PLACA</span>
+        <input type="text" style="width:140px">
+        <span class="campo-label">CARRETA-1</span>
+        <input type="text" style="width:160px">
+        <span class="campo-label">CARRETA-2</span>
+        <input type="text" style="width:160px">
+      </div>
+
+      <div class="grupo-titulo">DADOS CONTÊINER</div>
+      <div class="campos-linha">
+        <span class="campo-label">CONTÊINER 1</span>
+        <input type="text" style="width:200px">
+        <span class="campo-label" style="margin-left:20px">Nº LACRE 1</span>
+        <input type="text" style="width:180px">
+      </div>
+      <div class="campos-linha">
+        <span class="campo-label">CONTÊINER 2</span>
+        <input type="text" style="width:200px">
+        <span class="campo-label" style="margin-left:20px">Nº LACRE 2</span>
+        <input type="text" style="width:180px">
+      </div>
+
+      <div class="acoes">
+        <button class="btn-acao btn-padrao">FILTRO</button>
+        <button class="btn-acao btn-padrao" onclick="limparCampos('tela-conteiner')">LIMPAR</button>
+        <button class="btn-acao btn-padrao">PESQUISAR</button>
+        <button class="btn-acao btn-entrada">ENTRADA</button>
+        <button class="btn-acao btn-saida">SAIDA</button>
+      </div>
+    </div>
+
+    <!-- ===== TELA ACESSOS ===== -->
+    <div id="tela-acessos" class="tela">
+      <div class="sec-header">CADASTRO ACESSOS</div>
+
+      <div class="grupo-titulo">DADOS MOTORISTA</div>
+      <div class="campos-linha">
+        <span class="campo-label">NOME</span>
+        <input type="text" style="width:200px">
+        <span class="campo-label">RG</span>
+        <input type="text" class="rg-field" style="width:110px">
+        <span class="campo-label">EMPRESA</span>
+        <select style="width:180px">
+          <option value=""></option>
+          <option>Empresa A</option>
+          <option>Empresa B</option>
+        </select>
+      </div>
+
+      <div class="grupo-titulo">DADOS DO VEÍCULO</div>
+      <div class="campos-linha">
+        <span class="campo-label">VEÍCULO</span>
+        <input type="text" style="width:200px">
+        <span class="campo-label">PLACA</span>
+        <input type="text" style="width:110px">
+        <span class="campo-label">MOTIVO</span>
+        <select style="width:200px">
+          <option value=""></option>
+          <option>Entrega</option>
+          <option>Coleta</option>
+          <option>Visita</option>
+        </select>
+      </div>
+
+      <div class="acoes">
+        <button class="btn-acao btn-padrao">FILTRO</button>
+        <button class="btn-acao btn-padrao" onclick="limparCampos('tela-acessos')">LIMPAR</button>
+        <button class="btn-acao btn-padrao">PESQUISAR</button>
+        <button class="btn-acao btn-entrada">ENTRADA</button>
+        <button class="btn-acao btn-saida">SAIDA</button>
+      </div>
+    </div>
+
+    <!-- ===== TELA ROMANEIO ===== -->
+    <div id="tela-romaneio" class="tela">
+      <div class="sec-header">CADASTRO ROMANEIO</div>
+
+      <div class="grupo-titulo">DADOS DO MOTORISTA</div>
+      <div class="campos-linha">
+        <span class="campo-label">NOME</span>
+        <input type="text" style="width:200px">
+        <span class="campo-label">RG</span>
+        <input type="text" class="rg-field" style="width:110px">
+        <span class="campo-label">EMPRESA</span>
+        <input type="text" style="width:280px">
+      </div>
+
+      <div class="campos-linha">
+        <span class="campo-label">PLACA/CAVALO</span>
+        <input type="text" style="width:120px">
+        <span class="campo-label">CARRETA-1</span>
+        <input type="text" style="width:120px">
+        <span class="campo-label">CARRETA-2</span>
+        <input type="text" style="width:120px">
+      </div>
+
+      <div class="grupo-titulo">NÚMERO DE SÉRIE</div>
+      <div class="serie-linha">
+        <div class="serie-item"><span class="campo-label">1-</span><input type="text" style="width:95px"></div>
+        <div class="serie-item"><span class="campo-label">2-</span><input type="text" style="width:95px"></div>
+        <div class="serie-item"><span class="campo-label">3-</span><input type="text" style="width:95px"></div>
+        <div class="serie-item"><span class="campo-label">4-</span><input type="text" style="width:95px"></div>
+        <div class="serie-item"><span class="campo-label">5-</span><input type="text" style="width:95px"></div>
+        <div class="serie-item"><span class="campo-label">6-</span><input type="text" style="width:95px"></div>
+      </div>
+
+      <div class="grupo-titulo">OBSERVAÇÃO</div>
+      <div class="campos-linha">
+        <input type="text" class="obs-input">
+      </div>
+
+      <div class="acoes">
+        <button class="btn-acao btn-padrao">FILTRO</button>
+        <button class="btn-acao btn-padrao" onclick="limparCampos('tela-romaneio')">LIMPAR</button>
+        <button class="btn-acao btn-padrao">PESQUISAR</button>
+        <button class="btn-acao btn-entrada">ENTRADA</button>
+        <button class="btn-acao btn-saida">SAIDA</button>
+      </div>
+    </div>
+
+    <!-- ===== TELA JIT ===== -->
+    <div id="tela-jit" class="tela">
+      <div class="sec-header">CADASTRO JIT - ROTA PARANÁ</div>
+
+      <div class="grupo-titulo">DADOS MOTORISTA</div>
+      <div class="campos-linha">
+        <span class="campo-label">NOME</span>
+        <input type="text" style="width:200px">
+        <span class="campo-label">RG</span>
+        <input type="text" class="rg-field" style="width:110px">
+        <span class="campo-label">EMPRESA</span>
+        <input type="text" style="width:220px">
+      </div>
+
+      <div class="grupo-titulo">DADOS VEÍCULO</div>
+      <div class="campos-linha">
+        <span class="campo-label">PLACA</span>
+        <input type="text" style="width:140px">
+        <span class="campo-label">CARRETA</span>
+        <input type="text" style="width:160px">
+        <span class="campo-label">TRANSP/</span>
+        <select style="width:180px">
+          <option value=""></option>
+          <option>Transportadora A</option>
+          <option>Transportadora B</option>
+        </select>
+      </div>
+
+      <div class="acoes">
+        <button class="btn-acao btn-padrao">FILTRO</button>
+        <button class="btn-acao btn-padrao" onclick="limparCampos('tela-jit')">LIMPAR</button>
+        <button class="btn-acao btn-padrao">PESQUISAR</button>
+        <button class="btn-acao btn-entrada">ENTRADA</button>
+        <button class="btn-acao btn-saida">SAIDA</button>
+      </div>
+    </div>
+
+    <!-- ===== TELA NOTAS ===== -->
+    <div id="tela-notas" class="tela">
+      <div class="janela-titulo">
+        <span>Baixa de Notas Fiscais - Portaria 2.</span>
+        <button class="janela-fechar">✕</button>
+      </div>
+
+      <div class="notas-wrap">
+        <!-- Decorações de fundo -->
+        <div class="notas-decoracao" style="width:180px;height:180px;top:-40px;left:-40px;"></div>
+        <div class="notas-decoracao" style="width:120px;height:120px;bottom:60px;right:20px;"></div>
+        <div class="notas-decoracao" style="width:80px;height:80px;top:80px;right:100px;"></div>
+
+        <div class="notas-filtro-titulo">FILTRO</div>
+        <div class="notas-filtro">
+          <div>
+            <span class="notas-data-label">Data Inicial</span>
+            <input type="text" placeholder="dd/mm/aaaa" style="width:130px">
+          </div>
+          <div>
+            <span class="notas-data-label">Data Final</span>
+            <input type="text" placeholder="dd/mm/aaaa" style="width:130px">
+          </div>
+          <button class="btn-lupa">🔍</button>
+          <button class="btn-habilitar">Habilitar Filtro?</button>
+        </div>
+
+        <!-- IMAGEM DECORATIVA SVG -->
+        <div class="notas-imagem">
+          <svg class="portaria-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Casa -->
+            <polygon points="100,30 160,75 160,160 40,160 40,75" fill="#e8e8e8"/>
+            <polygon points="100,20 170,70 30,70" fill="#c8c8c8"/>
+            <!-- Porta -->
+            <rect x="80" y="110" width="40" height="50" fill="#5a9e8a" rx="2"/>
+            <!-- Janela -->
+            <rect x="55" y="90" width="28" height="24" fill="#a8d4c8" rx="2"/>
+            <rect x="117" y="90" width="28" height="24" fill="#a8d4c8" rx="2"/>
+            <!-- Guarda -->
+            <circle cx="100" cy="195" r="0"/>
+            <!-- Corpo guarda (centralizado em x=60) -->
+            <circle cx="58" cy="145" r="14" fill="#5a7fbf"/>
+            <circle cx="58" cy="128" r="10" fill="#f5c9a0"/>
+            <!-- Chapéu -->
+            <rect x="49" y="118" width="18" height="5" fill="#3a5fa0" rx="1"/>
+            <rect x="52" y="112" width="12" height="8" fill="#3a5fa0" rx="2"/>
+            <!-- Estrela no chapéu -->
+            <text x="56" y="119" font-size="5" fill="#FFD700" text-anchor="middle">★</text>
+            <!-- Escudo -->
+            <path d="M80,138 L80,152 Q80,160 88,162 Q96,160 96,152 L96,138 Z" fill="#c8c8c8" stroke="#888" stroke-width="1"/>
+            <path d="M88,142 L88,154 Q88,158 88,158" stroke="#888" stroke-width="1" fill="none"/>
+            <line x1="80" y1="148" x2="96" y2="148" stroke="#888" stroke-width="1"/>
+            <!-- Chaves -->
+            <circle cx="150" cy="55" r="8" fill="none" stroke="#FFD700" stroke-width="3"/>
+            <line x1="155" y1="60" x2="168" y2="73" stroke="#FFD700" stroke-width="3"/>
+            <line x1="163" y1="70" x2="165" y2="67" stroke="#FFD700" stroke-width="2"/>
+            <line x1="166" y1="72" x2="168" y2="69" stroke="#FFD700" stroke-width="2"/>
+            <!-- Olho -->
+            <ellipse cx="38" cy="120" rx="12" ry="8" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+            <circle cx="38" cy="120" r="4" fill="rgba(255,255,255,0.4)"/>
+          </svg>
+        </div>
+
+        <!-- Input de baixo -->
+        <div class="notas-input-bottom">
+          <input type="text" style="width:100%;height:28px;background:#fff;border:1px solid #aaa;font-size:13px;padding:4px 6px;color:#000;">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function mudarTela(id, btn) {
+    // Remove ativa de todas as telas
+    document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById('tela-' + id).classList.add('ativa');
+    btn.classList.add('active');
+  }
+
+  function limparCampos(telaId) {
+    const tela = document.getElementById(telaId);
+    tela.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+    tela.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+  }
+
+  // Ativa botão inicial
+  document.querySelector('.nav-btn').classList.add('active');
+</script>
+</body>
+</html>
