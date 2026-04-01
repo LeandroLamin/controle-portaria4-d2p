@@ -2,17 +2,19 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>PAINEL GESTÃO - Gestão D2P</title>
+    <title>Painel MASTER - Gestão D2P</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
         * { box-sizing: border-box !important; }
         body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; overflow-x: hidden; min-height: 100vh; }
         .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; background-color: #2c3e50; padding: 20px; display: flex; flex-direction: column; z-index: 1000; }
         .sidebar-header { text-align: center; border-bottom: 1px solid #34495e; padding-bottom: 20px; margin-bottom: 20px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; cursor: pointer; }
         .menu-item.active, .menu-item:hover { background-color: #34495e; color: white; border-left: 4px solid #f1c40f; }
         .btn-sair { margin-top: auto; background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; }
         .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; display: flex; flex-direction: column; align-items: flex-start; }
+
+        /* ── Gestão de Usuários ── */
         .caixa-branca { background: white !important; padding: 30px !important; border-radius: 8px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; width: 100% !important; max-width: 1000px !important; overflow-x: auto !important; }
         table { width: 100% !important; border-collapse: collapse !important; min-width: 600px; }
         th { background-color: #f8f9fa !important; color: #7f8c8d !important; text-align: left !important; padding: 15px !important; font-size: 12px !important; text-transform: uppercase !important; border-bottom: 2px solid #ddd !important; }
@@ -22,12 +24,11 @@
         .badge { font-size: 10px; font-weight: bold; padding: 5px 12px; border-radius: 15px; color: white; text-transform: uppercase; }
         .bg-admin { background-color: #27ae60 !important; }
         .bg-p04 { background-color: #3498db !important; }
-
         .btn-editar { background-color: #3498db !important; color: white !important; border: none !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .btn-editar:hover { background-color: #2980b9 !important; transform: scale(1.1); }
         .acoes-cell { display: flex; gap: 8px; justify-content: center; align-items: center; }
 
-        /* Modal */
+        /* ── Modal ── */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
         .modal-overlay.ativo { display: flex; }
         .modal-box { background: white; border-radius: 12px; padding: 30px; width: 90%; max-width: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
@@ -41,6 +42,80 @@
         .btn-modal-salvar:hover { background: #219a52; }
         .btn-modal-cancelar { background: #e0e0e0; color: #333; }
         .btn-modal-cancelar:hover { background: #ccc; }
+
+        /* ── Seções ── */
+        .secao { width: 100%; max-width: 1000px; display: none; }
+        .secao.ativo { display: block; }
+
+        /* ── Dashboard (tema claro) ── */
+        .dash-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+        .dash-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .dash-card-label { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: #7f8c8d; margin-bottom: 6px; }
+        .dash-card-value { font-size: 34px; font-weight: 700; line-height: 1; color: #2c3e50; font-variant-numeric: tabular-nums; }
+        .dash-card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+        .dash-card-icon svg { width: 20px; height: 20px; }
+        .dash-card-icon.blue  { background: rgba(52,152,219,.12); }
+        .dash-card-icon.blue  svg { stroke: #3498db; }
+        .dash-card-icon.green { background: rgba(39,174,96,.12); }
+        .dash-card-icon.green svg { stroke: #27ae60; }
+        .dash-card-icon.amber { background: rgba(243,156,18,.12); }
+        .dash-card-icon.amber svg { stroke: #f39c12; }
+        .dash-pulse { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #27ae60; animation: dashPing 1s cubic-bezier(0,0,.2,1) infinite; }
+        @keyframes dashPing { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+        .dash-duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+        .dash-caixa { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .dash-caixa-header { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; background: #fafafa; }
+        .dash-caixa-header h3 { font-size: 13px; font-weight: 600; color: #2c3e50; display: flex; align-items: center; gap: 8px; margin: 0; }
+        .dash-caixa-header h3 svg { width: 14px; height: 14px; }
+        .dash-badge { font-size: 11px; background: #f0f0f0; color: #7f8c8d; padding: 2px 9px; border-radius: 20px; }
+        .dash-badge.verde { background: rgba(39,174,96,.12); color: #27ae60; }
+
+        .dash-scroll { overflow-y: auto; max-height: 260px; }
+
+        .dash-item-evento { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #f5f5f5; transition: background .12s; }
+        .dash-item-evento:hover { background: #fafafa; }
+        .dash-item-evento:last-child { border-bottom: none; }
+        .dash-tipo-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .dash-tipo-icon.ent { background: rgba(39,174,96,.12); }
+        .dash-tipo-icon.ent svg { stroke: #27ae60; }
+        .dash-tipo-icon.sai { background: rgba(231,76,60,.10); }
+        .dash-tipo-icon.sai svg { stroke: #e74c3c; }
+        .dash-tipo-icon svg { width: 13px; height: 13px; }
+        .dash-ev-nome { font-size: 13px; font-weight: 500; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+        .dash-ev-sub  { font-size: 11px; color: #95a5a6; margin-top: 1px; }
+        .dash-ev-hora { margin-left: auto; font-size: 11px; font-family: monospace; color: #7f8c8d; flex-shrink: 0; }
+
+        .dash-item-presente { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #f5f5f5; transition: background .12s; }
+        .dash-item-presente:hover { background: #fafafa; }
+        .dash-item-presente:last-child { border-bottom: none; }
+        .dash-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(52,152,219,.12); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #3498db; flex-shrink: 0; }
+        .dash-pr-nome { font-size: 13px; font-weight: 500; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+        .dash-pr-sub  { font-size: 11px; color: #95a5a6; margin-top: 1px; }
+        .dash-pr-hora { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 11px; color: #7f8c8d; flex-shrink: 0; }
+        .dash-pr-hora svg { width: 11px; height: 11px; stroke: #95a5a6; }
+
+        .dash-hist-scroll { overflow-x: auto; max-height: 300px; overflow-y: auto; }
+        table.dash-hist { width: 100%; border-collapse: collapse; min-width: 900px; }
+        table.dash-hist th { position: sticky; top: 0; background: #fafafa; color: #7f8c8d; text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; border-bottom: 1px solid #eee; }
+        table.dash-hist td { padding: 10px 14px; border-bottom: 1px solid #f5f5f5; font-size: 12px; color: #333; }
+        table.dash-hist tr:last-child td { border-bottom: none; }
+        table.dash-hist tr:hover td { background: #fafafa; }
+        .dash-badge-ent { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:rgba(39,174,96,.12); color:#27ae60; }
+        .dash-badge-sai { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:rgba(231,76,60,.10); color:#e74c3c; }
+
+        .dash-estado { text-align:center; padding:40px 20px; color:#95a5a6; font-size:13px; }
+        .dash-estado svg { width:28px; height:28px; margin:0 auto 10px; display:block; stroke:#ddd; }
+
+        .dash-refresh { background: #f0f0f0; border: none; border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2c3e50; cursor: pointer; transition: background .15s; }
+        .dash-refresh:hover { background: #e0e0e0; }
+        .dash-refresh.girando { opacity: .6; pointer-events: none; }
+
+        @media (max-width: 900px) {
+            .dash-cards { grid-template-columns: 1fr; }
+            .dash-duplo  { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -48,38 +123,160 @@
     <nav class="sidebar">
         <div class="sidebar-header">
             <div style="font-size: 10px; color: #95a5a6; letter-spacing: 2px;">SEGURANÇA D2P</div>
-            <h2 style="color: white; font-size: 18px; margin-top: 5px;">PAINEL GESTÃO</h2>
+            <h2 style="color: white; font-size: 18px; margin-top: 5px;">PAINEL MASTER</h2>
         </div>
         <div style="flex-grow: 1;">
             <a href="index.html" class="menu-item">➕ Novo Cadastro</a>
-            <a href="#" class="menu-item active">👥 Gestão de Usuários</a>
-            <a href="dashboard.html" class="menu-item">📊 Dashboard de Acessos</a>
+            <a href="#" class="menu-item active" id="nav-usuarios" onclick="mostrarSecao('usuarios', this)">👥 Gestão de Usuários</a>
+            <a href="#" class="menu-item" id="nav-dashboard" onclick="mostrarSecao('dashboard', this)">📊 Dashboard de Acessos</a>
         </div>
         <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
     </nav>
 
     <main class="main-content">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1000px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
-            <h1 style="margin:0; color:#2c3e50; font-size: 24px;">CONTROLE DE OPERADORES</h1>
+            <h1 id="page-title" style="margin:0; color:#2c3e50; font-size: 24px;">CONTROLE DE OPERADORES</h1>
             <div style="font-size: 13px;">Admin: <b>LEANDRO LAMIN</b></div>
         </div>
 
-        <div class="caixa-branca">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 60px;">ID</th>
-                        <th>LOGIN</th>
-                        <th>NOME COMPLETO</th>
-                        <th>NÍVEL</th>
-                        <th style="text-align: center; width: 120px;">AÇÕES</th>
-                    </tr>
-                </thead>
-                <tbody id="corpo-tabela-usuarios">
-                    <tr><td colspan="5" style="text-align:center">Carregando dados...</td></tr>
-                </tbody>
-            </table>
+        <!-- ── SEÇÃO: GESTÃO DE USUÁRIOS ── -->
+        <div id="secao-usuarios" class="secao ativo">
+            <div class="caixa-branca">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ID</th>
+                            <th>LOGIN</th>
+                            <th>NOME COMPLETO</th>
+                            <th>NÍVEL</th>
+                            <th style="text-align: center; width: 120px;">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-tabela-usuarios">
+                        <tr><td colspan="5" style="text-align:center">Carregando dados...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <!-- ── SEÇÃO: DASHBOARD ── -->
+        <div id="secao-dashboard" class="secao">
+
+            <!-- Cards -->
+            <div class="dash-cards">
+                <div class="dash-card">
+                    <div>
+                        <div class="dash-card-label">Total de acessos hoje</div>
+                        <div class="dash-card-value" id="d-card-total">—</div>
+                    </div>
+                    <div class="dash-card-icon blue">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2"/>
+                            <path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <div>
+                        <div class="dash-card-label">Entradas hoje</div>
+                        <div class="dash-card-value" id="d-card-entradas">—</div>
+                    </div>
+                    <div class="dash-card-icon green">
+                        <div class="dash-pulse"></div>
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 17V3M6 11l6 6 6-6M19 21H5"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <div>
+                        <div class="dash-card-label">Saídas hoje</div>
+                        <div class="dash-card-value" id="d-card-saidas">—</div>
+                    </div>
+                    <div class="dash-card-icon amber">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="m18 9-6-6-6 6M12 3v14M5 21h14"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel duplo -->
+            <div class="dash-duplo">
+                <div class="dash-caixa">
+                    <div class="dash-caixa-header">
+                        <h3>
+                            <svg fill="none" viewBox="0 0 24 24" style="fill:#27ae60;stroke:none"><circle cx="12" cy="12" r="4"/></svg>
+                            Entradas e Saídas — Tempo Real
+                        </h3>
+                        <span class="dash-badge" id="d-badge-eventos">0 eventos</span>
+                    </div>
+                    <div class="dash-scroll" id="d-lista-eventos">
+                        <div class="dash-estado">
+                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                            Clique em "Dashboard de Acessos" para carregar
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-caixa">
+                    <div class="dash-caixa-header">
+                        <h3>
+                            <svg fill="none" stroke="#27ae60" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="m16 11 2 2 4-4M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                            </svg>
+                            No Local Agora
+                        </h3>
+                        <span class="dash-badge verde" id="d-badge-presentes">0 presentes</span>
+                    </div>
+                    <div class="dash-scroll" id="d-lista-presentes">
+                        <div class="dash-estado">
+                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                            Aguardando carregamento...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Histórico -->
+            <div class="dash-caixa">
+                <div class="dash-caixa-header">
+                    <h3>
+                        <svg fill="none" stroke="#7f8c8d" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                        </svg>
+                        Histórico de Acessos
+                    </h3>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span class="dash-badge" id="d-badge-hist">0 registros</span>
+                        <button class="dash-refresh" id="d-btn-refresh" onclick="carregarDashboard()">↻ Atualizar</button>
+                    </div>
+                </div>
+                <div class="dash-hist-scroll">
+                    <table class="dash-hist">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Nome</th>
+                                <th>Empresa</th>
+                                <th>Responsável</th>
+                                <th>Motivo</th>
+                                <th>Crachá</th>
+                                <th>Tipo</th>
+                                <th>Liberado</th>
+                                <th>Vigilante</th>
+                            </tr>
+                        </thead>
+                        <tbody id="d-corpo-hist">
+                            <tr><td colspan="10" class="dash-estado">Aguardando carregamento...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div><!-- /secao-dashboard -->
     </main>
 
     <!-- MODAL DE EDIÇÃO -->
@@ -115,6 +312,33 @@
     <script src="../conexao/config.js"></script>
     <script src="../conexao/db.js"></script>
     <script>
+        // ── Navegação entre seções ─────────────────────────────
+        let dashCarregado = false;
+        let dashInterval  = null;
+
+        const titulos = {
+            usuarios:  'CONTROLE DE OPERADORES',
+            dashboard: 'DASHBOARD DE ACESSOS'
+        };
+
+        function mostrarSecao(nome, el) {
+            event.preventDefault();
+            document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativo'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById('secao-' + nome).classList.add('ativo');
+            if (el) el.classList.add('active');
+            document.getElementById('page-title').textContent = titulos[nome] || '';
+
+            if (nome === 'dashboard') {
+                carregarDashboard();
+                if (!dashInterval) dashInterval = setInterval(carregarDashboard, 30000);
+            } else {
+                clearInterval(dashInterval);
+                dashInterval = null;
+            }
+        }
+
+        // ── Gestão de Usuários ─────────────────────────────────
         document.addEventListener('DOMContentLoaded', buscarUsuarios);
 
         async function buscarUsuarios() {
@@ -165,8 +389,8 @@
         }
 
         async function salvarEdicao() {
-            const id = document.getElementById('edit-id').value;
-            const nome = document.getElementById('edit-nome').value.trim().toUpperCase();
+            const id    = document.getElementById('edit-id').value;
+            const nome  = document.getElementById('edit-nome').value.trim().toUpperCase();
             const login = document.getElementById('edit-login').value.trim();
             const nivel = document.getElementById('edit-nivel').value;
 
@@ -192,6 +416,148 @@
                     alert("Erro ao remover usuário.");
                 }
             }
+        }
+
+        // ── Dashboard ──────────────────────────────────────────
+        function dataHoje() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
+        function iniciais(nome) {
+            return (nome || '').trim().split(' ').filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+        }
+
+        function svgEnt() {
+            return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M12 17V3M6 11l6 6 6-6M19 21H5"/></svg>`;
+        }
+        function svgSai() {
+            return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="m18 9-6-6-6 6M12 3v14M5 21h14"/></svg>`;
+        }
+        function svgClk() {
+            return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
+        }
+
+        async function carregarDashboard() {
+            const btn = document.getElementById('d-btn-refresh');
+            btn.classList.add('girando');
+
+            try {
+                const todos = await dbBuscar('acessos', {}, { order: 'id.desc' });
+
+                if (!todos || !Array.isArray(todos)) {
+                    dashMostrarErro();
+                    return;
+                }
+
+                const hoje     = dataHoje();
+                const deHoje   = todos.filter(r => r.data === hoje);
+                const entradas = deHoje.filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
+                const saidas   = deHoje.filter(r => (r.acesso || '').toUpperCase() !== 'ENTRADA');
+
+                document.getElementById('d-card-total').textContent    = deHoje.length;
+                document.getElementById('d-card-entradas').textContent = entradas.length;
+                document.getElementById('d-card-saidas').textContent   = saidas.length;
+
+                dashRenderEventos(deHoje.slice(0, 30));
+                dashRenderPresentes(dashCalcularPresentes(todos));
+                dashRenderHistorico(todos.slice(0, 50));
+
+            } catch (e) {
+                console.error(e);
+                dashMostrarErro();
+            } finally {
+                btn.classList.remove('girando');
+            }
+        }
+
+        function dashCalcularPresentes(registros) {
+            const mapa = {};
+            [...registros].reverse().forEach(r => {
+                if (!r.cpf) return;
+                mapa[r.cpf] = r;
+            });
+            return Object.values(mapa).filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
+        }
+
+        function dashRenderEventos(lista) {
+            const el = document.getElementById('d-lista-eventos');
+            document.getElementById('d-badge-eventos').textContent = lista.length + ' eventos';
+
+            if (!lista.length) {
+                el.innerHTML = '<div class="dash-estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Nenhum evento hoje</div>';
+                return;
+            }
+
+            el.innerHTML = lista.map(r => {
+                const isEnt = (r.acesso || '').toUpperCase() === 'ENTRADA';
+                return `
+                    <div class="dash-item-evento">
+                        <div class="dash-tipo-icon ${isEnt ? 'ent' : 'sai'}">${isEnt ? svgEnt() : svgSai()}</div>
+                        <div style="min-width:0;flex:1">
+                            <div class="dash-ev-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
+                            <div class="dash-ev-sub">${r.empresa || ''}${r.motivo ? ' · ' + r.motivo : ''}</div>
+                        </div>
+                        <div class="dash-ev-hora">${r.hora || ''}</div>
+                    </div>`;
+            }).join('');
+        }
+
+        function dashRenderPresentes(lista) {
+            const el    = document.getElementById('d-lista-presentes');
+            const badge = document.getElementById('d-badge-presentes');
+            badge.textContent = lista.length + ' presentes';
+
+            if (!lista.length) {
+                el.innerHTML = '<div class="dash-estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Nenhum registro no local</div>';
+                return;
+            }
+
+            el.innerHTML = lista.map(r => `
+                <div class="dash-item-presente">
+                    <div class="dash-avatar">${iniciais(r.nome)}</div>
+                    <div style="min-width:0;flex:1">
+                        <div class="dash-pr-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
+                        <div class="dash-pr-sub">${r.empresa || ''}${r.cracha ? ' · Crachá ' + r.cracha : ''}</div>
+                    </div>
+                    <div class="dash-pr-hora">${svgClk()} ${r.hora || ''}</div>
+                </div>`).join('');
+        }
+
+        function dashRenderHistorico(lista) {
+            const tbody = document.getElementById('d-corpo-hist');
+            document.getElementById('d-badge-hist').textContent = lista.length + ' registros';
+
+            if (!lista.length) {
+                tbody.innerHTML = '<tr><td colspan="10" class="dash-estado">Nenhum registro encontrado</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = lista.map(r => {
+                const isEnt = (r.acesso || '').toUpperCase() === 'ENTRADA';
+                const badge = isEnt
+                    ? `<span class="dash-badge-ent">↓ Entrada</span>`
+                    : `<span class="dash-badge-sai">↑ Saída</span>`;
+                return `
+                    <tr>
+                        <td>${r.data || '—'}</td>
+                        <td style="font-family:monospace">${r.hora || '—'}</td>
+                        <td style="font-weight:500">${r.nome || '—'}</td>
+                        <td style="color:#7f8c8d">${r.empresa || '—'}</td>
+                        <td style="color:#7f8c8d">${r.responsavel || '—'}</td>
+                        <td style="color:#7f8c8d">${r.motivo || '—'}</td>
+                        <td style="font-family:monospace;color:#7f8c8d">${r.cracha || '—'}</td>
+                        <td>${badge}</td>
+                        <td style="color:#7f8c8d">${r.liberado || '—'}</td>
+                        <td style="color:#7f8c8d">${r.vigilante || '—'}</td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function dashMostrarErro() {
+            const msg = '<div class="dash-estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Erro ao carregar dados</div>';
+            document.getElementById('d-lista-eventos').innerHTML   = msg;
+            document.getElementById('d-lista-presentes').innerHTML = msg;
+            document.getElementById('d-corpo-hist').innerHTML = '<tr><td colspan="10" class="dash-estado">Erro ao carregar dados</td></tr>';
         }
     </script>
 </body>
