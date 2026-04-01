@@ -17,16 +17,16 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg-light); 
-            display: flex; 
-            min-height: 100vh; 
-            overflow-x: hidden; 
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* --- LOGIN OVERLAY (ESTILO COMPACTO) --- */
+        /* --- LOGIN OVERLAY --- */
         #wrapper-login {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 50%, var(--primary-dark) 100%);
@@ -37,31 +37,16 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 16px;
-            padding: 30px 35px; /* Espaçamento interno reduzido */
-            width: 90%;
-            max-width: 360px;
+            padding: 30px 35px;
+            width: 90%; max-width: 360px;
             box-shadow: 0 25px 60px rgba(0,0,0,0.4);
             text-align: center;
         }
-        .login-logo { margin-bottom: 20px; } /* Espaço reduzido abaixo do logo */
-        .login-logo .titulo { 
-            color: var(--accent-gold); 
-            font-size: 10px; 
-            letter-spacing: 3px; 
-            text-transform: uppercase; 
-            margin-bottom: 5px; 
-        }
+        .login-logo { margin-bottom: 20px; }
+        .login-logo .titulo { color: var(--accent-gold); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 5px; }
         .login-logo h2 { color: white; font-size: 20px; margin: 0; font-weight: 700; letter-spacing: 1px; }
-        .login-logo small { 
-            color: rgba(255,255,255,0.4); 
-            font-size: 11px; 
-            display: block; 
-            margin-top: 10px; /* Reduzido o espaço da legenda */
-        }
-        
-        /* Removido .login-divider conforme solicitado */
-
-        .login-campo { margin-bottom: 12px; } /* Espaço entre campos reduzido */
+        .login-logo small { color: rgba(255,255,255,0.4); font-size: 11px; display: block; margin-top: 10px; }
+        .login-campo { margin-bottom: 12px; }
         .login-campo input {
             width: 100%; padding: 12px 16px;
             background: rgba(255,255,255,0.08);
@@ -71,52 +56,45 @@
         }
         .login-campo input::placeholder { color: rgba(255,255,255,0.3); }
         .login-campo input:focus { border-color: var(--accent-gold); }
-
         .btn-entrar {
             width: 100%; padding: 13px; background: var(--accent-gold); color: var(--primary-dark);
             border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
             letter-spacing: 2px; cursor: pointer; margin-top: 5px; transition: all 0.2s;
         }
         .btn-entrar:hover { background: var(--accent-hover); transform: translateY(-1px); }
-        
         .btn-voltar {
             width: 100%; padding: 10px; background: transparent;
             color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px; font-size: 13px; cursor: pointer; margin-top: 8px;
-            transition: all 0.2s;
+            border-radius: 8px; font-size: 13px; cursor: pointer; margin-top: 8px; transition: all 0.2s;
         }
         .btn-voltar:hover { color: white; border-color: rgba(255,255,255,0.3); }
 
         /* --- SIDEBAR --- */
-        .sidebar { 
-            width: 260px; height: 100vh; position: fixed; left: 0; top: 0; 
-            background-color: var(--secondary-dark); color: white; 
-            display: flex; flex-direction: column; padding: 20px; 
+        .sidebar {
+            width: 260px; height: 100vh; position: fixed; left: 0; top: 0;
+            background-color: var(--secondary-dark); color: white;
+            display: flex; flex-direction: column; padding: 20px;
             box-shadow: 4px 0 10px rgba(0,0,0,0.1);
         }
         .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--sidebar-item); padding-bottom: 20px; }
-        
-        .menu-item { 
-            display: flex; align-items: center; gap: 12px; padding: 15px; 
-            color: var(--text-muted); text-decoration: none; border-radius: 8px; 
-            margin-bottom: 10px; transition: 0.3s; 
+        .menu-item {
+            display: flex; align-items: center; gap: 12px; padding: 15px;
+            color: var(--text-muted); text-decoration: none; border-radius: 8px;
+            margin-bottom: 10px; transition: 0.3s; cursor: pointer;
         }
         .menu-item:hover, .menu-item.active { background-color: var(--sidebar-item); color: white; border-left: 4px solid var(--accent-gold); }
-        
-        .btn-sair { 
-            background: var(--sidebar-item); color: white; border: none; padding: 12px; 
-            border-radius: 8px; cursor: pointer; margin-top: auto; width: 100%; 
+        .btn-sair {
+            background: var(--sidebar-item); color: white; border: none; padding: 12px;
+            border-radius: 8px; cursor: pointer; margin-top: auto; width: 100%;
         }
 
         /* --- CONTEÚDO --- */
         .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; display: flex; flex-direction: column; align-items: center; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; max-width: 700px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; max-width: 1000px; }
         .caixa-branca { background: white; width: 100%; max-width: 700px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        
         .campo { margin-bottom: 18px; width: 100%; }
         .campo label { display: block; font-size: 13px; font-weight: bold; color: var(--secondary-dark); margin-bottom: 6px; }
         .campo input, .campo select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
-
         .btn-salvar {
             width: 100%; height: 50px; margin-top: 15px;
             background: var(--accent-gold); color: var(--primary-dark);
@@ -124,6 +102,80 @@
             cursor: pointer; transition: all 0.2s;
         }
         .btn-salvar:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+        /* --- Seções SPA --- */
+        .secao { width: 100%; max-width: 1000px; display: none; }
+        .secao.ativo { display: block; }
+
+        /* ── Dashboard (tema claro) ── */
+        .dash-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+        .dash-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .dash-card-label { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: #7f8c8d; margin-bottom: 6px; }
+        .dash-card-value { font-size: 34px; font-weight: 700; line-height: 1; color: #2c3e50; font-variant-numeric: tabular-nums; }
+        .dash-card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+        .dash-card-icon svg { width: 20px; height: 20px; }
+        .dash-card-icon.blue  { background: rgba(52,152,219,.12); }
+        .dash-card-icon.blue  svg { stroke: #3498db; }
+        .dash-card-icon.green { background: rgba(39,174,96,.12); }
+        .dash-card-icon.green svg { stroke: #27ae60; }
+        .dash-card-icon.amber { background: rgba(243,156,18,.12); }
+        .dash-card-icon.amber svg { stroke: #f39c12; }
+        .dash-pulse { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #27ae60; animation: dashPing 1s cubic-bezier(0,0,.2,1) infinite; }
+        @keyframes dashPing { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+        .dash-duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+        .dash-caixa { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .dash-caixa-header { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; background: #fafafa; }
+        .dash-caixa-header h3 { font-size: 13px; font-weight: 600; color: #2c3e50; display: flex; align-items: center; gap: 8px; margin: 0; }
+        .dash-caixa-header h3 svg { width: 14px; height: 14px; }
+        .dash-badge { font-size: 11px; background: #f0f0f0; color: #7f8c8d; padding: 2px 9px; border-radius: 20px; }
+        .dash-badge.verde { background: rgba(39,174,96,.12); color: #27ae60; }
+
+        .dash-scroll { overflow-y: auto; max-height: 260px; }
+
+        .dash-item-evento { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #f5f5f5; transition: background .12s; }
+        .dash-item-evento:hover { background: #fafafa; }
+        .dash-item-evento:last-child { border-bottom: none; }
+        .dash-tipo-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .dash-tipo-icon.ent { background: rgba(39,174,96,.12); }
+        .dash-tipo-icon.ent svg { stroke: #27ae60; }
+        .dash-tipo-icon.sai { background: rgba(231,76,60,.10); }
+        .dash-tipo-icon.sai svg { stroke: #e74c3c; }
+        .dash-tipo-icon svg { width: 13px; height: 13px; }
+        .dash-ev-nome { font-size: 13px; font-weight: 500; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+        .dash-ev-sub  { font-size: 11px; color: #95a5a6; margin-top: 1px; }
+        .dash-ev-hora { margin-left: auto; font-size: 11px; font-family: monospace; color: #7f8c8d; flex-shrink: 0; }
+
+        .dash-item-presente { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #f5f5f5; transition: background .12s; }
+        .dash-item-presente:hover { background: #fafafa; }
+        .dash-item-presente:last-child { border-bottom: none; }
+        .dash-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(52,152,219,.12); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #3498db; flex-shrink: 0; }
+        .dash-pr-nome { font-size: 13px; font-weight: 500; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+        .dash-pr-sub  { font-size: 11px; color: #95a5a6; margin-top: 1px; }
+        .dash-pr-hora { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 11px; color: #7f8c8d; flex-shrink: 0; }
+        .dash-pr-hora svg { width: 11px; height: 11px; stroke: #95a5a6; }
+
+        .dash-hist-scroll { overflow-x: auto; max-height: 300px; overflow-y: auto; }
+        table.dash-hist { width: 100%; border-collapse: collapse; min-width: 900px; }
+        table.dash-hist th { position: sticky; top: 0; background: #fafafa; color: #7f8c8d; text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; border-bottom: 1px solid #eee; }
+        table.dash-hist td { padding: 10px 14px; border-bottom: 1px solid #f5f5f5; font-size: 12px; color: #333; }
+        table.dash-hist tr:last-child td { border-bottom: none; }
+        table.dash-hist tr:hover td { background: #fafafa; }
+        .dash-badge-ent { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:rgba(39,174,96,.12); color:#27ae60; }
+        .dash-badge-sai { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:700; background:rgba(231,76,60,.10); color:#e74c3c; }
+
+        .dash-estado { text-align:center; padding:40px 20px; color:#95a5a6; font-size:13px; }
+        .dash-estado svg { width:28px; height:28px; margin:0 auto 10px; display:block; stroke:#ddd; }
+
+        .dash-refresh { background: #f0f0f0; border: none; border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2c3e50; cursor: pointer; transition: background .15s; }
+        .dash-refresh:hover { background: #e0e0e0; }
+        .dash-refresh.girando { opacity: .6; pointer-events: none; }
+
+        @media (max-width: 900px) {
+            .dash-cards { grid-template-columns: 1fr; }
+            .dash-duplo  { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -154,9 +206,9 @@
             <h2 style="color: white; font-size: 18px; margin-top: 5px;">PAINEL GESTÃO</h2>
         </div>
         <div style="flex-grow: 1;">
-            <a href="#" class="menu-item active">➕ Novo Cadastro</a>
+            <a href="#" class="menu-item active" id="nav-cadastro" onclick="mostrarSecao(event, 'cadastro', this)">➕ Novo Cadastro</a>
             <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
-            <a href="dashboard.html" class="menu-item">📊 Dashboard de Acessos</a>
+            <a href="#" class="menu-item" id="nav-dashboard" onclick="mostrarSecao(event, 'dashboard', this)">📊 Dashboard de Acessos</a>
         </div>
         <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
     </nav>
@@ -164,47 +216,170 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="main-content">
         <div class="page-header">
-            <h1 style="margin:0; color:var(--secondary-dark); font-size: 24px;">CADASTRO DE OPERADORES</h1>
+            <h1 id="page-title" style="margin:0; color:var(--secondary-dark); font-size: 24px;">CADASTRO DE OPERADORES</h1>
             <div style="font-size: 13px;">Admin: <b id="nome-admin-logado">---</b></div>
         </div>
 
-        <div class="caixa-branca">
-            <h3 style="margin-top:0; color: var(--secondary-dark); border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">
-                Dados do Novo Vigilante
-            </h3>
-            <div class="campo">
-                <label>NOME COMPLETO:</label>
-                <input type="text" id="cad-nome" placeholder="Ex: JOAO DA SILVA">
+        <!-- ── SEÇÃO: NOVO CADASTRO ── -->
+        <div id="secao-cadastro" class="secao ativo">
+            <div class="caixa-branca">
+                <h3 style="margin-top:0; color: var(--secondary-dark); border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">
+                    Dados do Novo Vigilante
+                </h3>
+                <div class="campo">
+                    <label>NOME COMPLETO:</label>
+                    <input type="text" id="cad-nome" placeholder="Ex: JOAO DA SILVA">
+                </div>
+                <div class="campo">
+                    <label>LOGIN (ÚNICO):</label>
+                    <input type="text" id="cad-login" placeholder="Ex: joao.p04">
+                </div>
+                <div class="campo">
+                    <label>SENHA DE ACESSO:</label>
+                    <input type="password" id="cad-senha" placeholder="SENHA">
+                </div>
+                <div class="campo">
+                    <label>NÍVEL DE PERMISSÃO / UNIDADE:</label>
+                    <select id="cad-nivel">
+                        <option value="p01">Portaria 01</option>
+                        <option value="portaria-02">Portaria 02</option>
+                        <option value="p03">Portaria 03</option>
+                        <option value="p04" selected>Portaria 04</option>
+                        <option value="administrador">Administrador (Master)</option>
+                    </select>
+                </div>
+                <button class="btn-salvar" onclick="cadastrarUsuario()">FINALIZAR CADASTRO</button>
             </div>
-            <div class="campo">
-                <label>LOGIN (ÚNICO):</label>
-                <input type="text" id="cad-login" placeholder="Ex: joao.p04">
-            </div>
-            <div class="campo">
-                <label>SENHA DE ACESSO:</label>
-                <input type="password" id="cad-senha" placeholder="SENHA">
-            </div>
-            <div class="campo">
-                <label>NÍVEL DE PERMISSÃO / UNIDADE:</label>
-                <select id="cad-nivel">
-                    <option value="p01">Portaria 01</option>
-                    <option value="portaria-02">Portaria 02</option>
-                    <option value="p03">Portaria 03</option>
-                    <option value="p04" selected>Portaria 04</option>
-                    <option value="administrador">Administrador (Master)</option>
-                </select>
-            </div>
-            <button class="btn-salvar" onclick="cadastrarUsuario()">FINALIZAR CADASTRO</button>
         </div>
+
+        <!-- ── SEÇÃO: DASHBOARD ── -->
+        <div id="secao-dashboard" class="secao">
+
+            <!-- Cards -->
+            <div class="dash-cards">
+                <div class="dash-card">
+                    <div>
+                        <div class="dash-card-label">Total de acessos hoje</div>
+                        <div class="dash-card-value" id="d-card-total">—</div>
+                    </div>
+                    <div class="dash-card-icon blue">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2"/>
+                            <path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <div>
+                        <div class="dash-card-label">Entradas hoje</div>
+                        <div class="dash-card-value" id="d-card-entradas">—</div>
+                    </div>
+                    <div class="dash-card-icon green">
+                        <div class="dash-pulse"></div>
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 17V3M6 11l6 6 6-6M19 21H5"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <div>
+                        <div class="dash-card-label">Saídas hoje</div>
+                        <div class="dash-card-value" id="d-card-saidas">—</div>
+                    </div>
+                    <div class="dash-card-icon amber">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="m18 9-6-6-6 6M12 3v14M5 21h14"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel duplo -->
+            <div class="dash-duplo">
+                <div class="dash-caixa">
+                    <div class="dash-caixa-header">
+                        <h3>
+                            <svg fill="none" viewBox="0 0 24 24" style="fill:#27ae60;stroke:none"><circle cx="12" cy="12" r="4"/></svg>
+                            Entradas e Saídas — Tempo Real
+                        </h3>
+                        <span class="dash-badge" id="d-badge-eventos">0 eventos</span>
+                    </div>
+                    <div class="dash-scroll" id="d-lista-eventos">
+                        <div class="dash-estado">
+                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                            Aguardando carregamento...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-caixa">
+                    <div class="dash-caixa-header">
+                        <h3>
+                            <svg fill="none" stroke="#27ae60" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="m16 11 2 2 4-4M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                            </svg>
+                            No Local Agora
+                        </h3>
+                        <span class="dash-badge verde" id="d-badge-presentes">0 presentes</span>
+                    </div>
+                    <div class="dash-scroll" id="d-lista-presentes">
+                        <div class="dash-estado">
+                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                            Aguardando carregamento...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Histórico -->
+            <div class="dash-caixa">
+                <div class="dash-caixa-header">
+                    <h3>
+                        <svg fill="none" stroke="#7f8c8d" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                        </svg>
+                        Histórico de Acessos
+                    </h3>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span class="dash-badge" id="d-badge-hist">0 registros</span>
+                        <button class="dash-refresh" id="d-btn-refresh" onclick="carregarDashboard()">↻ Atualizar</button>
+                    </div>
+                </div>
+                <div class="dash-hist-scroll">
+                    <table class="dash-hist">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Nome</th>
+                                <th>Empresa</th>
+                                <th>Responsável</th>
+                                <th>Motivo</th>
+                                <th>Crachá</th>
+                                <th>Tipo</th>
+                                <th>Liberado</th>
+                                <th>Vigilante</th>
+                            </tr>
+                        </thead>
+                        <tbody id="d-corpo-hist">
+                            <tr><td colspan="10" class="dash-estado">Aguardando carregamento...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div><!-- /secao-dashboard -->
     </main>
 
     <script src="../conexao/config.js"></script>
     <script src="../conexao/db.js"></script>
     <script>
+        // ── Login ──────────────────────────────────────────────
         async function autenticarAdmin() {
             const user = document.getElementById('user-admin').value.trim();
             const pass = document.getElementById('pass-admin').value.trim();
-            if(!user || !pass) return;
+            if (!user || !pass) return;
 
             const data = await dbBuscar('usuarios', { login: user, senha: pass });
 
@@ -216,19 +391,20 @@
             }
         }
 
+        // ── Cadastro ───────────────────────────────────────────
         async function cadastrarUsuario() {
-            const nome = document.getElementById('cad-nome').value.trim().toUpperCase();
+            const nome  = document.getElementById('cad-nome').value.trim().toUpperCase();
             const login = document.getElementById('cad-login').value.trim();
             const senha = document.getElementById('cad-senha').value.trim();
             const nivel = document.getElementById('cad-nivel').value;
 
             if (!nome || !login || !senha) return alert("Atenção: Preencha todos os campos!");
 
-            const result = await dbSalvar('usuarios', { 
-                nome_completo: nome, 
-                login: login, 
-                senha: senha, 
-                nivel_acesso: nivel 
+            const result = await dbSalvar('usuarios', {
+                nome_completo: nome,
+                login: login,
+                senha: senha,
+                nivel_acesso: nivel
             });
 
             if (result && result.ok) {
@@ -237,6 +413,173 @@
             } else {
                 alert("Erro ao cadastrar usuário.");
             }
+        }
+
+        // ── Navegação SPA ──────────────────────────────────────
+        let dashInterval = null;
+
+        const titulos = {
+            cadastro:  'CADASTRO DE OPERADORES',
+            dashboard: 'DASHBOARD DE ACESSOS'
+        };
+
+        function mostrarSecao(e, nome, el) {
+            e.preventDefault();
+            document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativo'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById('secao-' + nome).classList.add('ativo');
+            if (el) el.classList.add('active');
+            document.getElementById('page-title').textContent = titulos[nome] || '';
+
+            if (nome === 'dashboard') {
+                carregarDashboard();
+                if (!dashInterval) dashInterval = setInterval(carregarDashboard, 30000);
+            } else {
+                clearInterval(dashInterval);
+                dashInterval = null;
+            }
+        }
+
+        // ── Dashboard ──────────────────────────────────────────
+        function dataHoje() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
+        function iniciais(nome) {
+            return (nome || '').trim().split(' ').filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+        }
+
+        function svgEnt() {
+            return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M12 17V3M6 11l6 6 6-6M19 21H5"/></svg>`;
+        }
+        function svgSai() {
+            return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="m18 9-6-6-6 6M12 3v14M5 21h14"/></svg>`;
+        }
+        function svgClk() {
+            return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
+        }
+
+        async function carregarDashboard() {
+            const btn = document.getElementById('d-btn-refresh');
+            btn.classList.add('girando');
+
+            try {
+                const todos = await dbBuscar('acessos', {}, { order: 'id.desc' });
+
+                if (!todos || !Array.isArray(todos)) {
+                    dashMostrarErro();
+                    return;
+                }
+
+                const hoje     = dataHoje();
+                const deHoje   = todos.filter(r => r.data === hoje);
+                const entradas = deHoje.filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
+                const saidas   = deHoje.filter(r => (r.acesso || '').toUpperCase() !== 'ENTRADA');
+
+                document.getElementById('d-card-total').textContent    = deHoje.length;
+                document.getElementById('d-card-entradas').textContent = entradas.length;
+                document.getElementById('d-card-saidas').textContent   = saidas.length;
+
+                dashRenderEventos(deHoje.slice(0, 30));
+                dashRenderPresentes(dashCalcularPresentes(todos));
+                dashRenderHistorico(todos.slice(0, 50));
+
+            } catch (e) {
+                console.error(e);
+                dashMostrarErro();
+            } finally {
+                btn.classList.remove('girando');
+            }
+        }
+
+        function dashCalcularPresentes(registros) {
+            const mapa = {};
+            [...registros].reverse().forEach(r => {
+                if (!r.cpf) return;
+                mapa[r.cpf] = r;
+            });
+            return Object.values(mapa).filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
+        }
+
+        function dashRenderEventos(lista) {
+            const el = document.getElementById('d-lista-eventos');
+            document.getElementById('d-badge-eventos').textContent = lista.length + ' eventos';
+
+            if (!lista.length) {
+                el.innerHTML = '<div class="dash-estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Nenhum evento hoje</div>';
+                return;
+            }
+
+            el.innerHTML = lista.map(r => {
+                const isEnt = (r.acesso || '').toUpperCase() === 'ENTRADA';
+                return `
+                    <div class="dash-item-evento">
+                        <div class="dash-tipo-icon ${isEnt ? 'ent' : 'sai'}">${isEnt ? svgEnt() : svgSai()}</div>
+                        <div style="min-width:0;flex:1">
+                            <div class="dash-ev-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
+                            <div class="dash-ev-sub">${r.empresa || ''}${r.motivo ? ' · ' + r.motivo : ''}</div>
+                        </div>
+                        <div class="dash-ev-hora">${r.hora || ''}</div>
+                    </div>`;
+            }).join('');
+        }
+
+        function dashRenderPresentes(lista) {
+            const el    = document.getElementById('d-lista-presentes');
+            const badge = document.getElementById('d-badge-presentes');
+            badge.textContent = lista.length + ' presentes';
+
+            if (!lista.length) {
+                el.innerHTML = '<div class="dash-estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Nenhum registro no local</div>';
+                return;
+            }
+
+            el.innerHTML = lista.map(r => `
+                <div class="dash-item-presente">
+                    <div class="dash-avatar">${iniciais(r.nome)}</div>
+                    <div style="min-width:0;flex:1">
+                        <div class="dash-pr-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
+                        <div class="dash-pr-sub">${r.empresa || ''}${r.cracha ? ' · Crachá ' + r.cracha : ''}</div>
+                    </div>
+                    <div class="dash-pr-hora">${svgClk()} ${r.hora || ''}</div>
+                </div>`).join('');
+        }
+
+        function dashRenderHistorico(lista) {
+            const tbody = document.getElementById('d-corpo-hist');
+            document.getElementById('d-badge-hist').textContent = lista.length + ' registros';
+
+            if (!lista.length) {
+                tbody.innerHTML = '<tr><td colspan="10" class="dash-estado">Nenhum registro encontrado</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = lista.map(r => {
+                const isEnt = (r.acesso || '').toUpperCase() === 'ENTRADA';
+                const badge = isEnt
+                    ? `<span class="dash-badge-ent">↓ Entrada</span>`
+                    : `<span class="dash-badge-sai">↑ Saída</span>`;
+                return `
+                    <tr>
+                        <td>${r.data || '—'}</td>
+                        <td style="font-family:monospace">${r.hora || '—'}</td>
+                        <td style="font-weight:500">${r.nome || '—'}</td>
+                        <td style="color:#7f8c8d">${r.empresa || '—'}</td>
+                        <td style="color:#7f8c8d">${r.responsavel || '—'}</td>
+                        <td style="color:#7f8c8d">${r.motivo || '—'}</td>
+                        <td style="font-family:monospace;color:#7f8c8d">${r.cracha || '—'}</td>
+                        <td>${badge}</td>
+                        <td style="color:#7f8c8d">${r.liberado || '—'}</td>
+                        <td style="color:#7f8c8d">${r.vigilante || '—'}</td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function dashMostrarErro() {
+            const msg = '<div class="dash-estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Erro ao carregar dados</div>';
+            document.getElementById('d-lista-eventos').innerHTML   = msg;
+            document.getElementById('d-lista-presentes').innerHTML = msg;
+            document.getElementById('d-corpo-hist').innerHTML = '<tr><td colspan="10" class="dash-estado">Erro ao carregar dados</td></tr>';
         }
     </script>
 </body>
