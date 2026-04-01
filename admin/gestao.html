@@ -392,7 +392,11 @@
                 data.forEach(user => {
                     const classeBadge = user.nivel_acesso === 'administrador' ? 'bg-admin' : 'bg-p04';
                     const btnEditar = user.login !== 'Leandro' ?
-                        `<button class="btn-editar" onclick="abrirModal(${user.id}, '${user.nome_completo}', '${user.login}', '${user.nivel_acesso}')" title="Editar">✎</button>` : '';
+                        `<button class="btn-editar" onclick="abrirModal(this)" title="Editar"
+                            data-id="${user.id}"
+                            data-nome="${user.nome_completo}"
+                            data-login="${user.login}"
+                            data-nivel="${user.nivel_acesso}">✎</button>` : '';
                     const btnRemover = user.login !== 'Leandro' ?
                         `<button class="btn-x" onclick="solicitarExclusao(${user.id}, '${user.login}')" title="Remover">X</button>` :
                         `<span style="color:#bdc3c7; font-size:12px;">(Master)</span>`;
@@ -424,7 +428,12 @@
             }
         }
 
-        function abrirModal(id, nome, login, nivel) {
+        function abrirModal(btn) {
+            const id    = btn.dataset.id;
+            const nome  = btn.dataset.nome;
+            const login = btn.dataset.login;
+            const nivel = btn.dataset.nivel || '';
+
             document.getElementById('edit-id').value    = id;
             document.getElementById('edit-nome').value  = nome;
             document.getElementById('edit-login').value = login;
@@ -432,7 +441,7 @@
             document.getElementById('edit-senha').type  = 'password';
             document.getElementById('olho-icon').innerHTML = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>`;
 
-            const selecionados = nivel.split(',').map(v => v.trim());
+            const selecionados = nivel.split(',').map(v => v.trim()).filter(Boolean);
             document.querySelectorAll('.checkboxes-nivel input[type="checkbox"]').forEach(cb => {
                 cb.checked = selecionados.includes(cb.value);
             });
