@@ -42,6 +42,14 @@
         .btn-modal-salvar:hover { background: #219a52; }
         .btn-modal-cancelar { background: #e0e0e0; color: #333; }
         .btn-modal-cancelar:hover { background: #ccc; }
+        .input-olho { position: relative; display: flex; align-items: center; }
+        .input-olho input { flex: 1; width: 100%; padding: 10px 40px 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .btn-olho { position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #95a5a6; padding: 0; display: flex; align-items: center; }
+        .btn-olho:hover { color: #2c3e50; }
+        .btn-olho svg { width: 18px; height: 18px; }
+        .checkboxes-nivel { display: flex; flex-direction: column; gap: 10px; padding: 6px 0; }
+        .cb-label { display: flex; align-items: center; gap: 9px; font-size: 14px; color: #2c3e50; cursor: pointer; font-weight: normal; user-select: none; }
+        .cb-label input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #3498db; flex-shrink: 0; }
 
         /* ── Seções ── */
         .secao { width: 100%; max-width: 1000px; display: none; }
@@ -293,14 +301,26 @@
                 <input type="text" id="edit-login">
             </div>
             <div class="modal-campo">
+                <label>Senha: <span style="font-weight:normal;color:#95a5a6;font-size:11px">(deixe em branco para manter)</span></label>
+                <div class="input-olho">
+                    <input type="password" id="edit-senha" placeholder="Nova senha (opcional)" autocomplete="new-password">
+                    <button type="button" class="btn-olho" onclick="toggleSenha()" title="Mostrar/ocultar senha">
+                        <svg id="olho-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-campo">
                 <label>Nível de Acesso:</label>
-                <select id="edit-nivel">
-                    <option value="p01">Portaria 01</option>
-                    <option value="p02">Portaria 02</option>
-                    <option value="p03">Portaria 03</option>
-                    <option value="p04">Portaria 04</option>
-                    <option value="administrador">Administrador (Master)</option>
-                </select>
+                <div class="checkboxes-nivel">
+                    <label class="cb-label"><input type="checkbox" value="portaria-02"> Portaria 02</label>
+                    <label class="cb-label"><input type="checkbox" value="portaria-04"> Portaria 04</label>
+                    <label class="cb-label"><input type="checkbox" value="portaria-05"> Portaria 05</label>
+                    <label class="cb-label"><input type="checkbox" value="portaria-07"> Portaria 07</label>
+                    <label class="cb-label"><input type="checkbox" value="administrador"> Administrador (Master)</label>
+                </div>
             </div>
             <div class="modal-botoes">
                 <button class="btn-modal-cancelar" onclick="fecharModal()">CANCELAR</button>
@@ -392,15 +412,37 @@
             }
         }
 
+        function toggleSenha() {
+            const input = document.getElementById('edit-senha');
+            const icon  = document.getElementById('olho-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-8-10-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+            } else {
+                input.type = 'password';
+                icon.innerHTML = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>`;
+            }
+        }
+
         function abrirModal(id, nome, login, nivel) {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-nome').value = nome;
+            document.getElementById('edit-id').value    = id;
+            document.getElementById('edit-nome').value  = nome;
             document.getElementById('edit-login').value = login;
-            document.getElementById('edit-nivel').value = nivel;
+            document.getElementById('edit-senha').value = '';
+            document.getElementById('edit-senha').type  = 'password';
+            document.getElementById('olho-icon').innerHTML = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>`;
+
+            const selecionados = nivel.split(',').map(v => v.trim());
+            document.querySelectorAll('.checkboxes-nivel input[type="checkbox"]').forEach(cb => {
+                cb.checked = selecionados.includes(cb.value);
+            });
+
             document.getElementById('modal-editar').classList.add('ativo');
         }
 
         function fecharModal() {
+            document.getElementById('edit-senha').value = '';
+            document.getElementById('edit-senha').type  = 'password';
             document.getElementById('modal-editar').classList.remove('ativo');
         }
 
@@ -408,11 +450,19 @@
             const id    = document.getElementById('edit-id').value;
             const nome  = document.getElementById('edit-nome').value.trim().toUpperCase();
             const login = document.getElementById('edit-login').value.trim();
-            const nivel = document.getElementById('edit-nivel').value;
+            const senha = document.getElementById('edit-senha').value.trim();
+
+            const niveis = Array.from(
+                document.querySelectorAll('.checkboxes-nivel input[type="checkbox"]:checked')
+            ).map(cb => cb.value);
 
             if (!nome || !login) return alert("Preencha todos os campos!");
+            if (niveis.length === 0) return alert("Selecione pelo menos um nível de acesso!");
 
-            const result = await dbAtualizar('usuarios', { id: Number(id) }, { nome_completo: nome, login: login, nivel_acesso: nivel });
+            const campos = { nome_completo: nome, login: login, nivel_acesso: niveis.join(',') };
+            if (senha) campos.senha = senha;
+
+            const result = await dbAtualizar('usuarios', { id: Number(id) }, campos);
             if (result && result.ok) {
                 alert("Operador atualizado com sucesso!");
                 fecharModal();
