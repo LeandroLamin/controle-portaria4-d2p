@@ -130,13 +130,13 @@
             <a href="#" class="menu-item active" id="nav-usuarios" onclick="mostrarSecao(event, 'usuarios', this)">👥 Gestão de Usuários</a>
             <a href="#" class="menu-item" id="nav-dashboard" onclick="mostrarSecao(event, 'dashboard', this)">📊 Dashboard de Acessos</a>
         </div>
-        <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
+        <button class="btn-sair" onclick="sairSistema()">SAIR DO SISTEMA</button>
     </nav>
 
     <main class="main-content">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1000px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
             <h1 id="page-title" style="margin:0; color:#2c3e50; font-size: 24px;">CONTROLE DE OPERADORES</h1>
-            <div style="font-size: 13px;">Admin: <b>LEANDRO LAMIN</b></div>
+            <div style="font-size: 13px;">Admin: <b id="nome-admin-logado">---</b></div>
         </div>
 
         <!-- ── SEÇÃO: GESTÃO DE USUÁRIOS ── -->
@@ -338,8 +338,24 @@
             }
         }
 
+        // ── Sessão ────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = sessionStorage.getItem('adminSession');
+            if (!session) {
+                location.href = 'index.html';
+                return;
+            }
+            const { nome } = JSON.parse(session);
+            document.getElementById('nome-admin-logado').innerText = nome;
+            buscarUsuarios();
+        });
+
+        function sairSistema() {
+            sessionStorage.removeItem('adminSession');
+            location.href = '../index.html';
+        }
+
         // ── Gestão de Usuários ─────────────────────────────────
-        document.addEventListener('DOMContentLoaded', buscarUsuarios);
 
         async function buscarUsuarios() {
             const corpoTabela = document.getElementById('corpo-tabela-usuarios');

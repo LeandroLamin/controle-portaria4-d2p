@@ -210,7 +210,7 @@
             <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
             <a href="#" class="menu-item" id="nav-dashboard" onclick="mostrarSecao(event, 'dashboard', this)">📊 Dashboard de Acessos</a>
         </div>
-        <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
+        <button class="btn-sair" onclick="sairSistema()">SAIR DO SISTEMA</button>
     </nav>
 
     <!-- CONTEÚDO PRINCIPAL -->
@@ -375,6 +375,21 @@
     <script src="../conexao/config.js"></script>
     <script src="../conexao/db.js"></script>
     <script>
+        // ── Sessão ────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = sessionStorage.getItem('adminSession');
+            if (session) {
+                const { nome } = JSON.parse(session);
+                document.getElementById('wrapper-login').style.display = 'none';
+                document.getElementById('nome-admin-logado').innerText = nome;
+            }
+        });
+
+        function sairSistema() {
+            sessionStorage.removeItem('adminSession');
+            location.href = '../index.html';
+        }
+
         // ── Login ──────────────────────────────────────────────
         async function autenticarAdmin() {
             const user = document.getElementById('user-admin').value.trim();
@@ -384,6 +399,7 @@
             const data = await dbBuscar('usuarios', { login: user, senha: pass });
 
             if (data && data.length > 0 && data[0].nivel_acesso === 'administrador') {
+                sessionStorage.setItem('adminSession', JSON.stringify({ nome: data[0].nome_completo }));
                 document.getElementById('wrapper-login').style.display = 'none';
                 document.getElementById('nome-admin-logado').innerText = data[0].nome_completo;
             } else {
@@ -409,7 +425,10 @@
 
             if (result && result.ok) {
                 alert("Usuário " + nome + " cadastrado com sucesso!");
-                location.reload();
+                document.getElementById('cad-nome').value  = '';
+                document.getElementById('cad-login').value = '';
+                document.getElementById('cad-senha').value = '';
+                document.getElementById('cad-nivel').value = 'p04';
             } else {
                 alert("Erro ao cadastrar usuário.");
             }
