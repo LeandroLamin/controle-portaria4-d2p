@@ -36,6 +36,7 @@ async function fazerLogin(portariaAtual) {
 
     // --- PASSO 3: CHECAR NÍVEL DE ACESSO ---
     const niveis = resultado.nivel_acesso.toLowerCase().split(',').map(n => n.trim());
+    console.log('DEBUG niveis:', niveis, 'portariaAtual:', portariaAtual);
     if (niveis.includes('administrador') || niveis.includes(portariaAtual.toLowerCase())) {
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('sistema-principal').style.display = 'block';
