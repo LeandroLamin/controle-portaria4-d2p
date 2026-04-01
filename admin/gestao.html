@@ -131,7 +131,8 @@
             if (data.length > 0) {
                 data.forEach(user => {
                     const classeBadge = user.nivel_acesso === 'administrador' ? 'bg-admin' : 'bg-p04';
-                    const btnEditar = `<button class="btn-editar" onclick="abrirModal(${user.id}, '${user.nome_completo}', '${user.login}', '${user.nivel_acesso}')" title="Editar">✎</button>`;
+                    const btnEditar = user.login !== 'Leandro' ?
+                        `<button class="btn-editar" onclick="abrirModal(${user.id}, '${user.nome_completo}', '${user.login}', '${user.nivel_acesso}')" title="Editar">✎</button>` : '';
                     const btnRemover = user.login !== 'Leandro' ?
                         `<button class="btn-x" onclick="solicitarExclusao(${user.id}, '${user.login}')" title="Remover">X</button>` :
                         `<span style="color:#bdc3c7; font-size:12px;">(Master)</span>`;
