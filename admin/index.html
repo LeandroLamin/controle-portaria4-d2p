@@ -398,7 +398,7 @@
 
             const data = await dbBuscar('usuarios', { login: user, senha: pass });
 
-            if (data && data.length > 0 && data[0].nivel_acesso === 'administrador') {
+            if (data && data.length > 0 && data[0].nivel_acesso.toLowerCase().split(',').map(n => n.trim()).includes('administrador')) {
                 sessionStorage.setItem('adminSession', JSON.stringify({ nome: data[0].nome_completo }));
                 document.getElementById('wrapper-login').style.display = 'none';
                 document.getElementById('nome-admin-logado').innerText = data[0].nome_completo;
