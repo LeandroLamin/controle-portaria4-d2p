@@ -127,8 +127,8 @@
         </div>
         <div style="flex-grow: 1;">
             <a href="index.html" class="menu-item">➕ Novo Cadastro</a>
-            <a href="#" class="menu-item active" id="nav-usuarios" onclick="mostrarSecao('usuarios', this)">👥 Gestão de Usuários</a>
-            <a href="#" class="menu-item" id="nav-dashboard" onclick="mostrarSecao('dashboard', this)">📊 Dashboard de Acessos</a>
+            <a href="#" class="menu-item active" id="nav-usuarios" onclick="mostrarSecao(event, 'usuarios', this)">👥 Gestão de Usuários</a>
+            <a href="#" class="menu-item" id="nav-dashboard" onclick="mostrarSecao(event, 'dashboard', this)">📊 Dashboard de Acessos</a>
         </div>
         <button class="btn-sair" onclick="location.href='../index.html'">SAIR DO SISTEMA</button>
     </nav>
@@ -321,8 +321,8 @@
             dashboard: 'DASHBOARD DE ACESSOS'
         };
 
-        function mostrarSecao(nome, el) {
-            event.preventDefault();
+        function mostrarSecao(e, nome, el) {
+            e.preventDefault();
             document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativo'));
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             document.getElementById('secao-' + nome).classList.add('ativo');
