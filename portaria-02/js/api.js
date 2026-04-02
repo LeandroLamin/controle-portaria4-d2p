@@ -59,7 +59,7 @@ async function cntPesquisar() {
     if (data && data.length > 0) {
         const u = data[0];
         document.getElementById('cnt-nome').value       = u.nome       || '';
-        document.getElementById('cnt-cpf').value         = u.cpf        || '';
+        document.getElementById('cnt-cpf').value         = u.cpf       || '';
         document.getElementById('cnt-transp').value     = u.transp     || '';
         document.getElementById('cnt-placa').value      = u.placa      || '';
         document.getElementById('cnt-carreta1').value   = u.carreta1   || '';
