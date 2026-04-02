@@ -19,7 +19,8 @@
   --border:#d0d8e0; --text:#1a2a38;
   --label:#4a6070; --green-field:#d4f5d4;
 }
-body { font-family:'Segoe UI',Arial,sans-serif; background:var(--gray-bg); color:var(--text); min-height:100vh; }
+body { font-family:'Segoe UI',Arial,sans-serif; background:var(--gray-bg); color:var(--text); min-height:100vh; display:flex; justify-content:center; align-items:center; margin:0; }
+#sistema-principal { width:100%; }
 
 /* ===== TELA LOGIN ===== */
 #tela-login {
@@ -37,6 +38,7 @@ body { font-family:'Segoe UI',Arial,sans-serif; background:var(--gray-bg); color
   width:100%; padding:12px 14px; border:1.5px solid #d0dce8;
   border-radius:6px; font-size:14px; color:var(--text);
   background:#f2f6fa; margin-bottom:12px; outline:none; transition:border .2s;
+  box-sizing:border-box;
 }
 .login-input:focus { border-color:var(--teal); background:#fff; }
 .btn-login {
