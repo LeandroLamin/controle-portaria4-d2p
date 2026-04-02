@@ -30,8 +30,8 @@ function _cntLerFormulario() {
 async function cntRegistrar(acesso) {
     const dados = _cntLerFormulario();
 
-    if (!dados.nome || !dados.rg || !dados.placa || !dados.conteiner1) {
-        return notify('Preencha Nome, RG, Placa e Contêiner 1.', 'aviso');
+    if (!dados.nome || !dados.cpf || !dados.placa || !dados.conteiner1) {
+        return notify('Preencha Nome, CPF, Placa e Contêiner 1.', 'aviso');
     }
 
     dados.acesso = acesso;
@@ -49,17 +49,17 @@ async function cntRegistrar(acesso) {
 // ── 2. PESQUISAR (preenche formulário com último registro da placa/RG) ────────
 async function cntPesquisar() {
     const placa = document.getElementById('cnt-placa').value.trim().toUpperCase();
-    const rg    = document.getElementById('cnt-cpf').value.trim();
+    const cpf   = document.getElementById('cnt-cpf').value.trim();
 
-    if (!placa && !rg) return notify('Digite a Placa ou RG para pesquisar.', 'aviso');
+    if (!placa && !cpf) return notify('Digite a Placa ou CPF para pesquisar.', 'aviso');
 
-    const filtros = placa ? { placa } : { rg };
+    const filtros = placa ? { placa } : { cpf };
     const data = await dbBuscar(TABELA_CNT, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
         const u = data[0];
         document.getElementById('cnt-nome').value       = u.nome       || '';
-        document.getElementById('cnt-cpf').value         = u.rg         || '';
+        document.getElementById('cnt-cpf').value         = u.cpf        || '';
         document.getElementById('cnt-transp').value     = u.transp     || '';
         document.getElementById('cnt-placa').value      = u.placa      || '';
         document.getElementById('cnt-carreta1').value   = u.carreta1   || '';
@@ -125,7 +125,7 @@ function _cntRenderizarTabela(lista) {
             <td style="padding:7px 10px;">${item.data || ''}</td>
             <td style="padding:7px 10px;">${item.hora || ''}</td>
             <td style="padding:7px 10px;">${item.nome || ''}</td>
-            <td style="padding:7px 10px;">${item.rg || ''}</td>
+            <td style="padding:7px 10px;">${item.cpf || ''}</td>
             <td style="padding:7px 10px;">${item.transp || ''}</td>
             <td style="padding:7px 10px;">${item.placa || ''}</td>
             <td style="padding:7px 10px;">${item.carreta1 || '-'}</td>
@@ -144,9 +144,9 @@ function _cntRenderizarTabela(lista) {
 function cntExportarCSV() {
     if (dadosCntGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    let csv = '\uFEFFData;Hora;Nome;RG;Transp;Placa;Carreta1;Carreta2;Conteiner1;Lacre1;Conteiner2;Lacre2;Acesso\n';
+    let csv = '\uFEFFData;Hora;Nome;CPF;Transp;Placa;Carreta1;Carreta2;Conteiner1;Lacre1;Conteiner2;Lacre2;Acesso\n';
     dadosCntGlobal.forEach(r => {
-        csv += `${r.data};${r.hora};${r.nome};${r.rg};${r.transp};${r.placa};${r.carreta1};${r.carreta2};${r.conteiner1};${r.lacre1};${r.conteiner2};${r.lacre2};${r.acesso}\n`;
+        csv += `${r.data};${r.hora};${r.nome};${r.cpf};${r.transp};${r.placa};${r.carreta1};${r.carreta2};${r.conteiner1};${r.lacre1};${r.conteiner2};${r.lacre2};${r.acesso}\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
