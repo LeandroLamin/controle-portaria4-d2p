@@ -529,7 +529,7 @@
                 }
 
                 const hoje     = dataHoje();
-                const deHoje   = todos.filter(r => r.data === hoje);
+                const deHoje   = todos.filter(r => (r.data || r.data_acesso || r.data_hora || r.created_at || '').slice(0,10) === hoje);
                 const entradas = deHoje.filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
                 const saidas   = deHoje.filter(r => (r.acesso || '').toUpperCase() !== 'ENTRADA');
 
