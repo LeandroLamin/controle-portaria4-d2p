@@ -204,33 +204,33 @@ select { cursor:pointer; }
           <div class="sec-header">Cadastro Contêiner</div>
           <div class="grupo-titulo">Dados Motorista</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" style="width:230px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="cnt-nome" style="width:230px"></div>
+            <div class="campo-group"><span class="campo-label">RG</span><input type="text" id="cnt-rg" class="rg-field" style="width:130px"></div>
             <div class="campo-group"><span class="campo-label">Transp/</span>
-              <select style="width:190px"><option value="">Selecione</option><option>Transportadora A</option><option>Transportadora B</option></select>
+              <select id="cnt-transp" style="width:190px"><option value="">Selecione</option><option>Transportadora A</option><option>Transportadora B</option></select>
             </div>
           </div>
           <div class="grupo-titulo">Dados Veículo</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta-1</span><input type="text" style="width:150px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta-2</span><input type="text" style="width:150px"></div>
+            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="cnt-placa" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Carreta-1</span><input type="text" id="cnt-carreta1" style="width:150px"></div>
+            <div class="campo-group"><span class="campo-label">Carreta-2</span><input type="text" id="cnt-carreta2" style="width:150px"></div>
           </div>
           <div class="grupo-titulo">Dados Contêiner</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Contêiner 1</span><input type="text" style="width:210px"></div>
-            <div class="campo-group"><span class="campo-label">Nº Lacre 1</span><input type="text" style="width:180px"></div>
+            <div class="campo-group"><span class="campo-label">Contêiner 1</span><input type="text" id="cnt-conteiner1" style="width:210px"></div>
+            <div class="campo-group"><span class="campo-label">Nº Lacre 1</span><input type="text" id="cnt-lacre1" style="width:180px"></div>
           </div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Contêiner 2</span><input type="text" style="width:210px"></div>
-            <div class="campo-group"><span class="campo-label">Nº Lacre 2</span><input type="text" style="width:180px"></div>
+            <div class="campo-group"><span class="campo-label">Contêiner 2</span><input type="text" id="cnt-conteiner2" style="width:210px"></div>
+            <div class="campo-group"><span class="campo-label">Nº Lacre 2</span><input type="text" id="cnt-lacre2" style="width:180px"></div>
           </div>
           <div class="acoes">
-            <button class="btn-acao btn-filtro">FILTRO</button>
+            <button class="btn-acao btn-filtro" onclick="cntAbrirFiltro()">FILTRO</button>
             <button class="btn-acao btn-limpar" onclick="limparCampos('tela-conteiner')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar">PESQUISAR</button>
-            <button class="btn-acao btn-entrada">ENTRADA</button>
-            <button class="btn-acao btn-saida">SAÍDA</button>
+            <button class="btn-acao btn-pesquisar" onclick="cntPesquisar()">PESQUISAR</button>
+            <button class="btn-acao btn-entrada" onclick="cntRegistrar('ENTRADA')">ENTRADA</button>
+            <button class="btn-acao btn-saida" onclick="cntRegistrar('SAÍDA')">SAÍDA</button>
           </div>
         </div>
       </div>
@@ -371,7 +371,43 @@ select { cursor:pointer; }
   </div><!-- /layout -->
 </div><!-- /sistema-principal -->
 
+<!-- MODAL FILTRO CONTÊINER -->
+<div id="modal-cnt" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:900px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — CONTÊINER</span>
+      <button onclick="cntFecharFiltro()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="cnt-f-inicio" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="cnt-f-fim" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Placa / Contêiner / RG</span><input type="text" id="cnt-f-busca" style="width:220px" placeholder="Buscar..."></div>
+      <button class="btn-acao btn-pesquisar" onclick="cntBuscarRelatorio()">FILTRAR</button>
+      <button class="btn-acao btn-limpar" onclick="cntLimparFiltro()">LIMPAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="cnt-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px;">Data</th><th style="padding:8px 10px;">Hora</th>
+            <th style="padding:8px 10px;">Nome</th><th style="padding:8px 10px;">RG</th>
+            <th style="padding:8px 10px;">Transp.</th><th style="padding:8px 10px;">Placa</th>
+            <th style="padding:8px 10px;">Carreta-1</th><th style="padding:8px 10px;">Carreta-2</th>
+            <th style="padding:8px 10px;">Contêiner 1</th><th style="padding:8px 10px;">Lacre 1</th>
+            <th style="padding:8px 10px;">Contêiner 2</th><th style="padding:8px 10px;">Lacre 2</th>
+            <th style="padding:8px 10px;">Acesso</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button onclick="cntExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
+  </div>
+</div>
+
 <script src="../js/auth.js"></script>
+<script src="../js/ui.js"></script>
+<script src="js/api.js"></script>
 <script>
 // Enter no campo senha
 document.getElementById('user-pass').addEventListener('keydown', e => {
