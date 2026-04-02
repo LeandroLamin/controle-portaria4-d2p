@@ -67,7 +67,6 @@ async function cntPesquisar() {
         const u = data[0];
         document.getElementById('cnt-nome').value       = u.nome       || '';
         document.getElementById('cnt-cpf').value         = u.cpf       || '';
-        document.getElementById('cnt-transp').value     = u.transp     || '';
         document.getElementById('cnt-placa').value      = u.placa      || '';
         document.getElementById('cnt-carreta1').value   = u.carreta1   || '';
         document.getElementById('cnt-carreta2').value   = u.carreta2   || '';
@@ -75,6 +74,7 @@ async function cntPesquisar() {
         document.getElementById('cnt-lacre1').value     = u.lacre1     || '';
         document.getElementById('cnt-conteiner2').value = u.conteiner2 || '';
         document.getElementById('cnt-lacre2').value     = u.lacre2     || '';
+        document.getElementById('cnt-transp').value = u.transportadora || '';
         notify('Registro localizado!', 'sucesso');
     } else {
         notify('Nenhum registro encontrado.', 'aviso');
