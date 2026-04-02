@@ -33,6 +33,12 @@ async function cntRegistrar(acesso) {
         nome: document.getElementById('cnt-nome').value.trim().toUpperCase(),
         transportadora: document.getElementById('cnt-transp').value.trim().toUpperCase(),
         placa: document.getElementById('cnt-placa').value.trim().toUpperCase(),
+        document.getElementById('cnt-carreta1').value = res[0].carreta1 || '';
+        document.getElementById('cnt-carreta2').value = res[0].carreta2 || '';
+        document.getElementById('cnt-conteiner1').value = res[0].conteiner1 || '';
+        document.getElementById('cnt-lacre1').value = res[0].lacre1 || '';
+        document.getElementById('cnt-conteiner2').value = res[0].conteiner2 || '';
+        document.getElementById('cnt-lacre2').value = res[0].lacre2 || '';
         acesso: acesso
     };
     if (!dados.cpf || !dados.nome) {
