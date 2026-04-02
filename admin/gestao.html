@@ -517,7 +517,9 @@
             btn.classList.add('girando');
 
             try {
+                console.log('BUSCANDO ACESSOS...');
                 const todos = await dbBuscar('acessos', {}, { order: 'id.desc' });
+                console.log('RESULTADO:', todos);
 
                 if (!todos || !Array.isArray(todos)) {
                     dashMostrarErro();
