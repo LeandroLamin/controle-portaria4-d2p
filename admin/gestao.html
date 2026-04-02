@@ -521,6 +521,7 @@
                 console.log('BUSCANDO ACESSOS...');
                 const todos = await dbBuscar('acessos', {}, { order: 'id.desc' });
                 console.log('RESULTADO:', todos);
+                console.log('PRIMEIRO REGISTRO:', todos[0], 'HOJE:', dataHoje());
 
                 if (!todos || !Array.isArray(todos)) {
                     dashMostrarErro();
