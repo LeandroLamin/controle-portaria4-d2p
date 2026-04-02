@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D2P-Brazil - Menu Principal</title>
+</head>
+<body style="margin:0; padding:0;">
+<div style="min-height:100vh; position:relative; display:flex; align-items:center; justify-content:center;">
+  <div style="position:absolute; inset:0; background:url('https://n8n-supabase.tbjno4.easypanel.host/storage/v1/object/public/assets/fundo.webp') center/cover no-repeat; z-index:0;"></div>
+  <div style="position:absolute; inset:0; background:rgba(0,0,0,0.5); z-index:1;"></div>
+  <div style="position:relative; z-index:2; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:10px; padding:44px 40px 36px; width:320px; text-align:center;">
+    <div style="font-size:11px; color:rgba(255,255,255,0.6); letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">D2P-Brazil</div>
+    <div style="font-size:11px; color:rgba(255,255,255,0.5); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:20px;">Segurança Patrimonial</div>
+    <div style="font-size:18px; font-weight:500; color:#fff; margin-bottom:28px; line-height:1.4;">ACESSO RESTRITO<br>MENU PRINCIPAL</div>
+    <div id="msg-erro" style="display:none; background:rgba(220,50,50,0.3); color:#ffaaaa; border-radius:6px; padding:10px; font-size:13px; margin-bottom:14px;"></div>
+    <input type="text" id="user-login" placeholder="Usuário" autocomplete="off" style="width:100%; margin-bottom:12px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; border-radius:6px; padding:11px 14px; font-size:14px; outline:none; box-sizing:border-box;">
+    <input type="password" id="user-pass" placeholder="Senha" style="width:100%; margin-bottom:20px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; border-radius:6px; padding:11px 14px; font-size:14px; outline:none; box-sizing:border-box;">
+    <button onclick="loginMenu()" style="width:100%; padding:13px; background:#f5c518; border:none; border-radius:6px; font-size:14px; font-weight:700; color:#1a2535; cursor:pointer; letter-spacing:1px;">ENTRAR</button>
+  </div>
+</div>
+<script src="../js/auth.js"></script>
+<script>
+document.getElementById('user-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') loginMenu();
+});
+function loginMenu() {
+  fazerLogin('menu');
+}
+</script>
+</body>
+</html>
