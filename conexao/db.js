@@ -31,13 +31,20 @@ async function dbSalvar(tabela, dados) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tabela, dados })
         });
+
+        // Se o n8n der erro, agora ele vai te avisar o que foi
+        if (!res.ok) {
+            const erroTexto = await res.text();
+            throw new Error(`Erro no Servidor (${res.status}): ${erroTexto || 'Sem detalhes'}`);
+        }
+
         const text = await res.text();
-        const data = text ? JSON.parse(text) : { ok: true };
-        return data;
+        return text ? JSON.parse(text) : { ok: true };
+
     } catch (err) {
-        console.error(`[dbSalvar] Erro na tabela '${tabela}':`, err);
-        alert("Erro de conexão ao salvar dados.");
-        return { ok: false };
+        console.error(`[dbSalvar] Falha crítica na tabela '${tabela}':`, err);
+        alert(`ERRO AO SALVAR: ${err.message}`);
+        return { ok: false, error: err.message };
     }
 }
 
