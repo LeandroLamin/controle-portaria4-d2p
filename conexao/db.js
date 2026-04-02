@@ -31,8 +31,9 @@ async function dbSalvar(tabela, dados) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tabela, dados })
         });
-        const result = await res.json();
-        return result;
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : { ok: true };
+        return data;
     } catch (err) {
         console.error(`[dbSalvar] Erro na tabela '${tabela}':`, err);
         alert("Erro de conexão ao salvar dados.");
