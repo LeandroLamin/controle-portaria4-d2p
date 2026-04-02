@@ -14,7 +14,7 @@ let dadosCntGlobal = [];
 function _cntLerFormulario() {
     return {
         nome:       document.getElementById('cnt-nome').value.trim().toUpperCase(),
-        rg:         document.getElementById('cnt-rg').value.trim(),
+        cpf:         document.getElementById('cnt-cpf').value.trim(),
         transp:     document.getElementById('cnt-transp').value,
         placa:      document.getElementById('cnt-placa').value.trim().toUpperCase(),
         carreta1:   document.getElementById('cnt-carreta1').value.trim().toUpperCase(),
@@ -49,7 +49,7 @@ async function cntRegistrar(acesso) {
 // ── 2. PESQUISAR (preenche formulário com último registro da placa/RG) ────────
 async function cntPesquisar() {
     const placa = document.getElementById('cnt-placa').value.trim().toUpperCase();
-    const rg    = document.getElementById('cnt-rg').value.trim();
+    const rg    = document.getElementById('cnt-cpf').value.trim();
 
     if (!placa && !rg) return notify('Digite a Placa ou RG para pesquisar.', 'aviso');
 
@@ -59,7 +59,7 @@ async function cntPesquisar() {
     if (data && data.length > 0) {
         const u = data[0];
         document.getElementById('cnt-nome').value       = u.nome       || '';
-        document.getElementById('cnt-rg').value         = u.rg         || '';
+        document.getElementById('cnt-cpf').value         = u.rg         || '';
         document.getElementById('cnt-transp').value     = u.transp     || '';
         document.getElementById('cnt-placa').value      = u.placa      || '';
         document.getElementById('cnt-carreta1').value   = u.carreta1   || '';
