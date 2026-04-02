@@ -15,7 +15,7 @@ function _cntLerFormulario() {
     return {
         nome:       document.getElementById('cnt-nome').value.trim().toUpperCase(),
         cpf:         document.getElementById('cnt-cpf').value.trim(),
-        transp:     document.getElementById('cnt-transp').value,
+        transportadora: document.getElementById('cnt-transp').value,
         placa:      document.getElementById('cnt-placa').value.trim().toUpperCase(),
         carreta1:   document.getElementById('cnt-carreta1').value.trim().toUpperCase(),
         carreta2:   document.getElementById('cnt-carreta2').value.trim().toUpperCase(),
@@ -35,6 +35,10 @@ async function cntRegistrar(acesso) {
     }
 
     dados.acesso = acesso;
+
+    const agora = new Date();
+    dados.data = agora.toISOString().split('T')[0];
+    dados.hora = agora.toTimeString().split(' ')[0];
 
     const result = await dbSalvar(TABELA_CNT, dados);
 
