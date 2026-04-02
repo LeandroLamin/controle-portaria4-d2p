@@ -69,12 +69,12 @@ async function cntPesquisar() {
         document.getElementById('cnt-cpf').value         = u.cpf       || '';
         document.getElementById('cnt-placa').value      = u.placa      || '';
         document.getElementById('cnt-transp').value = u.transportadora || '';
-        //document.getElementById('cnt-carreta1').value   = u.carreta1   || '';
-        //document.getElementById('cnt-carreta2').value   = u.carreta2   || '';
-        //document.getElementById('cnt-conteiner1').value = u.conteiner1 || '';
-        //document.getElementById('cnt-lacre1').value     = u.lacre1     || '';
-        //document.getElementById('cnt-conteiner2').value = u.conteiner2 || '';
-        //document.getElementById('cnt-lacre2').value     = u.lacre2     || '';
+        document.getElementById('cnt-carreta1').value   = u.carreta1   || '';
+        document.getElementById('cnt-carreta2').value   = u.carreta2   || '';
+        document.getElementById('cnt-conteiner1').value = u.conteiner1 || '';
+        document.getElementById('cnt-lacre1').value     = u.lacre1     || '';
+        document.getElementById('cnt-conteiner2').value = u.conteiner2 || '';
+        document.getElementById('cnt-lacre2').value     = u.lacre2     || '';
         notify('Registro localizado!', 'sucesso');
     } else {
         notify('Nenhum registro encontrado.', 'aviso');
