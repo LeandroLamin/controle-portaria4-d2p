@@ -5,28 +5,62 @@
     <meta name="google" content="notranslate">
     <title>Controle de Acesso - Portaria 04</title>
     <link rel="stylesheet" href="../css/style.css">
+<style>
+/* ===== LOGIN — mesmo visual da Portaria 02 ===== */
+body { display:block; background:var(--fundo-dark); }
+#tela-login {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; background:#1a2535;
+}
+.login-card {
+  background:#fff; border-radius:10px; padding:44px 40px 36px;
+  width:340px; text-align:center;
+  box-shadow:0 8px 40px rgba(0,0,0,0.4);
+}
+.login-marca { font-size:11px; color:#6a8090; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:2px; }
+.login-titulo { font-size:20px; font-weight:800; color:#136b5e; margin:14px 0 28px; line-height:1.3; }
+.login-input {
+  width:100%; padding:12px 14px; border:1.5px solid #d0dce8;
+  border-radius:6px; font-size:14px; color:#1a2a38;
+  background:#f2f6fa; margin-bottom:12px; outline:none; transition:border .2s;
+  box-sizing:border-box;
+}
+.login-input:focus { border-color:#1a8a7a; background:#fff; }
+.btn-login {
+  width:100%; padding:13px; background:#f5c518; border:none;
+  border-radius:6px; font-size:15px; font-weight:800; color:#1a2535;
+  cursor:pointer; letter-spacing:1px; margin-top:6px; transition:background .2s;
+}
+.btn-login:hover { background:#d4a800; }
+.btn-login:disabled { background:#ccc; cursor:not-allowed; }
+.login-voltar {
+  display:block; margin-top:18px; font-size:12px;
+  color:#1a8a7a; text-decoration:none; cursor:pointer;
+}
+.login-voltar:hover { text-decoration:underline; }
+.login-erro {
+  background:#fdecea; color:#e03030; border-radius:6px;
+  padding:10px 14px; font-size:13px; margin-bottom:14px;
+  display:none; text-align:left; border:1px solid #f5c6c6;
+}
+</style>
 </head>
 <body>
 
     <div id="tela-login">
-        <div class="logo-subtexto">D2P-BRAZIL</div>
-        <div class="logo-subtexto" style="margin-bottom: 25px;">SEGURANÇA PATRIMONIAL</div>
-        
-        <h2>ACESSO RESTRITO<br>PORTARIA 04</h2>
-        
-        <input type="text" id="user-login" placeholder="Usuário" autocomplete="off">
-        <input type="password" id="user-pass" placeholder="Senha">
-        
-        <button onclick="fazerLogin('portaria-04')">ENTRAR</button>
+      <div class="login-card">
+        <div class="login-marca">D2P-BRAZIL<br>Segurança Patrimonial</div>
+        <div class="login-titulo">ACESSO RESTRITO<br>PORTARIA 04</div>
 
-        <div style="margin-top: 25px; text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
-            <a href="../index.html" style="text-decoration: none; color: #546e7a; font-family: sans-serif; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
-                </svg>
-                VOLTAR AO MENU PRINCIPAL
-            </a>
-        </div>
+        <div class="login-erro" id="msg-erro">⚠️ <span id="txt-erro"></span></div>
+
+        <input type="text"     class="login-input" id="user-login" placeholder="Usuário" autocomplete="username">
+        <input type="password" class="login-input" id="user-pass"  placeholder="Senha"   autocomplete="current-password">
+
+        <button class="btn-login" id="btn-entrar" onclick="fazerLogin('portaria-04')">ENTRAR</button>
+
+        <a class="login-voltar" href="../index.html">🏠 VOLTAR AO MENU PRINCIPAL</a>
+      </div>
     </div>
 
     <div id="sistema-principal" style="display: none;">
@@ -137,5 +171,35 @@
 <script src="../js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="../js/ui.js"></script>
+<script>
+// Gatilho ENTER no campo senha
+document.getElementById('user-pass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') fazerLogin('portaria-04');
+});
+
+// Login com loading e erro inline (mesmo padrão da Portaria 02)
+const _fazerLoginOriginal = fazerLogin;
+window.fazerLogin = async function(portaria) {
+  const btn    = document.getElementById('btn-entrar');
+  const msgErro = document.getElementById('msg-erro');
+  const txtErro = document.getElementById('txt-erro');
+
+  msgErro.style.display = 'none';
+  btn.disabled    = true;
+  btn.textContent = 'AGUARDE...';
+
+  const _alert = window.alert;
+  window.alert = function(msg) {
+    txtErro.textContent = msg;
+    msgErro.style.display = 'block';
+  };
+
+  await _fazerLoginOriginal(portaria);
+
+  window.alert    = _alert;
+  btn.disabled    = false;
+  btn.textContent = 'ENTRAR';
+};
+</script>
 </body>
 </html>
