@@ -10,7 +10,7 @@ async function dbBuscar(tabela, filtros = {}, opcoes = {}) {
     try {
         const res = await fetch(`${N8N_URL}/db-buscar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
            body: JSON.stringify({ tabela, filtros, order: opcoes.order || '', limit: opcoes.limit || '' })
         });
         const data = await res.json();
@@ -28,7 +28,7 @@ async function dbSalvar(tabela, dados) {
     try {
         const res = await fetch(`${N8N_URL}/db-salvar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
             body: JSON.stringify({ tabela, dados })
         });
 
@@ -54,7 +54,7 @@ async function dbDeletar(tabela, filtros) {
     try {
         const res = await fetch(`${N8N_URL}/db-deletar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
             body: JSON.stringify({ tabela, filtros })
         });
         const result = await res.json();
@@ -72,7 +72,7 @@ async function dbAtualizar(tabela, filtros, dados) {
     try {
         const res = await fetch(`${N8N_URL}/db-atualizar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
             body: JSON.stringify({ tabela, filtros, dados })
         });
         const result = await res.json();

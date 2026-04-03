@@ -26,20 +26,40 @@ async function buscarUsuariosNoBanco() {
                 // Define a cor do badge (Verde para Admin)
                 const classeBadge = user.nivel_acesso === 'administrador' ? 'badge-admin' : 'badge-portaria';
 
-                const linhaHTML = `
-                    <tr>
-                        <td>${user.id}</td>
-                        <td><b>${user.login}</b></td>
-                        <td>${user.nome_completo}</td>
-                        <td><span class="badge ${classeBadge}">${user.nivel_acesso}</span></td>
-                        <td style="text-align: center;">
-                            <button class="btn-delete" title="Excluir ${user.login}" onclick="solicitarExclusao(${user.id}, '${user.login}')">
-                                🗑️
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                corpoTabela.insertAdjacentHTML('beforeend', linhaHTML);
+                const tr = document.createElement('tr');
+
+                const tdId = document.createElement('td');
+                tdId.textContent = user.id;
+
+                const tdLogin = document.createElement('td');
+                const b = document.createElement('b');
+                b.textContent = user.login;
+                tdLogin.appendChild(b);
+
+                const tdNome = document.createElement('td');
+                tdNome.textContent = user.nome_completo;
+
+                const tdNivel = document.createElement('td');
+                const span = document.createElement('span');
+                span.className = `badge ${classeBadge}`;
+                span.textContent = user.nivel_acesso;
+                tdNivel.appendChild(span);
+
+                const tdAcao = document.createElement('td');
+                tdAcao.style.textAlign = 'center';
+                const btn = document.createElement('button');
+                btn.className = 'btn-delete';
+                btn.title = `Excluir ${user.login}`;
+                btn.textContent = '🗑️';
+                btn.addEventListener('click', () => solicitarExclusao(user.id, user.login));
+                tdAcao.appendChild(btn);
+
+                tr.appendChild(tdId);
+                tr.appendChild(tdLogin);
+                tr.appendChild(tdNome);
+                tr.appendChild(tdNivel);
+                tr.appendChild(tdAcao);
+                corpoTabela.appendChild(tr);
             });
         } else {
             corpoTabela.innerHTML = '<tr><td colspan="5" style="text-align:center">Nenhum usuário cadastrado.</td></tr>';

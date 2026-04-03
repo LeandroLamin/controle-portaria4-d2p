@@ -14,7 +14,7 @@ async function fazerLogin(portariaAtual) {
     try {
         const resposta = await fetch('https://n8n.laminlpp.com.br/webhook/login-portaria', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
             body: JSON.stringify({
                 login: userDigitado,
                 senha: passDigitada,
