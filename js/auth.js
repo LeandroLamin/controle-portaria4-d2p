@@ -35,13 +35,13 @@ async function fazerLogin(portariaAtual) {
     }
 
     // --- PASSO 3: CHECAR NÍVEL DE ACESSO ---
+    if (portariaAtual === 'menu') {
+        sessionStorage.setItem('d2p-auth', resultado.nome_completo);
+        window.location.href = '../portarias.html';
+        return;
+    }
     const niveis = resultado.nivel_acesso.toLowerCase().split(',').map(n => n.trim());
     if (niveis.includes('administrador') || niveis.includes(portariaAtual.toLowerCase())) {
-        if (portariaAtual === 'menu') {
-            sessionStorage.setItem('d2p-auth', resultado.nome_completo);
-            window.location.href = '../portarias.html';
-            return;
-        }
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('sistema-principal').style.display = 'block';
         document.getElementById('nome-logado').innerText = resultado.nome_completo;
