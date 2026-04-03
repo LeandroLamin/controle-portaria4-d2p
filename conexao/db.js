@@ -10,15 +10,15 @@ async function dbBuscar(tabela, filtros = {}, opcoes = {}) {
     try {
         const res = await fetch(`${N8N_URL}/db-buscar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
-           body: JSON.stringify({ tabela, filtros, order: opcoes.order || '', limit: opcoes.limit || '' })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tabela, filtros, order: opcoes.order || '', limit: opcoes.limit || '', _api_key: N8N_API_KEY })
         });
         const data = await res.json();
         return data;
     } catch (err) {
         console.error(`[dbBuscar] Erro na tabela '${tabela}':`, err);
         alert("Erro de conexão ao buscar dados.");
-        return null; // <- era []
+        return null;
     }
 }
 
@@ -28,11 +28,10 @@ async function dbSalvar(tabela, dados) {
     try {
         const res = await fetch(`${N8N_URL}/db-salvar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
-            body: JSON.stringify({ tabela, dados })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tabela, dados, _api_key: N8N_API_KEY })
         });
 
-        // Se o n8n der erro, agora ele vai te avisar o que foi
         if (!res.ok) {
             const erroTexto = await res.text();
             throw new Error(`Erro no Servidor (${res.status}): ${erroTexto || 'Sem detalhes'}`);
@@ -54,8 +53,8 @@ async function dbDeletar(tabela, filtros) {
     try {
         const res = await fetch(`${N8N_URL}/db-deletar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
-            body: JSON.stringify({ tabela, filtros })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tabela, filtros, _api_key: N8N_API_KEY })
         });
         const result = await res.json();
         return result;
@@ -72,8 +71,8 @@ async function dbAtualizar(tabela, filtros, dados) {
     try {
         const res = await fetch(`${N8N_URL}/db-atualizar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-api-key': N8N_API_KEY },
-            body: JSON.stringify({ tabela, filtros, dados })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tabela, filtros, dados, _api_key: N8N_API_KEY })
         });
         const result = await res.json();
         return result;
