@@ -23,7 +23,8 @@ async function fazerLogin(portariaAtual) {
                 _api_key: N8N_API_KEY
             })
         });
-        resultado = await resposta.json();
+        const texto = await resposta.text();
+        resultado = texto ? JSON.parse(texto) : { ok: false, mensagem: 'Servidor não respondeu.' };
     } catch (err) {
         console.error("Erro de conexão:", err);
         alert("Erro de conexão com o servidor.");
