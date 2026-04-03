@@ -135,4 +135,22 @@ table th { background-color: var(--cor-primaria); color: white; padding: 10px; t
 table td { border: 1px solid #ddd; padding: 8px; }
 
 .btn-exportar { background-color: var(--cor-verde); color: white; margin-top: 20px; padding: 12px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-.header-usuario { text-align: right; font-size: 12px; color: #777; margin-bottom: 10px; width: 950px; margin: 0 auto 10px auto; }
+/* CSS ATUALIZADO PARA APROXIMAR O ADMIN DO TÍTULO */
+.header-usuario { 
+    display: flex;            /* Ativa o alinhamento flexível */
+    justify-content: flex-start; /* Alinha tudo à esquerda (perto um do outro) */
+    align-items: baseline;    /* Alinha o texto por baixo */
+    gap: 30px;                /* DISTÂNCIA EXATA: Aumente ou diminua aqui */
+    width: 950px; 
+    margin: 20px auto 10px auto; 
+    font-size: 12px; 
+    color: #777; 
+}
+
+/* Garante que o H2 não tenha margens que empurrem o Admin para baixo */
+.header-usuario h2 { 
+    margin: 0; 
+    font-size: 22px; 
+    color: var(--cor-primaria); 
+    text-transform: uppercase;
+}
