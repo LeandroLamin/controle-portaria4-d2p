@@ -110,8 +110,7 @@
 if (!sessionStorage.getItem('d2p-auth')) {
     window.location.href = 'menu/index.html';
 }
-const resultado = JSON.parse(sessionStorage.getItem('d2p-auth'));
-document.getElementById('nome-usuario-menu').innerText = resultado.nome_completo;
+document.getElementById('nome-usuario-menu').innerText = sessionStorage.getItem('d2p-auth');
 </script>
 
 <div class="header">
