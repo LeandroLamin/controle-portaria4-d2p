@@ -102,10 +102,16 @@
 </head>
 <body>
 
+<div style="position:fixed; top:12px; right:20px; z-index:999; font-size:13px; color:#fff; background:rgba(0,0,0,0.4); padding:6px 14px; border-radius:6px;">
+  Usuário: <b id="nome-usuario-menu"></b> | <a href="menu/index.html" style="color:#f5c518; font-weight:600; text-decoration:none; cursor:pointer;">Sair</a>
+</div>
+
 <script>
 if (!sessionStorage.getItem('d2p-auth')) {
     window.location.href = 'menu/index.html';
 }
+const resultado = JSON.parse(sessionStorage.getItem('d2p-auth'));
+document.getElementById('nome-usuario-menu').innerText = resultado.nome_completo;
 </script>
 
 <div class="header">
