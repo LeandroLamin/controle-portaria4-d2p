@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Migração de Senhas — USO ÚNICO</title>
+<style>
+  body { font-family: sans-serif; max-width: 500px; margin: 60px auto; padding: 20px; background: #f4f7f6; }
+  h2 { color: #34495e; }
+  .aviso { background: #fff3cd; border: 1px solid #ffc107; padding: 12px; border-radius: 6px; margin-bottom: 24px; font-size: 13px; }
+  input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+  button { width: 100%; padding: 12px; background: #34495e; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; }
+  button:hover { background: #2c3e50; }
+  #log { margin-top: 20px; font-size: 13px; }
+  .ok  { color: green; } .erro { color: red; }
+</style>
+</head>
+<body>
+
+<h2>Migração de Senhas</h2>
+<div class="aviso">⚠️ Use este arquivo uma vez para migrar cada usuário. Apague-o depois.</div>
+
+<input type="text"     id="login" placeholder="Login do usuário">
+<input type="password" id="senha" placeholder="Senha atual (texto puro)">
+<button onclick="migrar()">Migrar senha para hash</button>
+
+<div id="log"></div>
+
+<script src="conexao/config.js"></script>
+<script src="conexao/crypto.js"></script>
+<script src="conexao/db.js"></script>
+<script>
+async function migrar() {
+    const login = document.getElementById('login').value.trim();
+    const senha = document.getElementById('senha').value.trim();
+    const log   = document.getElementById('log');
+
+    if (!login || !senha) return alert('Preencha login e senha.');
+
+    log.innerHTML = 'Calculando hash...';
+
+    const hash = await hashSenha(login, senha);
+    log.innerHTML += `<br>Hash: <code>${hash}</code><br>Atualizando...`;
+
+    const result = await dbAtualizar('usuarios', { login }, { senha: hash });
+
+    if (result && result.ok) {
+        log.innerHTML += `<br><span class="ok">✔ ${login} migrado com sucesso!</span>`;
+    } else {
+        log.innerHTML += `<br><span class="erro">✖ Erro ao atualizar ${login}.</span>`;
+    }
+
+    document.getElementById('login').value = '';
+    document.getElementById('senha').value = '';
+}
+</script>
+</body>
+</html>
