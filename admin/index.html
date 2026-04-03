@@ -373,6 +373,7 @@
     </main>
 
     <script src="../conexao/config.js"></script>
+    <script src="../conexao/crypto.js"></script>
     <script src="../conexao/db.js"></script>
     <script>
         // ── Sessão ────────────────────────────────────────────
@@ -396,7 +397,8 @@
             const pass = document.getElementById('pass-admin').value.trim();
             if (!user || !pass) return;
 
-            const data = await dbBuscar('usuarios', { login: user, senha: pass });
+            const senhaHash = await hashSenha(user, pass);
+            const data = await dbBuscar('usuarios', { login: user, senha: senhaHash });
 
             if (data && data.length > 0 && data[0].nivel_acesso.toLowerCase().split(',').map(n => n.trim()).includes('administrador')) {
                 sessionStorage.setItem('adminSession', JSON.stringify({ nome: data[0].nome_completo }));
@@ -416,10 +418,11 @@
 
             if (!nome || !login || !senha) return alert("Atenção: Preencha todos os campos!");
 
+            const senhaHash = await hashSenha(login, senha);
             const result = await dbSalvar('usuarios', {
                 nome_completo: nome,
                 login: login,
-                senha: senha,
+                senha: senhaHash,
                 nivel_acesso: nivel
             });
 
