@@ -43,8 +43,18 @@ async function fazerLogin(portariaAtual) {
         window.location.href = '../portarias.html';
         return;
     }
-    const niveis = resultado.nivel_acesso.toLowerCase().split(',').map(n => n.trim());
-    if (niveis.includes('administrador') || niveis.includes(portariaAtual.toLowerCase())) {
+
+    // Normaliza nível de acesso: aceita "p04", "portaria-04", "P04" etc
+    function normalizarNivel(n) {
+        n = n.toLowerCase().trim();
+        const m = n.match(/^p0?(\d+)$/);
+        return m ? 'portaria-0' + m[1] : n;
+    }
+
+    const niveis = resultado.nivel_acesso.split(',').map(normalizarNivel);
+    const portariaNorm = normalizarNivel(portariaAtual);
+
+    if (niveis.includes('administrador') || niveis.includes(portariaNorm)) {
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('sistema-principal').style.display = 'block';
         document.getElementById('nome-logado').innerText = resultado.nome_completo;
