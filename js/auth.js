@@ -39,16 +39,8 @@ async function fazerLogin(portariaAtual) {
 
     // --- PASSO 3: CHECAR NÍVEL DE ACESSO ---
     if (portariaAtual === 'menu') {
-        const nivel = resultado.nivel_acesso.toLowerCase().trim();
         sessionStorage.setItem('d2p-auth', resultado.nome_completo);
-        sessionStorage.setItem('d2p-nivel', nivel);
-
-        if (nivel === 'administrador') {
-            window.location.href = '../portarias.html';
-        } else {
-            // Redireciona direto para a portaria do usuário
-            window.location.href = '../' + nivel + '/index.html';
-        }
+        window.location.href = '../portarias.html';
         return;
     }
     const niveis = resultado.nivel_acesso.toLowerCase().split(',').map(n => n.trim());

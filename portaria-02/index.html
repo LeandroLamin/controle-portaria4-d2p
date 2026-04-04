@@ -423,18 +423,6 @@ document.getElementById('user-pass').addEventListener('keydown', e => {
   if (e.key === 'Enter') fazerLogin('portaria-02');
 });
 
-// Verificar se já veio autenticado pelo menu
-(function verificarSessao() {
-  const nome = sessionStorage.getItem('d2p-auth');
-  const nivel = sessionStorage.getItem('d2p-nivel');
-  if (nome && nivel === 'portaria-02') {
-    document.getElementById('tela-login').style.display = 'none';
-    document.getElementById('sistema-principal').style.display = 'block';
-    document.getElementById('nome-logado').innerText = nome;
-    document.body.classList.add('sistema-aberto');
-  }
-})();
-
 // Sobrescreve o fazerLogin p/ mostrar erro inline e loading no botão
 const _fazerLoginOriginal = fazerLogin;
 window.fazerLogin = async function(portaria) {
