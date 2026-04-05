@@ -94,6 +94,12 @@ async function jitBuscarRelatorio() {
     }
 }
 
+function _formatarData(data) {
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('-');
+    return `${dia}/${mes}/${ano}`;
+}
+
 function _jitRenderizarTabela(lista) {
     const tbody = document.querySelector('#jit-tabela tbody');
     tbody.innerHTML = '';
@@ -101,7 +107,7 @@ function _jitRenderizarTabela(lista) {
         const tr = document.createElement('tr');
         tr.style.borderBottom = '1px solid #e8ecf0';
         tr.innerHTML = `
-            <td style="padding:7px 10px;">${item.data           || ''}</td>
+            <td style="padding:7px 10px;">${_formatarData(item.data)}</td>
             <td style="padding:7px 10px;">${item.hora           || ''}</td>
             <td style="padding:7px 10px;">${item.nome           || ''}</td>
             <td style="padding:7px 10px;">${item.cpf            || ''}</td>

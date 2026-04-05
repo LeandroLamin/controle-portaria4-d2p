@@ -98,6 +98,12 @@ async function cntBuscarRelatorio() {
     }
 }
 
+function _formatarData(data) {
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('-');
+    return `${dia}/${mes}/${ano}`;
+}
+
 function _cntRenderizarTabela(lista) {
     const tbody = document.querySelector('#cnt-tabela tbody');
     tbody.innerHTML = '';
@@ -105,7 +111,7 @@ function _cntRenderizarTabela(lista) {
         const tr = document.createElement('tr');
         tr.style.borderBottom = '1px solid #e8ecf0';
         tr.innerHTML = `
-            <td style="padding:7px 10px;">${item.data        || ''}</td>
+            <td style="padding:7px 10px;">${_formatarData(item.data)}</td>
             <td style="padding:7px 10px;">${item.hora        || ''}</td>
             <td style="padding:7px 10px;">${item.nome        || ''}</td>
             <td style="padding:7px 10px;">${item.cpf         || ''}</td>
