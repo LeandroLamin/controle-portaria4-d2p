@@ -1,0 +1,132 @@
+/**
+ * PORTARIA 02 — ACESSOS
+ * Tabela: portaria-02-acessos
+ * Depende: /conexao/config.js, /conexao/db.js, /js/ui.js
+ */
+
+const TABELA_ACS = 'portaria-02-acessos';
+let dadosAcsGlobal = [];
+
+// ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
+async function acsRegistrar(acesso) {
+    const dados = {
+        nome:    document.getElementById('acs-nome').value.trim().toUpperCase(),
+        cpf:     document.getElementById('acs-cpf').value.trim(),
+        empresa: document.getElementById('acs-empresa').value.trim().toUpperCase(),
+        veiculo: document.getElementById('acs-veiculo').value.trim().toUpperCase(),
+        placa:   document.getElementById('acs-placa').value.trim().toUpperCase(),
+        motivo:  document.getElementById('acs-motivo').value,
+        acesso:  acesso
+    };
+    if (!dados.cpf || !dados.nome) {
+        return notify('Preencha Nome e CPF.', 'aviso');
+    }
+    const result = await dbSalvar(TABELA_ACS, dados);
+    if (result && result.ok) {
+        notify(`${acesso} registrada com sucesso!`, 'sucesso');
+        limparCampos('tela-acessos');
+    } else {
+        notify('Erro ao salvar no servidor.', 'erro');
+    }
+}
+
+// ── 2. PESQUISAR por Placa ou CPF ────────────────────────────────────────────
+async function acsPesquisar() {
+    const placa = document.getElementById('acs-placa').value.trim().toUpperCase();
+    const cpf   = document.getElementById('acs-cpf').value.trim();
+
+    if (!placa && !cpf) return notify('Digite a Placa ou CPF para pesquisar.', 'aviso');
+
+    const filtros = placa ? { placa } : { cpf };
+    const data = await dbBuscar(TABELA_ACS, filtros, { order: 'id.desc', limit: 1 });
+
+    if (data && data.length > 0) {
+        const u = data[0];
+        document.getElementById('acs-nome').value    = u.nome    || '';
+        document.getElementById('acs-cpf').value     = u.cpf     || '';
+        document.getElementById('acs-empresa').value = u.empresa || '';
+        document.getElementById('acs-veiculo').value = u.veiculo || '';
+        document.getElementById('acs-placa').value   = u.placa   || '';
+        document.getElementById('acs-motivo').value  = u.motivo  || '';
+        notify('Registro localizado!', 'sucesso');
+    } else {
+        notify('Nenhum registro encontrado.', 'aviso');
+    }
+}
+
+// ── 3. FILTRO / RELATÓRIO ─────────────────────────────────────────────────────
+function acsAbrirFiltro() {
+    document.getElementById('modal-acs').style.display = 'block';
+}
+
+function acsFecharFiltro() {
+    acsLimparFiltro();
+    document.getElementById('modal-acs').style.display = 'none';
+}
+
+function acsLimparFiltro() {
+    document.getElementById('acs-f-inicio').value = '';
+    document.getElementById('acs-f-fim').value    = '';
+    document.getElementById('acs-f-busca').value  = '';
+    document.querySelector('#acs-tabela tbody').innerHTML = '';
+    dadosAcsGlobal = [];
+}
+
+async function acsBuscarRelatorio() {
+    const inicio = document.getElementById('acs-f-inicio').value;
+    const fim    = document.getElementById('acs-f-fim').value;
+    const busca  = document.getElementById('acs-f-busca').value.trim().toUpperCase();
+
+    if (!inicio || !fim) return notify('Selecione o período.', 'aviso');
+
+    const filtros = { data_gte: inicio, data_lte: fim };
+    if (busca) filtros.placa_like = busca;
+
+    const data = await dbBuscar(TABELA_ACS, filtros);
+    if (data === null) return;
+
+    if (data.length > 0) {
+        dadosAcsGlobal = data;
+        _acsRenderizarTabela(data);
+    } else {
+        notify('Nenhum registro encontrado.', 'aviso');
+        document.querySelector('#acs-tabela tbody').innerHTML = '';
+    }
+}
+
+function _acsRenderizarTabela(lista) {
+    const tbody = document.querySelector('#acs-tabela tbody');
+    tbody.innerHTML = '';
+    lista.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #e8ecf0';
+        tr.innerHTML = `
+            <td style="padding:7px 10px;">${item.data    || ''}</td>
+            <td style="padding:7px 10px;">${item.hora    || ''}</td>
+            <td style="padding:7px 10px;">${item.nome    || ''}</td>
+            <td style="padding:7px 10px;">${item.cpf     || ''}</td>
+            <td style="padding:7px 10px;">${item.empresa || ''}</td>
+            <td style="padding:7px 10px;">${item.veiculo || ''}</td>
+            <td style="padding:7px 10px;">${item.placa   || ''}</td>
+            <td style="padding:7px 10px;">${item.motivo  || ''}</td>
+            <td style="padding:7px 10px; font-weight:700;">${item.acesso || ''}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// ── 4. EXPORTAR CSV ───────────────────────────────────────────────────────────
+function acsExportarCSV() {
+    if (dadosAcsGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
+
+    let csv = '\uFEFFData;Hora;Nome;CPF;Empresa;Veiculo;Placa;Motivo;Acesso\n';
+    dadosAcsGlobal.forEach(r => {
+        csv += `${r.data};${r.hora};${r.nome};${r.cpf};${r.empresa};${r.veiculo};${r.placa};${r.motivo};${r.acesso}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.setAttribute('href', URL.createObjectURL(blob));
+    link.setAttribute('download', 'relatorio_p02_acessos.csv');
+    link.click();
+}
