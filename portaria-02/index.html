@@ -250,26 +250,31 @@ select { cursor:pointer; }
           <div class="sec-header">Cadastro Acessos</div>
           <div class="grupo-titulo">Dados Motorista</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" style="width:230px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" class="rg-field" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Empresa</span>
-              <select style="width:190px"><option value="">Selecione</option><option>Empresa A</option><option>Empresa B</option></select>
-            </div>
+            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="acs-nome" style="width:230px"></div>
+            <div class="campo-group"><span class="campo-label">RG</span><input type="text" id="acs-rg" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="acs-empresa" style="width:190px"></div>
           </div>
           <div class="grupo-titulo">Dados do Veículo</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Veículo</span><input type="text" style="width:210px"></div>
-            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Veículo</span><input type="text" id="acs-veiculo" style="width:210px"></div>
+            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="acs-placa" style="width:130px"></div>
             <div class="campo-group"><span class="campo-label">Motivo</span>
-              <select style="width:200px"><option value="">Selecione</option><option>Entrega</option><option>Coleta</option><option>Visita</option></select>
+              <select id="acs-motivo" style="width:200px">
+                <option value="">Selecione</option>
+                <option>Entrega</option>
+                <option>Coleta</option>
+                <option>Visita</option>
+                <option>Manutenção</option>
+                <option>Outros</option>
+              </select>
             </div>
           </div>
           <div class="acoes">
-            <button class="btn-acao btn-filtro">FILTRO</button>
+            <button class="btn-acao btn-filtro" onclick="acsAbrirFiltro()">FILTRO</button>
             <button class="btn-acao btn-limpar" onclick="limparCampos('tela-acessos')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar">PESQUISAR</button>
-            <button class="btn-acao btn-entrada">ENTRADA</button>
-            <button class="btn-acao btn-saida">SAÍDA</button>
+            <button class="btn-acao btn-pesquisar" onclick="acsPesquisar()">PESQUISAR</button>
+            <button class="btn-acao btn-entrada" onclick="acsRegistrar('ENTRADA')">ENTRADA</button>
+            <button class="btn-acao btn-saida" onclick="acsRegistrar('SAÍDA')">SAÍDA</button>
           </div>
         </div>
       </div>
@@ -411,6 +416,42 @@ select { cursor:pointer; }
       </table>
     </div>
     <button onclick="cntExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
+  </div>
+</div>
+
+<!-- MODAL FILTRO ACESSOS -->
+<div id="modal-acs" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:900px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — ACESSOS</span>
+      <button onclick="acsFecharFiltro()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="acs-f-inicio" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="acs-f-fim" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">RG / Placa</span><input type="text" id="acs-f-busca" style="width:200px" placeholder="Buscar..."></div>
+      <button class="btn-acao btn-pesquisar" onclick="acsBuscarRelatorio()">FILTRAR</button>
+      <button class="btn-acao btn-limpar" onclick="acsLimparFiltro()">LIMPAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="acs-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px;">Data</th>
+            <th style="padding:8px 10px;">Hora</th>
+            <th style="padding:8px 10px;">Nome</th>
+            <th style="padding:8px 10px;">RG</th>
+            <th style="padding:8px 10px;">Empresa</th>
+            <th style="padding:8px 10px;">Veículo</th>
+            <th style="padding:8px 10px;">Placa</th>
+            <th style="padding:8px 10px;">Motivo</th>
+            <th style="padding:8px 10px;">Acesso</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button onclick="acsExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
   </div>
 </div>
 

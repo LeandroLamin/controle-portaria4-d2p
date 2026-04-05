@@ -143,7 +143,138 @@ function _cntRenderizarTabela(lista) {
     });
 }
 
+// ================================================================================
+// ACESSOS
+// ================================================================================
+
+const TABELA_ACS = 'portaria-02-acessos';
+let dadosAcsGlobal = [];
+
+// ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
+async function acsRegistrar(acesso) {
+    const dados = {
+        nome:    document.getElementById('acs-nome').value.trim().toUpperCase(),
+        rg:      document.getElementById('acs-rg').value.trim(),
+        empresa: document.getElementById('acs-empresa').value.trim().toUpperCase(),
+        veiculo: document.getElementById('acs-veiculo').value.trim().toUpperCase(),
+        placa:   document.getElementById('acs-placa').value.trim().toUpperCase(),
+        motivo:  document.getElementById('acs-motivo').value,
+        acesso:  acesso
+    };
+    if (!dados.rg || !dados.nome) {
+        return notify('Preencha Nome e RG.', 'aviso');
+    }
+    const result = await dbSalvar(TABELA_ACS, dados);
+    if (result && result.ok) {
+        notify(`${acesso} registrada com sucesso!`, 'sucesso');
+        limparCampos('tela-acessos');
+    } else {
+        notify('Erro ao salvar no servidor.', 'erro');
+    }
+}
+
+// ── 2. PESQUISAR por RG ou Placa ─────────────────────────────────────────────
+async function acsPesquisar() {
+    const rg    = document.getElementById('acs-rg').value.trim();
+    const placa = document.getElementById('acs-placa').value.trim().toUpperCase();
+
+    if (!rg && !placa) return notify('Digite o RG ou a Placa para pesquisar.', 'aviso');
+
+    const filtros = rg ? { rg } : { placa };
+    const data = await dbBuscar(TABELA_ACS, filtros, { order: 'id.desc', limit: 1 });
+
+    if (data && data.length > 0) {
+        const u = data[0];
+        document.getElementById('acs-nome').value    = u.nome    || '';
+        document.getElementById('acs-rg').value      = u.rg      || '';
+        document.getElementById('acs-empresa').value = u.empresa  || '';
+        document.getElementById('acs-veiculo').value = u.veiculo  || '';
+        document.getElementById('acs-placa').value   = u.placa   || '';
+        document.getElementById('acs-motivo').value  = u.motivo  || '';
+        notify('Registro localizado!', 'sucesso');
+    } else {
+        notify('Nenhum registro encontrado.', 'aviso');
+    }
+}
+
+// ── 3. FILTRO / RELATÓRIO ─────────────────────────────────────────────────────
+function acsAbrirFiltro() {
+    document.getElementById('modal-acs').style.display = 'block';
+}
+
+function acsFecharFiltro() {
+    acsLimparFiltro();
+    document.getElementById('modal-acs').style.display = 'none';
+}
+
+function acsLimparFiltro() {
+    document.getElementById('acs-f-inicio').value = '';
+    document.getElementById('acs-f-fim').value    = '';
+    document.getElementById('acs-f-busca').value  = '';
+    document.querySelector('#acs-tabela tbody').innerHTML = '';
+    dadosAcsGlobal = [];
+}
+
+async function acsBuscarRelatorio() {
+    const inicio = document.getElementById('acs-f-inicio').value;
+    const fim    = document.getElementById('acs-f-fim').value;
+    const busca  = document.getElementById('acs-f-busca').value.trim().toUpperCase();
+
+    if (!inicio || !fim) return notify('Selecione o período.', 'aviso');
+
+    const filtros = { data_gte: inicio, data_lte: fim };
+    if (busca) filtros.placa_like = busca;
+
+    const data = await dbBuscar(TABELA_ACS, filtros);
+    if (data === null) return;
+
+    if (data.length > 0) {
+        dadosAcsGlobal = data;
+        _acsRenderizarTabela(data);
+    } else {
+        notify('Nenhum registro encontrado.', 'aviso');
+        document.querySelector('#acs-tabela tbody').innerHTML = '';
+    }
+}
+
+function _acsRenderizarTabela(lista) {
+    const tbody = document.querySelector('#acs-tabela tbody');
+    tbody.innerHTML = '';
+    lista.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #e8ecf0';
+        tr.innerHTML = `
+            <td style="padding:7px 10px;">${item.data    || ''}</td>
+            <td style="padding:7px 10px;">${item.hora    || ''}</td>
+            <td style="padding:7px 10px;">${item.nome    || ''}</td>
+            <td style="padding:7px 10px;">${item.rg      || ''}</td>
+            <td style="padding:7px 10px;">${item.empresa || ''}</td>
+            <td style="padding:7px 10px;">${item.veiculo || ''}</td>
+            <td style="padding:7px 10px;">${item.placa   || ''}</td>
+            <td style="padding:7px 10px;">${item.motivo  || ''}</td>
+            <td style="padding:7px 10px; font-weight:700;">${item.acesso || ''}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
 // ── 4. EXPORTAR CSV ───────────────────────────────────────────────────────────
+function acsExportarCSV() {
+    if (dadosAcsGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
+
+    let csv = '\uFEFFData;Hora;Nome;RG;Empresa;Veiculo;Placa;Motivo;Acesso\n';
+    dadosAcsGlobal.forEach(r => {
+        csv += `${r.data};${r.hora};${r.nome};${r.rg};${r.empresa};${r.veiculo};${r.placa};${r.motivo};${r.acesso}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.setAttribute('href', URL.createObjectURL(blob));
+    link.setAttribute('download', 'relatorio_p02_acessos.csv');
+    link.click();
+}
+
+// ── 4. EXPORTAR CSV (CONTÊINER) ───────────────────────────────────────────────
 function cntExportarCSV() {
     if (dadosCntGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
