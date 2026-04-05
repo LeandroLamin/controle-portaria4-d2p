@@ -18,9 +18,13 @@ function notasFocar() {
     if (input) setTimeout(() => input.focus(), 50);
 }
 
-// ── Listener Enter (disparo do leitor) ───────────────────────────────────────
+// ── Listener: dispara ao atingir 44 caracteres ou Enter (fallback) ───────────
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('nf-numero').addEventListener('keydown', async (e) => {
+    const input = document.getElementById('nf-numero');
+    input.addEventListener('input', async () => {
+        if (input.value.trim().length === 44) await notasLer();
+    });
+    input.addEventListener('keydown', async (e) => {
         if (e.key === 'Enter') await notasLer();
     });
 });
