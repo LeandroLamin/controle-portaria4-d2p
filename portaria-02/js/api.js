@@ -154,15 +154,15 @@ let dadosAcsGlobal = [];
 async function acsRegistrar(acesso) {
     const dados = {
         nome:    document.getElementById('acs-nome').value.trim().toUpperCase(),
-        rg:      document.getElementById('acs-rg').value.trim(),
+        cpf:     document.getElementById('acs-cpf').value.trim(),
         empresa: document.getElementById('acs-empresa').value.trim().toUpperCase(),
         veiculo: document.getElementById('acs-veiculo').value.trim().toUpperCase(),
         placa:   document.getElementById('acs-placa').value.trim().toUpperCase(),
         motivo:  document.getElementById('acs-motivo').value,
         acesso:  acesso
     };
-    if (!dados.rg || !dados.nome) {
-        return notify('Preencha Nome e RG.', 'aviso');
+    if (!dados.cpf || !dados.nome) {
+        return notify('Preencha Nome e CPF.', 'aviso');
     }
     const result = await dbSalvar(TABELA_ACS, dados);
     if (result && result.ok) {
@@ -175,18 +175,18 @@ async function acsRegistrar(acesso) {
 
 // ── 2. PESQUISAR por RG ou Placa ─────────────────────────────────────────────
 async function acsPesquisar() {
-    const rg    = document.getElementById('acs-rg').value.trim();
+    const cpf   = document.getElementById('acs-cpf').value.trim();
     const placa = document.getElementById('acs-placa').value.trim().toUpperCase();
 
-    if (!rg && !placa) return notify('Digite o RG ou a Placa para pesquisar.', 'aviso');
+    if (!cpf && !placa) return notify('Digite o CPF ou a Placa para pesquisar.', 'aviso');
 
-    const filtros = rg ? { rg } : { placa };
+    const filtros = cpf ? { cpf } : { placa };
     const data = await dbBuscar(TABELA_ACS, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
         const u = data[0];
         document.getElementById('acs-nome').value    = u.nome    || '';
-        document.getElementById('acs-rg').value      = u.rg      || '';
+        document.getElementById('acs-cpf').value      = u.cpf     || '';
         document.getElementById('acs-empresa').value = u.empresa  || '';
         document.getElementById('acs-veiculo').value = u.veiculo  || '';
         document.getElementById('acs-placa').value   = u.placa   || '';
@@ -247,7 +247,7 @@ function _acsRenderizarTabela(lista) {
             <td style="padding:7px 10px;">${item.data    || ''}</td>
             <td style="padding:7px 10px;">${item.hora    || ''}</td>
             <td style="padding:7px 10px;">${item.nome    || ''}</td>
-            <td style="padding:7px 10px;">${item.rg      || ''}</td>
+            <td style="padding:7px 10px;">${item.cpf     || ''}</td>
             <td style="padding:7px 10px;">${item.empresa || ''}</td>
             <td style="padding:7px 10px;">${item.veiculo || ''}</td>
             <td style="padding:7px 10px;">${item.placa   || ''}</td>
@@ -262,9 +262,9 @@ function _acsRenderizarTabela(lista) {
 function acsExportarCSV() {
     if (dadosAcsGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    let csv = '\uFEFFData;Hora;Nome;RG;Empresa;Veiculo;Placa;Motivo;Acesso\n';
+    let csv = '\uFEFFData;Hora;Nome;CPF;Empresa;Veiculo;Placa;Motivo;Acesso\n';
     dadosAcsGlobal.forEach(r => {
-        csv += `${r.data};${r.hora};${r.nome};${r.rg};${r.empresa};${r.veiculo};${r.placa};${r.motivo};${r.acesso}\n`;
+        csv += `${r.data};${r.hora};${r.nome};${r.cpf};${r.empresa};${r.veiculo};${r.placa};${r.motivo};${r.acesso}\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

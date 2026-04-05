@@ -251,12 +251,12 @@ select { cursor:pointer; }
           <div class="grupo-titulo">Dados Motorista</div>
           <div class="campos-linha">
             <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="acs-nome" style="width:230px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" id="acs-rg" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="acs-cpf" class="rg-field" style="width:130px"></div>
             <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="acs-empresa" style="width:190px"></div>
           </div>
           <div class="grupo-titulo">Dados do Veículo</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Veículo</span><input type="text" id="acs-veiculo" style="width:210px"></div>
+            <div class="campo-group"><span class="campo-label">Veículo</span><input type="text" id="acs-veiculo" class="rg-field" style="width:210px"></div>
             <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="acs-placa" style="width:130px"></div>
             <div class="campo-group"><span class="campo-label">Motivo</span>
               <select id="acs-motivo" style="width:200px">
@@ -429,7 +429,7 @@ select { cursor:pointer; }
     <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
       <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="acs-f-inicio" style="width:150px"></div>
       <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="acs-f-fim" style="width:150px"></div>
-      <div class="campo-group"><span class="campo-label">RG / Placa</span><input type="text" id="acs-f-busca" style="width:200px" placeholder="Buscar..."></div>
+      <div class="campo-group"><span class="campo-label">CPF / Placa</span><input type="text" id="acs-f-busca" style="width:200px" placeholder="Buscar..."></div>
       <button class="btn-acao btn-pesquisar" onclick="acsBuscarRelatorio()">FILTRAR</button>
       <button class="btn-acao btn-limpar" onclick="acsLimparFiltro()">LIMPAR</button>
     </div>
@@ -440,7 +440,7 @@ select { cursor:pointer; }
             <th style="padding:8px 10px;">Data</th>
             <th style="padding:8px 10px;">Hora</th>
             <th style="padding:8px 10px;">Nome</th>
-            <th style="padding:8px 10px;">RG</th>
+            <th style="padding:8px 10px;">CPF</th>
             <th style="padding:8px 10px;">Empresa</th>
             <th style="padding:8px 10px;">Veículo</th>
             <th style="padding:8px 10px;">Placa</th>
