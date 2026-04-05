@@ -161,6 +161,7 @@ function _nfRenderizarTabela(lista) {
 // ── EXPORTAR XLSX ─────────────────────────────────────────────────────────────
 function notasExportarXLSX() {
     if (dadosNfGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
+    if (typeof XLSX === 'undefined') return notify('Biblioteca XLSX não carregou. Verifique a conexão.', 'erro');
 
     const cabecalho = ['Data', 'Hora', 'Nº NF', 'Chave de Acesso'];
     const linhas = dadosNfGlobal.map(r => [
@@ -173,5 +174,13 @@ function notasExportarXLSX() {
     const ws = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Notas');
-    XLSX.writeFile(wb, 'relatorio_p02_notas.xlsx');
+
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob  = new Blob([wbout], { type: 'application/octet-stream' });
+    const url   = URL.createObjectURL(blob);
+    const link  = document.createElement('a');
+    link.href     = url;
+    link.download = 'relatorio_p02_notas.xlsx';
+    link.click();
+    URL.revokeObjectURL(url);
 }
