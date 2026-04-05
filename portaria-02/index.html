@@ -6,6 +6,7 @@
 <title>Controle de Acesso - Portaria 2</title>
 
 <!-- Arquivos compartilhados do projeto -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="../conexao/config.js"></script>
 <script src="../conexao/crypto.js"></script>
 <script src="../conexao/db.js"></script>
@@ -385,7 +386,7 @@ select { cursor:pointer; }
                 <tbody></tbody>
               </table>
             </div>
-            <button onclick="notasExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
+            <button onclick="notasExportarXLSX()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
           </div>
         </div>
       </div>

@@ -158,20 +158,19 @@ function _nfRenderizarTabela(lista) {
     });
 }
 
-// ── EXPORTAR CSV ──────────────────────────────────────────────────────────────
-function notasExportarCSV() {
+// ── EXPORTAR XLSX ─────────────────────────────────────────────────────────────
+function notasExportarXLSX() {
     if (dadosNfGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    let csv = '\uFEFFData;Hora;Nº NF;Chave de Acesso\n';
-    dadosNfGlobal.forEach(r => {
-        const numNf   = r.num_nf || _nfExtrairNumero(r.numero_nf);
-        const chave   = r.numero_nf || '';
-        csv += `${_nfFormatarData(r.data)};${r.hora};${numNf};${chave}\n`;
-    });
+    const linhas = dadosNfGlobal.map(r => ({
+        'Data':            _nfFormatarData(r.data),
+        'Hora':            r.hora || '',
+        'Nº NF':           { t: 's', v: r.num_nf || _nfExtrairNumero(r.numero_nf) || '' },
+        'Chave de Acesso': { t: 's', v: r.numero_nf || '' }
+    }));
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.setAttribute('href', URL.createObjectURL(blob));
-    link.setAttribute('download', 'relatorio_p02_notas.csv');
-    link.click();
+    const ws = XLSX.utils.json_to_sheet(linhas);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Notas');
+    XLSX.writeFile(wb, 'relatorio_p02_notas.xlsx');
 }
