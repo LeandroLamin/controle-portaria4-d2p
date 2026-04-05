@@ -378,11 +378,22 @@
     <script>
         // ── Sessão ────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
-            const session = sessionStorage.getItem('adminSession');
-            if (session) {
-                const { nome } = JSON.parse(session);
+            // Bypass via login do menu principal (d2p-nivel = administrador)
+            const nome  = sessionStorage.getItem('d2p-auth');
+            const nivel = sessionStorage.getItem('d2p-nivel') || '';
+            const niveis = nivel.toLowerCase().split(',').map(n => n.trim());
+            if (nome && niveis.includes('administrador')) {
+                sessionStorage.setItem('adminSession', JSON.stringify({ nome }));
                 document.getElementById('wrapper-login').style.display = 'none';
                 document.getElementById('nome-admin-logado').innerText = nome;
+                return;
+            }
+            // Fallback: sessão admin própria (acesso direto pela URL)
+            const session = sessionStorage.getItem('adminSession');
+            if (session) {
+                const { nome: nomeAdmin } = JSON.parse(session);
+                document.getElementById('wrapper-login').style.display = 'none';
+                document.getElementById('nome-admin-logado').innerText = nomeAdmin;
             }
         });
 
