@@ -46,7 +46,7 @@ async function notasLer() {
         notasAbrirModal(existente[0]);
     } else {
         // NF nova → salva → verde
-        const result = await dbSalvar(TABELA_NF, { numero_nf: numeroNf, num_nf: _nfExtrairNumero(numeroNf) });
+        const result = await dbSalvar(TABELA_NF, { numero_nf: numeroNf });
         if (result && result.ok) {
             _nfFeedback('verde', 'NF REGISTRADA COM SUCESSO');
             input.value = '';
