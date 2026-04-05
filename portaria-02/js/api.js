@@ -173,14 +173,14 @@ async function acsRegistrar(acesso) {
     }
 }
 
-// ── 2. PESQUISAR por RG ou Placa ─────────────────────────────────────────────
+// ── 2. PESQUISAR por Placa ou CPF ────────────────────────────────────────────
 async function acsPesquisar() {
-    const cpf   = document.getElementById('acs-cpf').value.trim();
     const placa = document.getElementById('acs-placa').value.trim().toUpperCase();
+    const cpf   = document.getElementById('acs-cpf').value.trim();
 
-    if (!cpf && !placa) return notify('Digite o CPF ou a Placa para pesquisar.', 'aviso');
+    if (!placa && !cpf) return notify('Digite a Placa ou CPF para pesquisar.', 'aviso');
 
-    const filtros = cpf ? { cpf } : { placa };
+    const filtros = placa ? { placa } : { cpf };
     const data = await dbBuscar(TABELA_ACS, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
