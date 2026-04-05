@@ -285,32 +285,32 @@ select { cursor:pointer; }
           <div class="sec-header">Cadastro Romaneio</div>
           <div class="grupo-titulo">Dados do Motorista</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" style="width:220px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" class="rg-field" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" style="width:260px"></div>
+            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="rom-nome" style="width:220px"></div>
+            <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="rom-cpf" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="rom-empresa" style="width:260px"></div>
           </div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Placa/Cavalo</span><input type="text" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta-1</span><input type="text" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta-2</span><input type="text" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Placa/Cavalo</span><input type="text" id="rom-placa" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Carreta-1</span><input type="text" id="rom-carreta1" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Carreta-2</span><input type="text" id="rom-carreta2" style="width:130px"></div>
           </div>
           <div class="grupo-titulo">Número de Série</div>
           <div class="serie-linha">
-            <div class="campo-group"><span class="campo-label">1</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">2</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">3</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">4</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">5</span><input type="text" style="width:100px"></div>
-            <div class="campo-group"><span class="campo-label">6</span><input type="text" style="width:100px"></div>
+            <div class="campo-group"><span class="campo-label">1</span><input type="text" id="rom-serie1" style="width:100px"></div>
+            <div class="campo-group"><span class="campo-label">2</span><input type="text" id="rom-serie2" style="width:100px"></div>
+            <div class="campo-group"><span class="campo-label">3</span><input type="text" id="rom-serie3" style="width:100px"></div>
+            <div class="campo-group"><span class="campo-label">4</span><input type="text" id="rom-serie4" style="width:100px"></div>
+            <div class="campo-group"><span class="campo-label">5</span><input type="text" id="rom-serie5" style="width:100px"></div>
+            <div class="campo-group"><span class="campo-label">6</span><input type="text" id="rom-serie6" style="width:100px"></div>
           </div>
           <div class="grupo-titulo">Observação</div>
-          <input type="text" class="obs-input" placeholder="Detalhes importantes do romaneio...">
+          <input type="text" id="rom-obs" class="obs-input" placeholder="Detalhes importantes do romaneio...">
           <div class="acoes">
-            <button class="btn-acao btn-filtro">FILTRO</button>
+            <button class="btn-acao btn-filtro" onclick="romAbrirFiltro()">FILTRO</button>
             <button class="btn-acao btn-limpar" onclick="limparCampos('tela-romaneio')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar">PESQUISAR</button>
-            <button class="btn-acao btn-entrada">ENTRADA</button>
-            <button class="btn-acao btn-saida">SAÍDA</button>
+            <button class="btn-acao btn-pesquisar" onclick="romPesquisar()">PESQUISAR</button>
+            <button class="btn-acao btn-entrada" onclick="romRegistrar('ENTRADA')">ENTRADA</button>
+            <button class="btn-acao btn-saida" onclick="romRegistrar('SAÍDA')">SAÍDA</button>
           </div>
         </div>
       </div>
@@ -416,6 +416,49 @@ select { cursor:pointer; }
       </table>
     </div>
     <button onclick="cntExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
+  </div>
+</div>
+
+<!-- MODAL FILTRO ROMANEIO -->
+<div id="modal-rom" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:1000px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — ROMANEIO</span>
+      <button onclick="romFecharFiltro()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="rom-f-inicio" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="rom-f-fim" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Placa / CPF</span><input type="text" id="rom-f-busca" style="width:200px" placeholder="Buscar..."></div>
+      <button class="btn-acao btn-pesquisar" onclick="romBuscarRelatorio()">FILTRAR</button>
+      <button class="btn-acao btn-limpar" onclick="romLimparFiltro()">LIMPAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="rom-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px;">Data</th>
+            <th style="padding:8px 10px;">Hora</th>
+            <th style="padding:8px 10px;">Nome</th>
+            <th style="padding:8px 10px;">CPF</th>
+            <th style="padding:8px 10px;">Empresa</th>
+            <th style="padding:8px 10px;">Placa</th>
+            <th style="padding:8px 10px;">Carreta-1</th>
+            <th style="padding:8px 10px;">Carreta-2</th>
+            <th style="padding:8px 10px;">Série 1</th>
+            <th style="padding:8px 10px;">Série 2</th>
+            <th style="padding:8px 10px;">Série 3</th>
+            <th style="padding:8px 10px;">Série 4</th>
+            <th style="padding:8px 10px;">Série 5</th>
+            <th style="padding:8px 10px;">Série 6</th>
+            <th style="padding:8px 10px;">Obs</th>
+            <th style="padding:8px 10px;">Acesso</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button onclick="romExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
   </div>
 </div>
 
