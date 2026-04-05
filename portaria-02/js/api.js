@@ -152,6 +152,7 @@ let dadosAcsGlobal = [];
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function acsRegistrar(acesso) {
+    const agora = new Date();
     const dados = {
         nome:    document.getElementById('acs-nome').value.trim().toUpperCase(),
         cpf:     document.getElementById('acs-cpf').value.trim(),
@@ -159,7 +160,9 @@ async function acsRegistrar(acesso) {
         veiculo: document.getElementById('acs-veiculo').value.trim().toUpperCase(),
         placa:   document.getElementById('acs-placa').value.trim().toUpperCase(),
         motivo:  document.getElementById('acs-motivo').value,
-        acesso:  acesso
+        acesso:  acesso,
+        data:    agora.toLocaleDateString('pt-BR'),
+        hora:    agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
     };
     if (!dados.cpf || !dados.nome) {
         return notify('Preencha Nome e CPF.', 'aviso');
