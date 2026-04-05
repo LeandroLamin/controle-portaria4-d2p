@@ -91,6 +91,7 @@ function notasFecharModal() {
 function notasLimparFiltro() {
     document.getElementById('nf-f-inicio').value = '';
     document.getElementById('nf-f-fim').value    = '';
+    document.getElementById('nf-f-busca').value  = '';
     document.querySelector('#nf-tabela tbody').innerHTML = '';
     dadosNfGlobal = [];
 }
@@ -98,10 +99,16 @@ function notasLimparFiltro() {
 async function notasBuscarRelatorio() {
     const inicio = document.getElementById('nf-f-inicio').value;
     const fim    = document.getElementById('nf-f-fim').value;
+    const busca  = document.getElementById('nf-f-busca').value.trim();
 
-    if (!inicio || !fim) return notify('Selecione o período.', 'aviso');
+    if (!inicio && !fim && !busca) return notify('Informe o período ou um número de NF.', 'aviso');
 
-    const data = await dbBuscar(TABELA_NF, { data_gte: inicio, data_lte: fim });
+    const filtros = {};
+    if (inicio) filtros.data_gte = inicio;
+    if (fim)    filtros.data_lte = fim;
+    if (busca)  filtros.numero_nf_like = busca;
+
+    const data = await dbBuscar(TABELA_NF, filtros);
     if (data === null) return;
 
     if (data.length > 0) {
