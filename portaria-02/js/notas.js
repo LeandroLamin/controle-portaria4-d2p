@@ -78,7 +78,7 @@ function _nfFeedback(tipo, mensagem) {
 // ── Modal NF duplicada ────────────────────────────────────────────────────────
 function notasAbrirModal(registro) {
     document.getElementById('nf-dup-numero').textContent = registro.numero_nf || '';
-    document.getElementById('nf-dup-data').textContent   = registro.data      || '';
+    document.getElementById('nf-dup-data').textContent   = _nfFormatarData(registro.data);
     document.getElementById('nf-dup-hora').textContent   = registro.hora      || '';
     document.getElementById('modal-nf-dup').style.display = 'block';
 }
@@ -113,6 +113,12 @@ async function notasBuscarRelatorio() {
     }
 }
 
+function _nfFormatarData(data) {
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('-');
+    return `${dia}/${mes}/${ano}`;
+}
+
 function _nfRenderizarTabela(lista) {
     const tbody = document.querySelector('#nf-tabela tbody');
     tbody.innerHTML = '';
@@ -120,7 +126,7 @@ function _nfRenderizarTabela(lista) {
         const tr = document.createElement('tr');
         tr.style.borderBottom = '1px solid #e8ecf0';
         tr.innerHTML = `
-            <td style="padding:7px 10px;">${item.data      || ''}</td>
+            <td style="padding:7px 10px;">${_nfFormatarData(item.data)}</td>
             <td style="padding:7px 10px;">${item.hora      || ''}</td>
             <td style="padding:7px 10px;">${item.numero_nf || ''}</td>
         `;
