@@ -167,6 +167,16 @@ select { cursor:pointer; }
 </head>
 <body>
 
+<!-- Modal: sem acesso a esta portaria -->
+<div id="modal-sem-acesso" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:12px; padding:36px 32px; max-width:360px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+    <div style="font-size:48px; margin-bottom:12px;">🔒</div>
+    <div style="font-size:18px; font-weight:800; color:#c0392b; margin-bottom:8px;">ACESSO NEGADO</div>
+    <p style="font-size:14px; color:#555; margin-bottom:24px; line-height:1.5;">Você não tem permissão para acessar a Portaria 02.</p>
+    <a href="../portarias.html" style="display:inline-block; background:#34495e; color:#fff; border-radius:6px; padding:12px 32px; font-size:14px; font-weight:700; text-decoration:none; letter-spacing:1px;">VOLTAR</a>
+  </div>
+</div>
+
 <!-- ==================== TELA LOGIN ==================== -->
 <div id="tela-login">
   <div class="login-card">
@@ -418,6 +428,24 @@ select { cursor:pointer; }
 <script src="../js/ui.js"></script>
 <script src="js/api.js"></script>
 <script>
+// Auto-bypass: se já tem sessão válida com acesso a p02
+(function() {
+    var nome  = sessionStorage.getItem('d2p-auth');
+    var nivel = sessionStorage.getItem('d2p-nivel') || '';
+    if (!nome || !nivel) return;
+    var niveis = nivel.toLowerCase().split(',').map(function(n){ return n.trim(); });
+    if (niveis.includes('administrador') || niveis.includes('p02')) {
+        document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('sistema-principal').style.display = 'block';
+        document.getElementById('nome-logado').innerText = nome;
+        document.body.classList.add('sistema-aberto');
+    } else {
+        // Sessão válida mas sem acesso a esta portaria
+        document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('modal-sem-acesso').style.display = 'flex';
+    }
+})();
+
 // Enter no campo senha
 document.getElementById('user-pass').addEventListener('keydown', e => {
   if (e.key === 'Enter') fazerLogin('portaria-02');
