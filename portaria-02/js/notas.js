@@ -164,7 +164,9 @@ function notasExportarCSV() {
 
     let csv = '\uFEFFData;Hora;Nº NF;Chave de Acesso\n';
     dadosNfGlobal.forEach(r => {
-        csv += `${_nfFormatarData(r.data)};${r.hora};${_nfExtrairNumero(r.numero_nf)};${r.numero_nf}\n`;
+        const numNf   = r.num_nf || _nfExtrairNumero(r.numero_nf);
+        const chave   = r.numero_nf || '';
+        csv += `${_nfFormatarData(r.data)};${r.hora};"="${numNf}";"="${chave}"\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
