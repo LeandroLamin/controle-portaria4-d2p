@@ -86,6 +86,9 @@ function notasAbrirModal(registro) {
 
 function notasFecharModal() {
     document.getElementById('modal-nf-dup').style.display = 'none';
+    const input = document.getElementById('nf-numero');
+    input.value = '';
+    input.focus();
 }
 
 // ── RELATÓRIO ─────────────────────────────────────────────────────────────────
