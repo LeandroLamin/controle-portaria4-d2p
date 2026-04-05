@@ -121,18 +121,31 @@ function _jitRenderizarTabela(lista) {
     });
 }
 
-// ── 4. EXPORTAR CSV ───────────────────────────────────────────────────────────
-function jitExportarCSV() {
+// ── 4. EXPORTAR XLSX ─────────────────────────────────────────────────────────
+function jitExportarXLSX() {
     if (dadosJitGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    let csv = '\uFEFFData;Hora;Nome;CPF;Empresa;Placa;Carreta;Transportadora;Acesso\n';
-    dadosJitGlobal.forEach(r => {
-        csv += `${r.data};${r.hora};${r.nome};${r.cpf};${r.empresa};${r.placa};${r.carreta};${r.transportadora};${r.acesso}\n`;
-    });
+    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Placa','Carreta','Transportadora','Acesso'];
+    const linhas = dadosJitGlobal.map(r => [
+        _formatarData(r.data),
+        r.hora           || '',
+        r.nome           || '',
+        String(r.cpf     || ''),
+        r.empresa        || '',
+        r.placa          || '',
+        r.carreta        || '',
+        r.transportadora || '',
+        r.acesso         || ''
+    ]);
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.setAttribute('href', URL.createObjectURL(blob));
-    link.setAttribute('download', 'relatorio_p02_jit.csv');
+    const ws = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'JIT');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob  = new Blob([wbout], { type: 'application/octet-stream' });
+    const link  = document.createElement('a');
+    link.href     = URL.createObjectURL(blob);
+    link.download = 'relatorio_p02_jit.xlsx';
     link.click();
+    URL.revokeObjectURL(link.href);
 }

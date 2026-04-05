@@ -129,18 +129,35 @@ function _cntRenderizarTabela(lista) {
     });
 }
 
-// ── 4. EXPORTAR CSV ───────────────────────────────────────────────────────────
-function cntExportarCSV() {
+// ── 4. EXPORTAR XLSX ─────────────────────────────────────────────────────────
+function cntExportarXLSX() {
     if (dadosCntGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    let csv = '\uFEFFData;Hora;Nome;CPF;Transp;Placa;Carreta1;Carreta2;Conteiner1;Lacre1;Conteiner2;Lacre2;Acesso\n';
-    dadosCntGlobal.forEach(r => {
-        csv += `${r.data};${r.hora};${r.nome};${r.cpf};${r.transp};${r.placa};${r.carreta1};${r.carreta2};${r.conteiner1};${r.lacre1};${r.conteiner2};${r.lacre2};${r.acesso}\n`;
-    });
+    const cabecalho = ['Data','Hora','Nome','CPF','Transportadora','Placa','Carreta1','Carreta2','Conteiner1','Lacre1','Conteiner2','Lacre2','Acesso'];
+    const linhas = dadosCntGlobal.map(r => [
+        _formatarData(r.data),
+        r.hora           || '',
+        r.nome           || '',
+        String(r.cpf     || ''),
+        r.transportadora || '',
+        r.placa          || '',
+        r.carreta1       || '',
+        r.carreta2       || '',
+        r.conteiner1     || '',
+        r.lacre1         || '',
+        r.conteiner2     || '',
+        r.lacre2         || '',
+        r.acesso         || ''
+    ]);
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.setAttribute('href', URL.createObjectURL(blob));
-    link.setAttribute('download', 'relatorio_p02_conteiner.csv');
+    const ws = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Conteiner');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob  = new Blob([wbout], { type: 'application/octet-stream' });
+    const link  = document.createElement('a');
+    link.href     = URL.createObjectURL(blob);
+    link.download = 'relatorio_p02_conteiner.xlsx';
     link.click();
+    URL.revokeObjectURL(link.href);
 }

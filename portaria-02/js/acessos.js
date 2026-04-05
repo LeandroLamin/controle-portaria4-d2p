@@ -121,18 +121,31 @@ function _acsRenderizarTabela(lista) {
     });
 }
 
-// ── 4. EXPORTAR CSV ───────────────────────────────────────────────────────────
-function acsExportarCSV() {
+// ── 4. EXPORTAR XLSX ─────────────────────────────────────────────────────────
+function acsExportarXLSX() {
     if (dadosAcsGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    let csv = '\uFEFFData;Hora;Nome;CPF;Empresa;Veiculo;Placa;Motivo;Acesso\n';
-    dadosAcsGlobal.forEach(r => {
-        csv += `${r.data};${r.hora};${r.nome};${r.cpf};${r.empresa};${r.veiculo};${r.placa};${r.motivo};${r.acesso}\n`;
-    });
+    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Veículo','Placa','Motivo','Acesso'];
+    const linhas = dadosAcsGlobal.map(r => [
+        _formatarData(r.data),
+        r.hora    || '',
+        r.nome    || '',
+        String(r.cpf     || ''),
+        r.empresa || '',
+        r.veiculo || '',
+        r.placa   || '',
+        r.motivo  || '',
+        r.acesso  || ''
+    ]);
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.setAttribute('href', URL.createObjectURL(blob));
-    link.setAttribute('download', 'relatorio_p02_acessos.csv');
+    const ws = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Acessos');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob  = new Blob([wbout], { type: 'application/octet-stream' });
+    const link  = document.createElement('a');
+    link.href     = URL.createObjectURL(blob);
+    link.download = 'relatorio_p02_acessos.xlsx';
     link.click();
+    URL.revokeObjectURL(link.href);
 }
