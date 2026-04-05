@@ -162,14 +162,15 @@ function _nfRenderizarTabela(lista) {
 function notasExportarXLSX() {
     if (dadosNfGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    const linhas = dadosNfGlobal.map(r => ({
-        'Data':            _nfFormatarData(r.data),
-        'Hora':            r.hora || '',
-        'Nº NF':           { t: 's', v: r.num_nf || _nfExtrairNumero(r.numero_nf) || '' },
-        'Chave de Acesso': { t: 's', v: r.numero_nf || '' }
-    }));
+    const cabecalho = ['Data', 'Hora', 'Nº NF', 'Chave de Acesso'];
+    const linhas = dadosNfGlobal.map(r => [
+        _nfFormatarData(r.data),
+        r.hora || '',
+        String(r.num_nf || _nfExtrairNumero(r.numero_nf) || ''),
+        String(r.numero_nf || '')
+    ]);
 
-    const ws = XLSX.utils.json_to_sheet(linhas);
+    const ws = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Notas');
     XLSX.writeFile(wb, 'relatorio_p02_notas.xlsx');
