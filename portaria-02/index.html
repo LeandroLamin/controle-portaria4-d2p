@@ -163,6 +163,17 @@ select { cursor:pointer; }
 .notas-center-img { display:flex; justify-content:center; align-items:center; padding:20px; position:relative; z-index:2; }
 .notas-bottom-input { position:relative; z-index:2; }
 .notas-bottom-input input { width:100%; height:32px; background:rgba(255,255,255,.92); border:none; border-radius:5px; padding:0 10px; font-size:13px; outline:none; }
+
+/* ===== NOTAS FISCAL ===== */
+.nf-input {
+  width:100%; max-width:520px; height:54px; font-size:20px; text-align:center;
+  border:2px solid var(--border); border-radius:8px; padding:0 16px;
+  outline:none; transition:border-color .3s, background .3s; letter-spacing:2px;
+}
+.nf-input:focus { border-color:var(--teal); }
+.nf-input.nf-verde   { border-color:#27ae60 !important; background:#d4f5d4 !important; }
+.nf-input.nf-vermelho { border-color:var(--red) !important; background:#fdecea !important; }
+.nf-status { font-size:12px; font-weight:700; letter-spacing:1px; min-height:18px; margin-top:8px; }
 </style>
 </head>
 <body>
@@ -202,7 +213,7 @@ select { cursor:pointer; }
       <button class="nav-btn" onclick="mudarTela('acessos',this)">ACESSOS</button>
       <button class="nav-btn" onclick="mudarTela('romaneio',this)">ROMANEIO</button>
       <button class="nav-btn" onclick="mudarTela('jit',this)">JIT</button>
-      <button class="nav-btn" onclick="mudarTela('notas',this)">NOTAS</button>
+      <button class="nav-btn" onclick="mudarTela('notas',this); notasFocar()">NOTAS</button>
     </div>
 
     <div class="content">
@@ -343,38 +354,36 @@ select { cursor:pointer; }
 
       <!-- NOTAS -->
       <div id="tela-notas" class="tela">
-        <div class="notas-card">
-          <div class="notas-titulo-bar">
-            <span>Baixa de Notas Fiscais — Portaria 2</span>
-            <button class="btn-fechar-notas">✕</button>
+        <div class="card" style="max-width:860px;">
+          <div class="sec-header">Baixa de Notas Fiscais</div>
+
+          <div style="display:flex; flex-direction:column; align-items:center; padding:24px 0 28px;">
+            <span class="campo-label" style="font-size:11px; margin-bottom:10px;">APONTE O LEITOR PARA O CÓDIGO DE BARRAS</span>
+            <input type="text" id="nf-numero" class="nf-input" placeholder="Aguardando leitura..." autocomplete="off">
+            <div id="nf-status" class="nf-status"></div>
           </div>
-          <div class="notas-body">
-            <div class="notas-filtro-titulo">FILTRO</div>
-            <div class="notas-filtro-linha">
-              <div><span class="notas-data-label">Data Inicial</span><input type="text" placeholder="dd/mm/aaaa"></div>
-              <div><span class="notas-data-label">Data Final</span><input type="text" placeholder="dd/mm/aaaa"></div>
-              <button class="btn-lupa">🔍</button>
-              <button class="btn-habilitar">Habilitar Filtro?</button>
+
+          <div style="border-top:1px solid var(--border); padding-top:20px;">
+            <div class="grupo-titulo">Relatório</div>
+            <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:14px;">
+              <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="nf-f-inicio" style="width:150px"></div>
+              <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="nf-f-fim" style="width:150px"></div>
+              <button class="btn-acao btn-pesquisar" onclick="notasBuscarRelatorio()">FILTRAR</button>
+              <button class="btn-acao btn-limpar" onclick="notasLimparFiltro()">LIMPAR</button>
             </div>
-            <div class="notas-center-img">
-              <svg width="180" height="180" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="100,28 162,72 162,162 38,162 38,72" fill="rgba(255,255,255,0.18)"/>
-                <polygon points="100,16 172,68 28,68" fill="rgba(255,255,255,0.12)"/>
-                <rect x="78" y="112" width="44" height="50" fill="rgba(26,138,122,0.7)" rx="3"/>
-                <rect x="53" y="90" width="30" height="26" fill="rgba(255,255,255,0.3)" rx="3"/>
-                <rect x="117" y="90" width="30" height="26" fill="rgba(255,255,255,0.3)" rx="3"/>
-                <circle cx="58" cy="147" r="15" fill="rgba(60,100,180,0.8)"/>
-                <circle cx="58" cy="128" r="11" fill="#f5c9a0"/>
-                <rect x="48" y="118" width="20" height="5" fill="rgba(30,60,140,0.9)" rx="1"/>
-                <rect x="52" y="111" width="12" height="9" fill="rgba(30,60,140,0.9)" rx="2"/>
-                <text x="57" y="119" font-size="5" fill="#FFD700" text-anchor="middle">★</text>
-                <circle cx="150" cy="52" r="9" fill="none" stroke="#FFD700" stroke-width="3"/>
-                <line x1="156" y1="58" x2="170" y2="72" stroke="#FFD700" stroke-width="3"/>
-              </svg>
+            <div style="overflow-x:auto;">
+              <table id="nf-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
+                <thead style="background:var(--teal); color:#fff;">
+                  <tr>
+                    <th style="padding:8px 10px;">Data</th>
+                    <th style="padding:8px 10px;">Hora</th>
+                    <th style="padding:8px 10px;">Número NF</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
             </div>
-            <div class="notas-bottom-input">
-              <input type="text" placeholder="Número da nota fiscal...">
-            </div>
+            <button onclick="notasExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
           </div>
         </div>
       </div>
@@ -414,6 +423,20 @@ select { cursor:pointer; }
       </table>
     </div>
     <button onclick="cntExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
+  </div>
+</div>
+
+<!-- MODAL NF DUPLICADA -->
+<div id="modal-nf-dup" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:420px; margin:120px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3); text-align:center;">
+    <div style="font-size:32px; margin-bottom:8px;">⚠️</div>
+    <div style="font-size:14px; font-weight:800; color:var(--red); letter-spacing:1px; margin-bottom:20px;">NOTA JÁ REGISTRADA</div>
+    <div style="background:#fdecea; border-radius:8px; padding:16px; margin-bottom:20px; text-align:left; font-size:13px;">
+      <div style="margin-bottom:6px;"><strong>NF:</strong> <span id="nf-dup-numero"></span></div>
+      <div style="margin-bottom:6px;"><strong>Data:</strong> <span id="nf-dup-data"></span></div>
+      <div><strong>Hora:</strong> <span id="nf-dup-hora"></span></div>
+    </div>
+    <button onclick="notasFecharModal()" style="background:var(--teal); border:none; color:#fff; border-radius:6px; padding:10px 28px; font-size:13px; font-weight:700; cursor:pointer;">FECHAR</button>
   </div>
 </div>
 
@@ -538,6 +561,7 @@ select { cursor:pointer; }
 <script src="js/acessos.js"></script>
 <script src="js/romaneio.js"></script>
 <script src="js/jit.js"></script>
+<script src="js/notas.js"></script>
 <script>
 // Enter no campo senha
 document.getElementById('user-pass').addEventListener('keydown', e => {
