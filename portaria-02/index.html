@@ -321,24 +321,22 @@ select { cursor:pointer; }
           <div class="sec-header">Cadastro JIT — Rota Paraná</div>
           <div class="grupo-titulo">Dados Motorista</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" style="width:220px"></div>
-            <div class="campo-group"><span class="campo-label">RG</span><input type="text" class="rg-field" style="width:130px"></div>
-            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" style="width:220px"></div>
+            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="jit-nome" style="width:220px"></div>
+            <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="jit-cpf" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="jit-empresa" style="width:220px"></div>
           </div>
           <div class="grupo-titulo">Dados Veículo</div>
           <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" style="width:140px"></div>
-            <div class="campo-group"><span class="campo-label">Carreta</span><input type="text" style="width:160px"></div>
-            <div class="campo-group"><span class="campo-label">Transp/</span>
-              <select style="width:190px"><option value="">Selecione</option><option>Transportadora A</option><option>Transportadora B</option></select>
-            </div>
+            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="jit-placa" class="rg-field" style="width:140px"></div>
+            <div class="campo-group"><span class="campo-label">Carreta</span><input type="text" id="jit-carreta" style="width:160px"></div>
+            <div class="campo-group"><span class="campo-label">Transportadora</span><input type="text" id="jit-transportadora" style="width:190px"></div>
           </div>
           <div class="acoes">
-            <button class="btn-acao btn-filtro">FILTRO</button>
+            <button class="btn-acao btn-filtro" onclick="jitAbrirFiltro()">FILTRO</button>
             <button class="btn-acao btn-limpar" onclick="limparCampos('tela-jit')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar">PESQUISAR</button>
-            <button class="btn-acao btn-entrada">ENTRADA</button>
-            <button class="btn-acao btn-saida">SAÍDA</button>
+            <button class="btn-acao btn-pesquisar" onclick="jitPesquisar()">PESQUISAR</button>
+            <button class="btn-acao btn-entrada" onclick="jitRegistrar('ENTRADA')">ENTRADA</button>
+            <button class="btn-acao btn-saida" onclick="jitRegistrar('SAÍDA')">SAÍDA</button>
           </div>
         </div>
       </div>
@@ -416,6 +414,42 @@ select { cursor:pointer; }
       </table>
     </div>
     <button onclick="cntExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
+  </div>
+</div>
+
+<!-- MODAL FILTRO JIT -->
+<div id="modal-jit" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:900px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — JIT</span>
+      <button onclick="jitFecharFiltro()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="jit-f-inicio" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="jit-f-fim" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Placa / CPF</span><input type="text" id="jit-f-busca" style="width:200px" placeholder="Buscar..."></div>
+      <button class="btn-acao btn-pesquisar" onclick="jitBuscarRelatorio()">FILTRAR</button>
+      <button class="btn-acao btn-limpar" onclick="jitLimparFiltro()">LIMPAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="jit-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px;">Data</th>
+            <th style="padding:8px 10px;">Hora</th>
+            <th style="padding:8px 10px;">Nome</th>
+            <th style="padding:8px 10px;">CPF</th>
+            <th style="padding:8px 10px;">Empresa</th>
+            <th style="padding:8px 10px;">Placa</th>
+            <th style="padding:8px 10px;">Carreta</th>
+            <th style="padding:8px 10px;">Transportadora</th>
+            <th style="padding:8px 10px;">Acesso</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button onclick="jitExportarCSV()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
   </div>
 </div>
 
@@ -503,6 +537,7 @@ select { cursor:pointer; }
 <script src="js/conteiner.js"></script>
 <script src="js/acessos.js"></script>
 <script src="js/romaneio.js"></script>
+<script src="js/jit.js"></script>
 <script>
 // Enter no campo senha
 document.getElementById('user-pass').addEventListener('keydown', e => {
