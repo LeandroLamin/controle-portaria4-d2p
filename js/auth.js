@@ -40,7 +40,6 @@ async function fazerLogin(portariaAtual) {
     // --- PASSO 3: CHECAR NÍVEL DE ACESSO ---
     if (portariaAtual === 'menu') {
         sessionStorage.setItem('d2p-auth', resultado.nome_completo);
-        sessionStorage.setItem('d2p-nivel', resultado.nivel_acesso);
         window.location.href = '../portarias.html';
         return;
     }
