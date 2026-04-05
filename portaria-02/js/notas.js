@@ -119,6 +119,11 @@ function _nfFormatarData(data) {
     return `${dia}/${mes}/${ano}`;
 }
 
+function _nfExtrairNumero(chave) {
+    if (!chave || chave.length !== 44) return '';
+    return parseInt(chave.substring(25, 34), 10).toString();
+}
+
 function _nfRenderizarTabela(lista) {
     const tbody = document.querySelector('#nf-tabela tbody');
     tbody.innerHTML = '';
@@ -127,8 +132,9 @@ function _nfRenderizarTabela(lista) {
         tr.style.borderBottom = '1px solid #e8ecf0';
         tr.innerHTML = `
             <td style="padding:7px 10px;">${_nfFormatarData(item.data)}</td>
-            <td style="padding:7px 10px;">${item.hora      || ''}</td>
-            <td style="padding:7px 10px;">${item.numero_nf || ''}</td>
+            <td style="padding:7px 10px;">${item.hora || ''}</td>
+            <td style="padding:7px 10px; font-weight:700; color:var(--teal-dk);">${_nfExtrairNumero(item.numero_nf)}</td>
+            <td style="padding:7px 10px; font-size:11px; color:#888;">${item.numero_nf || ''}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -138,9 +144,9 @@ function _nfRenderizarTabela(lista) {
 function notasExportarCSV() {
     if (dadosNfGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    let csv = '\uFEFFData;Hora;Numero NF\n';
+    let csv = '\uFEFFData;Hora;Nº NF;Chave de Acesso\n';
     dadosNfGlobal.forEach(r => {
-        csv += `${r.data};${r.hora};${r.numero_nf}\n`;
+        csv += `${_nfFormatarData(r.data)};${r.hora};${_nfExtrairNumero(r.numero_nf)};${r.numero_nf}\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
