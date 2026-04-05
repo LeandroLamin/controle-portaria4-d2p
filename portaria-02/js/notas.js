@@ -46,7 +46,7 @@ async function notasLer() {
         notasAbrirModal(existente[0]);
     } else {
         // NF nova → salva → verde
-        const result = await dbSalvar(TABELA_NF, { numero_nf: numeroNf });
+        const result = await dbSalvar(TABELA_NF, { numero_nf: numeroNf, num_nf: _nfExtrairNumero(numeroNf) });
         if (result && result.ok) {
             _nfFeedback('verde', 'NF REGISTRADA COM SUCESSO');
             input.value = '';
@@ -77,6 +77,7 @@ function _nfFeedback(tipo, mensagem) {
 
 // ── Modal NF duplicada ────────────────────────────────────────────────────────
 function notasAbrirModal(registro) {
+    document.getElementById('nf-dup-numNf').textContent  = registro.num_nf    || '';
     document.getElementById('nf-dup-numero').textContent = registro.numero_nf || '';
     document.getElementById('nf-dup-data').textContent   = _nfFormatarData(registro.data);
     document.getElementById('nf-dup-hora').textContent   = registro.hora      || '';
@@ -106,7 +107,7 @@ async function notasBuscarRelatorio() {
     const filtros = {};
     if (inicio) filtros.data_gte = inicio;
     if (fim)    filtros.data_lte = fim;
-    if (busca)  filtros.numero_nf_like = busca;
+    if (busca)  filtros.num_nf = busca;
 
     const data = await dbBuscar(TABELA_NF, filtros);
     if (data === null) return;
@@ -141,7 +142,7 @@ function _nfRenderizarTabela(lista) {
             <td style="padding:7px 10px;">${_nfFormatarData(item.data)}</td>
             <td style="padding:7px 10px;">${item.hora || ''}</td>
             <td style="padding:7px 10px; font-size:11px; color:#888;">${item.numero_nf || ''}</td>
-            <td style="padding:7px 10px; font-weight:700; color:var(--teal-dk);">${_nfExtrairNumero(item.numero_nf)}</td>
+            <td style="padding:7px 10px; font-weight:700; color:var(--teal-dk);">${item.num_nf || ''}</td>
         `;
         tbody.appendChild(tr);
     });
