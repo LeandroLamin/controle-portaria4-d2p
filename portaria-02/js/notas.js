@@ -110,14 +110,21 @@ async function notasBuscarRelatorio() {
     const filtros = {};
     if (inicio) filtros.data_gte = inicio;
     if (fim)    filtros.data_lte = fim;
-    if (busca)  filtros.num_nf = busca;
 
     const data = await dbBuscar(TABELA_NF, filtros);
     if (data === null) return;
 
-    if (data.length > 0) {
-        dadosNfGlobal = data;
-        _nfRenderizarTabela(data);
+    let resultado = data;
+    if (busca) {
+        resultado = data.filter(item => {
+            const numNf = item.num_nf || _nfExtrairNumero(item.numero_nf);
+            return numNf === busca;
+        });
+    }
+
+    if (resultado.length > 0) {
+        dadosNfGlobal = resultado;
+        _nfRenderizarTabela(resultado);
     } else {
         notify('Nenhum registro encontrado.', 'aviso');
         document.querySelector('#nf-tabela tbody').innerHTML = '';
@@ -145,7 +152,7 @@ function _nfRenderizarTabela(lista) {
             <td style="padding:7px 10px;">${_nfFormatarData(item.data)}</td>
             <td style="padding:7px 10px;">${item.hora || ''}</td>
             <td style="padding:7px 10px; font-size:11px; color:#888;">${item.numero_nf || ''}</td>
-            <td style="padding:7px 10px; font-weight:700; color:var(--teal-dk);">${item.num_nf || ''}</td>
+            <td style="padding:7px 10px; font-weight:700; color:var(--teal-dk);">${item.num_nf || _nfExtrairNumero(item.numero_nf) || ''}</td>
         `;
         tbody.appendChild(tr);
     });
