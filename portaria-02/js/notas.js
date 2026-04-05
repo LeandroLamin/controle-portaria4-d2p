@@ -140,8 +140,8 @@ function _nfRenderizarTabela(lista) {
         tr.innerHTML = `
             <td style="padding:7px 10px;">${_nfFormatarData(item.data)}</td>
             <td style="padding:7px 10px;">${item.hora || ''}</td>
-            <td style="padding:7px 10px; font-weight:700; color:var(--teal-dk);">${_nfExtrairNumero(item.numero_nf)}</td>
             <td style="padding:7px 10px; font-size:11px; color:#888;">${item.numero_nf || ''}</td>
+            <td style="padding:7px 10px; font-weight:700; color:var(--teal-dk);">${_nfExtrairNumero(item.numero_nf)}</td>
         `;
         tbody.appendChild(tr);
     });
