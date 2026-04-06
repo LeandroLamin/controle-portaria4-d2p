@@ -7,6 +7,12 @@
 const TABELA_CNT = 'portaria-02-conteiner';
 let dadosCntGlobal = [];
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('cnt-cpf').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') cntPesquisar();
+    });
+});
+
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function cntRegistrar(acesso) {
     const dados = {
