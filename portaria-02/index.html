@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Acesso - Portaria 2</title>
 
+<!-- Proteção de sessão -->
+<script>
+(function() {
+    var auth = sessionStorage.getItem('d2p-auth');
+    if (!auth) { location.replace('/menu/index.html'); return; }
+    var niveis = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
+    if (!niveis.includes('p02') && !niveis.includes('administrador')) { location.replace('/portarias.html'); }
+})();
+</script>
+
 <!-- Arquivos compartilhados do projeto -->
 <script src="/portaria-02/js/xlsx.full.min.js"></script>
 <script src="../conexao/config.js"></script>
@@ -567,6 +577,17 @@ select { cursor:pointer; }
 <script src="js/jit.js"></script>
 <script src="js/notas.js"></script>
 <script>
+// Auto-login via sessão existente
+document.addEventListener('DOMContentLoaded', function() {
+    var auth = sessionStorage.getItem('d2p-auth');
+    if (auth) {
+        document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('sistema-principal').style.display = 'block';
+        document.getElementById('nome-logado').innerText = auth;
+        document.body.classList.add('sistema-aberto');
+    }
+});
+
 // Enter no campo senha
 document.getElementById('user-pass').addEventListener('keydown', e => {
   if (e.key === 'Enter') fazerLogin('portaria-02');

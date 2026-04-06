@@ -5,6 +5,14 @@
     <meta name="google" content="notranslate">
     <title>Controle de Acesso - Portaria 04</title>
     <link rel="stylesheet" href="../css/style.css">
+<script>
+(function() {
+    var auth = sessionStorage.getItem('d2p-auth');
+    if (!auth) { location.replace('/menu/index.html'); return; }
+    var niveis = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
+    if (!niveis.includes('p04') && !niveis.includes('administrador')) { location.replace('/portarias.html'); }
+})();
+</script>
 <style>
 /* ===== LOGIN — mesmo visual da Portaria 02 ===== */
 body {
@@ -179,6 +187,17 @@ body {
 <script src="js/api.js"></script>
 <script src="../js/ui.js"></script>
 <script>
+// Auto-login via sessão existente
+document.addEventListener('DOMContentLoaded', function() {
+    var auth = sessionStorage.getItem('d2p-auth');
+    if (auth) {
+        document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('sistema-principal').style.display = 'block';
+        document.getElementById('nome-logado').innerText = auth;
+        document.body.classList.add('sistema-aberto');
+    }
+});
+
 // Gatilho ENTER no campo senha
 document.getElementById('user-pass').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') fazerLogin('portaria-04');

@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PAINEL GESTÃO - Novo Cadastro - D2P</title>
     <link rel="stylesheet" href="../css/style.css">
+<script>
+(function() {
+    var auth = sessionStorage.getItem('d2p-auth');
+    var session = sessionStorage.getItem('adminSession');
+    if (!auth && !session) { location.replace('/menu/index.html'); }
+})();
+</script>
     <style>
         :root {
             --primary-dark: #1a252f;

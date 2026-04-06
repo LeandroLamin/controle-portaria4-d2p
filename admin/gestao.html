@@ -360,9 +360,14 @@
 
         // ── Sessão ────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
+            const auth    = sessionStorage.getItem('d2p-auth');
             const session = sessionStorage.getItem('adminSession');
+            if (!auth && !session) {
+                location.replace('/menu/index.html');
+                return;
+            }
             if (!session) {
-                location.href = 'index.html';
+                location.replace('index.html');
                 return;
             }
             const { nome } = JSON.parse(session);
