@@ -2,6 +2,12 @@
 <html lang="pt-br">
 <head><meta charset="UTF-8"></head>
 <body>
-<script>window.location.href = 'menu/index.html';</script>
+<script>
+if (window.location.hostname === 'servico.laminlpp.com.br') {
+    window.location.href = '/servico-extra/index.html';
+} else {
+    window.location.href = 'menu/index.html';
+}
+</script>
 </body>
 </html>
