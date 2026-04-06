@@ -221,8 +221,17 @@ async function listarImagens() {
             headers: { ...HEADERS, 'Content-Type': 'application/json' },
             body: JSON.stringify({ prefix: '', limit: 200, offset: 0, sortBy: { column: 'name', order: 'asc' } })
         });
-        const lista = await resp.json();
-        if (!lista.length) { grid.innerHTML = '<div class="empty-state">Nenhuma imagem no bucket.</div>'; return; }
+        let lista;
+        try { lista = await resp.json(); } catch { lista = null; }
+        if (!resp.ok) {
+            const msg = lista?.message || lista?.error || 'HTTP ' + resp.status;
+            grid.innerHTML = `<div class="empty-state">Erro ao carregar imagens.<br><small style="color:#aaa">${msg}</small></div>`;
+            return;
+        }
+        if (!Array.isArray(lista) || lista.length === 0) {
+            grid.innerHTML = '<div class="empty-state">Nenhuma imagem no bucket.</div>';
+            return;
+        }
         grid.innerHTML = '';
         lista.forEach(item => {
             const url = PUB_URL + item.name;
@@ -242,7 +251,7 @@ async function listarImagens() {
             grid.appendChild(div);
         });
     } catch (e) {
-        grid.innerHTML = '<div class="empty-state">Erro ao carregar imagens.</div>';
+        grid.innerHTML = `<div class="empty-state">Erro ao carregar imagens.<br><small style="color:#aaa">${e.message}</small></div>`;
     }
 }
 
