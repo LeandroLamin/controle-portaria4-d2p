@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Imagens - D2P</title>
+    <script>
+    (function() {
+        var auth = sessionStorage.getItem('d2p-auth');
+        var session = sessionStorage.getItem('adminSession');
+        if (!auth && !session) { location.replace('/menu/index.html'); }
+    })();
+    </script>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../conexao/config.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; display: flex; min-height: 100vh; }
+
+        /* ── Sidebar ── */
+        .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; background: #2c3e50; padding: 20px; display: flex; flex-direction: column; z-index: 1000; }
+        .sidebar-header { text-align: center; border-bottom: 1px solid #34495e; padding-bottom: 20px; margin-bottom: 20px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; cursor: pointer; }
+        .menu-item.active, .menu-item:hover { background: #34495e; color: white; border-left: 4px solid #f1c40f; }
+        .btn-sair { margin-top: auto; background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 14px; font-weight: 600; }
+
+        /* ── Main ── */
+        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; }
+        .page-title { font-size: 22px; font-weight: 700; color: #2c3e50; margin-bottom: 24px; }
+
+        /* ── Upload Card ── */
+        .card { background: white; border-radius: 10px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 28px; }
+        .card-title { font-size: 14px; font-weight: 700; color: #2c3e50; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 18px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+
+        .drop-zone { border: 2px dashed #c0cfe0; border-radius: 10px; padding: 36px; text-align: center; cursor: pointer; transition: all .2s; color: #7f8c8d; }
+        .drop-zone:hover, .drop-zone.over { border-color: #1a8a7a; background: #f0faf8; color: #1a8a7a; }
+        .drop-zone input { display: none; }
+        .drop-zone svg { width: 40px; height: 40px; margin: 0 auto 12px; display: block; stroke: currentColor; fill: none; stroke-width: 1.5; }
+        .drop-zone p { font-size: 14px; }
+        .drop-zone span { font-size: 12px; color: #aaa; }
+
+        #preview-box { display: none; margin-top: 16px; align-items: flex-start; gap: 20px; }
+        #preview-img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid #e0e0e0; }
+        .preview-info { flex: 1; }
+        .preview-info label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 4px; }
+        .preview-info input { width: 100%; padding: 9px 12px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 13px; color: #333; }
+        .preview-info input:focus { outline: none; border-color: #1a8a7a; }
+
+        .upsert-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+        .upsert-row input[type=checkbox] { width: 16px; height: 16px; accent-color: #1a8a7a; cursor: pointer; }
+        .upsert-row label { font-size: 13px; color: #555; cursor: pointer; }
+
+        .btn-upload { margin-top: 18px; background: #1a8a7a; color: white; border: none; padding: 11px 28px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .2s; }
+        .btn-upload:hover { background: #136b5e; }
+        .btn-upload:disabled { background: #aaa; cursor: not-allowed; }
+
+        .upload-status { margin-top: 12px; font-size: 13px; font-weight: 600; }
+        .upload-status.ok { color: #27ae60; }
+        .upload-status.err { color: #e03030; }
+
+        /* ── Image Grid ── */
+        .grid-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .btn-refresh { background: #f0f0f0; border: none; border-radius: 6px; padding: 7px 16px; font-size: 12px; font-weight: 600; color: #2c3e50; cursor: pointer; transition: background .15s; }
+        .btn-refresh:hover { background: #e0e0e0; }
+
+        .img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+        .img-card { background: #fafafa; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: box-shadow .2s; }
+        .img-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+        .img-card img { width: 100%; height: 120px; object-fit: cover; display: block; background: #eee; }
+        .img-card-body { padding: 10px; }
+        .img-name { font-size: 12px; font-weight: 600; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+        .img-size { font-size: 11px; color: #95a5a6; margin-bottom: 8px; }
+        .img-actions { display: flex; gap: 6px; }
+        .btn-copy { flex: 1; background: #eaf4ff; color: #2980b9; border: none; border-radius: 5px; padding: 5px 0; font-size: 11px; font-weight: 700; cursor: pointer; transition: background .15s; }
+        .btn-copy:hover { background: #cce4f7; }
+        .btn-copy.copiado { background: #d4f5d4; color: #27ae60; }
+        .btn-del { background: #fdecea; color: #e03030; border: none; border-radius: 5px; padding: 5px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background .15s; }
+        .btn-del:hover { background: #f5c6c6; }
+
+        .empty-state { text-align: center; padding: 50px 20px; color: #95a5a6; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <div style="font-size:10px;color:#95a5a6;letter-spacing:2px;">SEGURANÇA D2P</div>
+        <h2 style="color:white;font-size:18px;margin-top:5px;">PAINEL GESTÃO</h2>
+    </div>
+    <div style="flex-grow:1;">
+        <a href="index.html" class="menu-item">➕ Novo Cadastro</a>
+        <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
+        <a href="storage.html" class="menu-item active">🖼️ Gerenciar Imagens</a>
+    </div>
+    <button class="btn-sair" onclick="location.href='../portarias.html'">← VOLTAR</button>
+</nav>
+
+<main class="main-content">
+    <div class="page-title">🖼️ Gerenciar Imagens — Storage</div>
+
+    <!-- Upload -->
+    <div class="card">
+        <div class="card-title">Enviar Nova Imagem</div>
+
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+            <input type="file" id="file-input" accept="image/*">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+            <p>Clique ou arraste uma imagem aqui</p>
+            <span>PNG, JPG, WEBP, SVG...</span>
+        </div>
+
+        <div id="preview-box">
+            <img id="preview-img" src="" alt="preview">
+            <div class="preview-info">
+                <label>Nome do arquivo (como será salvo no storage)</label>
+                <input type="text" id="file-name" placeholder="nome-da-imagem.png">
+                <div class="upsert-row">
+                    <input type="checkbox" id="upsert-check" checked>
+                    <label for="upsert-check">Substituir se já existir (mesmo nome)</label>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-upload" id="btn-upload" onclick="uploadImagem()" style="display:none;">⬆ ENVIAR IMAGEM</button>
+        <div class="upload-status" id="upload-status"></div>
+    </div>
+
+    <!-- Listagem -->
+    <div class="card">
+        <div class="grid-header">
+            <div class="card-title" style="margin-bottom:0;border:none;padding:0;">Imagens no Storage</div>
+            <button class="btn-refresh" onclick="listarImagens()">↻ Atualizar</button>
+        </div>
+        <div class="img-grid" id="img-grid">
+            <div class="empty-state">Carregando...</div>
+        </div>
+    </div>
+</main>
+
+<script>
+const BASE = SUPABASE_URL + '/storage/v1';
+const HEADERS = { 'Authorization': 'Bearer ' + SUPABASE_SERVICE_KEY };
+const PUB_URL = BASE + '/object/public/' + SUPABASE_BUCKET + '/';
+
+let arquivoSelecionado = null;
+
+// ── Drag & Drop ──────────────────────────────────────────────
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+dz.addEventListener('drop', e => {
+    e.preventDefault();
+    dz.classList.remove('over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('image/')) selecionarArquivo(f);
+});
+document.getElementById('file-input').addEventListener('change', e => {
+    if (e.target.files[0]) selecionarArquivo(e.target.files[0]);
+});
+
+function selecionarArquivo(file) {
+    arquivoSelecionado = file;
+    document.getElementById('file-name').value = file.name;
+    const reader = new FileReader();
+    reader.onload = e => { document.getElementById('preview-img').src = e.target.result; };
+    reader.readAsDataURL(file);
+    document.getElementById('preview-box').style.display = 'flex';
+    document.getElementById('btn-upload').style.display = 'inline-block';
+    document.getElementById('upload-status').textContent = '';
+}
+
+// ── Upload ───────────────────────────────────────────────────
+async function uploadImagem() {
+    if (!arquivoSelecionado) return;
+    const nome = document.getElementById('file-name').value.trim();
+    if (!nome) return;
+    const upsert = document.getElementById('upsert-check').checked;
+
+    const btn = document.getElementById('btn-upload');
+    const status = document.getElementById('upload-status');
+    btn.disabled = true;
+    btn.textContent = 'ENVIANDO...';
+    status.textContent = '';
+    status.className = 'upload-status';
+
+    try {
+        const resp = await fetch(`${BASE}/object/${SUPABASE_BUCKET}/${nome}`, {
+            method: 'POST',
+            headers: { ...HEADERS, 'Content-Type': arquivoSelecionado.type, 'x-upsert': upsert ? 'true' : 'false' },
+            body: arquivoSelecionado
+        });
+        const json = await resp.json();
+        if (resp.ok) {
+            status.textContent = '✓ Imagem enviada com sucesso!';
+            status.className = 'upload-status ok';
+            arquivoSelecionado = null;
+            document.getElementById('preview-box').style.display = 'none';
+            btn.style.display = 'none';
+            document.getElementById('file-input').value = '';
+            listarImagens();
+        } else {
+            status.textContent = '✗ Erro: ' + (json.error || json.message || 'falha no envio');
+            status.className = 'upload-status err';
+        }
+    } catch (e) {
+        status.textContent = '✗ Erro de conexão: ' + e.message;
+        status.className = 'upload-status err';
+    }
+
+    btn.disabled = false;
+    btn.textContent = '⬆ ENVIAR IMAGEM';
+}
+
+// ── Listar ───────────────────────────────────────────────────
+async function listarImagens() {
+    const grid = document.getElementById('img-grid');
+    grid.innerHTML = '<div class="empty-state">Carregando...</div>';
+    try {
+        const resp = await fetch(`${BASE}/object/list/${SUPABASE_BUCKET}`, {
+            method: 'POST',
+            headers: { ...HEADERS, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prefix: '', limit: 200, offset: 0, sortBy: { column: 'name', order: 'asc' } })
+        });
+        const lista = await resp.json();
+        if (!lista.length) { grid.innerHTML = '<div class="empty-state">Nenhuma imagem no bucket.</div>'; return; }
+        grid.innerHTML = '';
+        lista.forEach(item => {
+            const url = PUB_URL + item.name;
+            const kb = item.metadata?.size ? (item.metadata.size / 1024).toFixed(1) + ' KB' : '';
+            const div = document.createElement('div');
+            div.className = 'img-card';
+            div.innerHTML = `
+                <img src="${url}" alt="${item.name}" loading="lazy" onerror="this.style.background='#eee'">
+                <div class="img-card-body">
+                    <div class="img-name" title="${item.name}">${item.name}</div>
+                    <div class="img-size">${kb}</div>
+                    <div class="img-actions">
+                        <button class="btn-copy" onclick="copiarUrl('${url}', this)">📋 Copiar URL</button>
+                        <button class="btn-del" onclick="deletarImagem('${item.name}', this)">🗑</button>
+                    </div>
+                </div>`;
+            grid.appendChild(div);
+        });
+    } catch (e) {
+        grid.innerHTML = '<div class="empty-state">Erro ao carregar imagens.</div>';
+    }
+}
+
+// ── Copiar URL ───────────────────────────────────────────────
+function copiarUrl(url, btn) {
+    navigator.clipboard.writeText(url).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copiado!';
+        btn.classList.add('copiado');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copiado'); }, 2000);
+    });
+}
+
+// ── Deletar ──────────────────────────────────────────────────
+async function deletarImagem(nome, btn) {
+    if (!confirm(`Deletar "${nome}"?`)) return;
+    btn.disabled = true;
+    try {
+        const resp = await fetch(`${BASE}/object/${SUPABASE_BUCKET}`, {
+            method: 'DELETE',
+            headers: { ...HEADERS, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prefixes: [nome] })
+        });
+        if (resp.ok) listarImagens();
+        else { alert('Erro ao deletar.'); btn.disabled = false; }
+    } catch { alert('Erro de conexão.'); btn.disabled = false; }
+}
+
+// ── Init ─────────────────────────────────────────────────────
+listarImagens();
+</script>
+</body>
+</html>
