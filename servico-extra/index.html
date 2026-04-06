@@ -5,15 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Solicitação de Serviço Extra — GPS Vigilância</title>
 
-<!-- Proteção de sessão: qualquer usuário autenticado pode acessar -->
-<script>
-(function() {
-    if (!sessionStorage.getItem('d2p-auth')) {
-        location.replace('/menu/index.html');
-    }
-})();
-</script>
-
 <script src="../conexao/config.js"></script>
 <script src="../conexao/db.js"></script>
 <script src="../js/ui.js"></script>
@@ -49,43 +40,17 @@ body {
     height: 56px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     position: sticky;
     top: 0;
     z-index: 100;
 }
-.topbar-esq {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-.btn-voltar {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: white;
-    padding: 7px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: background 0.2s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-.btn-voltar:hover { background: rgba(255,255,255,0.25); }
 .topbar-titulo {
     font-size: 15px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
-}
-.topbar-usuario {
-    font-size: 12px;
-    opacity: 0.85;
 }
 
 /* ===== CABEÇALHO DO FORM ===== */
@@ -180,7 +145,7 @@ body {
 }
 .campo-select { cursor: pointer; }
 
-/* Grid 2 colunas */
+/* Grids */
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -194,7 +159,6 @@ body {
 @media (max-width: 600px) {
     .grid-2, .grid-3 { grid-template-columns: 1fr; }
     .form-header, .form-card { margin: 12px; padding: 20px 18px; }
-    .topbar-titulo { font-size: 13px; }
 }
 
 /* Separador de seção */
@@ -268,25 +232,8 @@ body {
     cursor: pointer;
     letter-spacing: 0.5px;
     transition: background 0.2s;
-    margin: 6px;
 }
 .btn-nova:hover { background: var(--teal-dk); }
-.btn-voltar-menu {
-    background: #ecf0f1;
-    color: var(--text);
-    border: none;
-    padding: 13px 32px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: background 0.2s;
-    margin: 6px;
-    text-decoration: none;
-    display: inline-block;
-}
-.btn-voltar-menu:hover { background: #dde1e7; }
 
 /* Número do protocolo */
 .protocolo-box {
@@ -305,11 +252,7 @@ body {
 
 <!-- TOPO -->
 <div class="topbar">
-    <div class="topbar-esq">
-        <a href="/portarias.html" class="btn-voltar">&#8592; Voltar</a>
-        <span class="topbar-titulo">Solicitação de Serviço Extra</span>
-    </div>
-    <span class="topbar-usuario">Usuário: <b id="nome-usuario"></b></span>
+    <span class="topbar-titulo">Solicitação de Serviço Extra — GPS Vigilância</span>
 </div>
 
 <!-- TELA DE SUCESSO (oculta por padrão) -->
@@ -324,9 +267,8 @@ body {
         <div class="protocolo-label">Número do Protocolo</div>
         <div class="protocolo-num" id="protocolo-num">—</div>
     </div>
-    <br>
-    <button class="btn-nova" onclick="novasSolicitacao()">Nova Solicitação</button>
-    <a href="/portarias.html" class="btn-voltar-menu">Ir para Menu</a>
+    <br><br>
+    <button class="btn-nova" onclick="novaSolicitacao()">Nova Solicitação</button>
 </div>
 
 <!-- CONTEÚDO DO FORMULÁRIO -->
@@ -517,10 +459,6 @@ body {
 </div><!-- /conteudo-form -->
 
 <script>
-// Preenche nome do usuário logado
-document.getElementById('nome-usuario').textContent = sessionStorage.getItem('d2p-auth') || '';
-
-// Gera protocolo único: GPS + timestamp reverso
 function gerarProtocolo() {
     var agora = Date.now();
     var sufixo = String(agora).slice(-6);
@@ -530,7 +468,6 @@ function gerarProtocolo() {
     return 'GPS' + ano + mes + sufixo;
 }
 
-// Formata data YYYY-MM-DD → DD/MM/YYYY
 function formatarData(val) {
     if (!val) return '';
     var partes = val.split('-');
@@ -539,7 +476,6 @@ function formatarData(val) {
 }
 
 async function enviarSolicitacao() {
-    // — Validação dos campos obrigatórios —
     var campos = [
         { id: 'tipo-servico',      label: 'Tipo de serviço' },
         { id: 'nome-solicitante',  label: 'Nome do solicitante' },
@@ -567,7 +503,6 @@ async function enviarSolicitacao() {
         }
     }
 
-    // — Verifica se data final >= data início —
     var di = document.getElementById('data-inicio').value;
     var df = document.getElementById('data-final').value;
     if (df < di) {
@@ -588,27 +523,26 @@ async function enviarSolicitacao() {
                   String(agora.getMinutes()).padStart(2,'0');
 
     var dados = {
-        protocolo:          protocolo,
-        tipo_servico:       document.getElementById('tipo-servico').value,
-        nome_solicitante:   document.getElementById('nome-solicitante').value.trim().toUpperCase(),
-        email:              document.getElementById('email').value.trim().toLowerCase(),
-        telefone:           document.getElementById('telefone').value.trim(),
-        departamento:       document.getElementById('departamento').value.trim().toUpperCase(),
-        centro_custo:       document.getElementById('centro-custo').value.trim(),
-        conta_contabil:     document.getElementById('conta-contabil').value.trim(),
-        zedoa:              document.getElementById('zedoa').value.trim().toUpperCase(),
-        local_servico:      document.getElementById('local-servico').value.trim().toUpperCase(),
-        motivo:             document.getElementById('motivo').value.trim().toUpperCase(),
-        postos:             parseInt(document.getElementById('postos').value) || 1,
-        data_inicio:        formatarData(di),
-        hora_inicio:        document.getElementById('hora-inicio').value,
-        data_final:         formatarData(df),
-        hora_final:         document.getElementById('hora-final').value,
-        observacoes:        document.getElementById('observacoes').value.trim(),
-        solicitante_sistema: sessionStorage.getItem('d2p-auth') || '',
-        data_solicitacao:   hojeStr,
-        hora_solicitacao:   horaStr,
-        status:             'PENDENTE'
+        protocolo:         protocolo,
+        tipo_servico:      document.getElementById('tipo-servico').value,
+        nome_solicitante:  document.getElementById('nome-solicitante').value.trim().toUpperCase(),
+        email:             document.getElementById('email').value.trim().toLowerCase(),
+        telefone:          document.getElementById('telefone').value.trim(),
+        departamento:      document.getElementById('departamento').value.trim().toUpperCase(),
+        centro_custo:      document.getElementById('centro-custo').value.trim(),
+        conta_contabil:    document.getElementById('conta-contabil').value.trim(),
+        zedoa:             document.getElementById('zedoa').value.trim().toUpperCase(),
+        local_servico:     document.getElementById('local-servico').value.trim().toUpperCase(),
+        motivo:            document.getElementById('motivo').value.trim().toUpperCase(),
+        postos:            parseInt(document.getElementById('postos').value) || 1,
+        data_inicio:       formatarData(di),
+        hora_inicio:       document.getElementById('hora-inicio').value,
+        data_final:        formatarData(df),
+        hora_final:        document.getElementById('hora-final').value,
+        observacoes:       document.getElementById('observacoes').value.trim(),
+        data_solicitacao:  hojeStr,
+        hora_solicitacao:  horaStr,
+        status:            'PENDENTE'
     };
 
     var resultado = await dbSalvar('gps-servico-extra', dados);
@@ -626,14 +560,11 @@ async function enviarSolicitacao() {
     }
 }
 
-function novasSolicitacao() {
+function novaSolicitacao() {
     document.getElementById('tela-sucesso').style.display = 'none';
     document.getElementById('conteudo-form').style.display = 'block';
-
-    // Limpa todos os campos
     document.querySelectorAll('.campo-input, .campo-textarea').forEach(function(el) { el.value = ''; });
     document.querySelectorAll('.campo-select').forEach(function(el) { el.selectedIndex = 0; });
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
