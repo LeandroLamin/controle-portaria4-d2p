@@ -7,6 +7,15 @@
 const TABELA_ROM = 'portaria-02-romaneio';
 let dadosRomGlobal = [];
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('rom-cpf').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') romPesquisar();
+    });
+    document.getElementById('rom-placa').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') romPesquisar();
+    });
+});
+
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function romRegistrar(acesso) {
     const dados = {
