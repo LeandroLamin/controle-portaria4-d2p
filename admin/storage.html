@@ -138,6 +138,10 @@
 </main>
 
 <script>
+if (typeof SUPABASE_URL === 'undefined') {
+    document.getElementById('img-grid').innerHTML = '<div class="empty-state">Erro: config.js não carregou.</div>';
+    throw new Error('config.js não carregou');
+}
 const BASE = SUPABASE_URL + '/storage/v1';
 const HEADERS = { 'Authorization': 'Bearer ' + SUPABASE_SERVICE_KEY };
 const PUB_URL = BASE + '/object/public/' + SUPABASE_BUCKET + '/';
@@ -222,7 +226,7 @@ async function listarImagens() {
             body: JSON.stringify({ prefix: '', limit: 200, offset: 0, sortBy: { column: 'name', order: 'asc' } })
         });
         let lista;
-        try { lista = await resp.json(); } catch { lista = null; }
+        try { lista = await resp.json(); } catch(err) { lista = null; }
         if (!resp.ok) {
             const msg = lista?.message || lista?.error || 'HTTP ' + resp.status;
             grid.innerHTML = `<div class="empty-state">Erro ao carregar imagens.<br><small style="color:#aaa">${msg}</small></div>`;
