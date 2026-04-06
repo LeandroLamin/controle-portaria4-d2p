@@ -7,6 +7,15 @@
 const TABELA_ACS = 'portaria-02-acessos';
 let dadosAcsGlobal = [];
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('acs-cpf').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') acsPesquisar();
+    });
+    document.getElementById('acs-placa').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') acsPesquisar();
+    });
+});
+
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function acsRegistrar(acesso) {
     const dados = {
