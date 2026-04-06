@@ -8,6 +8,12 @@
 
 let dadosFiltradosGlobal = [];
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('cpf').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') localizar();
+    });
+});
+
 // --- 1. LOCALIZAR ---
 async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
@@ -41,8 +47,10 @@ async function salvar() {
         obs: document.getElementById('obs').value.trim().toUpperCase()
     };
 
-    if (!dados.cpf || !dados.nome || !dados.obs) {
-        return notify("Preencha todos os campos obrigatórios.", 'aviso');
+    if (!dados.cpf || !dados.nome || !dados.empresa || !dados.responsavel ||
+        !dados.liberado || !dados.motivo || !dados.vigilante || !dados.cracha ||
+        !dados.acesso || !dados.obs) {
+        return notify("Preencha todos os campos antes de salvar.", 'aviso');
     }
 
     const result = await dbSalvar('acessos', dados);
