@@ -22,8 +22,10 @@ async function cntRegistrar(acesso) {
         lacre2: document.getElementById('cnt-lacre2').value.trim().toUpperCase(),
         acesso: acesso
     };
-    if (!dados.cpf || !dados.nome) {
-        return notify('Preencha Nome e CPF.', 'aviso');
+    if (!dados.cpf || !dados.nome || !dados.transportadora || !dados.placa ||
+        !dados.carreta1 || !dados.carreta2 || !dados.conteiner1 || !dados.lacre1 ||
+        !dados.conteiner2 || !dados.lacre2) {
+        return notify('Preencha todos os campos antes de salvar.', 'aviso');
     }
     const result = await dbSalvar(TABELA_CNT, dados);
     if (result && result.ok) {
