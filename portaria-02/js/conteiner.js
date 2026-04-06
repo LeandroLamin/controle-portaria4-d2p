@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cnt-cpf').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') cntPesquisar();
     });
+    document.getElementById('cnt-placa').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') cntPesquisar();
+    });
 });
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
