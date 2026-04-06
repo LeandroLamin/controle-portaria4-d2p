@@ -25,8 +25,10 @@ async function romRegistrar(acesso) {
         observacao: document.getElementById('rom-obs').value.trim(),
         acesso:    acesso
     };
-    if (!dados.placa || !dados.nome) {
-        return notify('Preencha Nome e Placa.', 'aviso');
+    if (!dados.nome || !dados.cpf || !dados.empresa || !dados.placa ||
+        !dados.carreta1 || !dados.carreta2 || !dados.serie1 || !dados.serie2 ||
+        !dados.serie3 || !dados.serie4 || !dados.serie5 || !dados.serie6 || !dados.observacao) {
+        return notify('Preencha todos os campos antes de salvar.', 'aviso');
     }
     const result = await dbSalvar(TABELA_ROM, dados);
     if (result && result.ok) {

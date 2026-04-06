@@ -18,8 +18,8 @@ async function acsRegistrar(acesso) {
         motivo:  document.getElementById('acs-motivo').value,
         acesso:  acesso
     };
-    if (!dados.cpf || !dados.nome) {
-        return notify('Preencha Nome e CPF.', 'aviso');
+    if (!dados.nome || !dados.cpf || !dados.empresa || !dados.veiculo || !dados.placa || !dados.motivo) {
+        return notify('Preencha todos os campos antes de salvar.', 'aviso');
     }
     const result = await dbSalvar(TABELA_ACS, dados);
     if (result && result.ok) {

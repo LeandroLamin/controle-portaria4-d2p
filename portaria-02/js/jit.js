@@ -18,8 +18,8 @@ async function jitRegistrar(acesso) {
         transportadora: document.getElementById('jit-transportadora').value.trim().toUpperCase(),
         acesso:         acesso
     };
-    if (!dados.placa || !dados.nome) {
-        return notify('Preencha Nome e Placa.', 'aviso');
+    if (!dados.nome || !dados.cpf || !dados.empresa || !dados.placa || !dados.carreta || !dados.transportadora) {
+        return notify('Preencha todos os campos antes de salvar.', 'aviso');
     }
     const result = await dbSalvar(TABELA_JIT, dados);
     if (result && result.ok) {
