@@ -6,6 +6,7 @@
 <title>Solicitação de Serviço Extra — GPS Vigilância</title>
 
 <script src="../conexao/config.js"></script>
+<script src="../conexao/crypto.js"></script>
 <script src="../conexao/db.js"></script>
 <script src="../js/ui.js"></script>
 
@@ -23,7 +24,6 @@
     --label: #4a6070;
     --red: #e03030;
 }
-
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: var(--gray-bg);
@@ -31,6 +31,165 @@ body {
     min-height: 100vh;
     padding-bottom: 60px;
 }
+
+/* ===== TELA DE ACESSO ===== */
+#tela-acesso {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #1a2535;
+}
+.acesso-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 36px;
+    width: 360px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    text-align: center;
+}
+.acesso-marca {
+    font-size: 11px;
+    color: #6a8090;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.acesso-titulo {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--teal-dk);
+    margin: 12px 0 28px;
+    line-height: 1.4;
+}
+.acesso-input {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid #d0dce8;
+    border-radius: 7px;
+    font-size: 14px;
+    color: var(--text);
+    background: #f2f6fa;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border .2s;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+.acesso-input:focus { border-color: var(--teal); background: #fff; }
+.btn-entrar {
+    width: 100%;
+    height: 46px;
+    background: var(--yellow);
+    border: none;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a2535;
+    cursor: pointer;
+    letter-spacing: 1px;
+    margin-top: 4px;
+    transition: background .2s;
+}
+.btn-entrar:hover { background: var(--yellow-dk); }
+.btn-entrar:disabled { background: #ccc; cursor: not-allowed; }
+.acesso-erro {
+    background: #fdecea;
+    color: var(--red);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    display: none;
+    text-align: left;
+    border: 1px solid #f5c6c6;
+}
+.link-recuperar {
+    display: block;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--teal);
+    cursor: pointer;
+    text-decoration: none;
+}
+.link-recuperar:hover { text-decoration: underline; }
+
+/* ===== MODAL RECUPERAÇÃO ===== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.aberto { display: flex; }
+.modal-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 36px 32px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modal-titulo {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--teal-dk);
+    margin-bottom: 8px;
+}
+.modal-texto {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+.modal-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-size: 14px;
+    background: #f2f6fa;
+    outline: none;
+    margin-bottom: 14px;
+    transition: border .2s;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    box-sizing: border-box;
+}
+.modal-input:focus { border-color: var(--teal); background: #fff; }
+.modal-btns { display: flex; gap: 10px; }
+.btn-modal-enviar {
+    flex: 1;
+    height: 42px;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+}
+.btn-modal-enviar:hover { background: var(--teal-dk); }
+.btn-modal-enviar:disabled { background: #aaa; cursor: not-allowed; }
+.btn-modal-cancelar {
+    flex: 1;
+    height: 42px;
+    background: #ecf0f1;
+    color: var(--text);
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+}
+.btn-modal-cancelar:hover { background: #dde1e7; }
 
 /* ===== TOPO ===== */
 .topbar {
@@ -69,11 +228,7 @@ body {
     color: var(--teal-dk);
     margin-bottom: 4px;
 }
-.form-header-subtitulo {
-    font-size: 13px;
-    color: var(--label);
-    line-height: 1.5;
-}
+.form-header-subtitulo { font-size: 13px; color: var(--label); line-height: 1.5; }
 .form-header-aviso {
     margin-top: 12px;
     font-size: 12px;
@@ -84,7 +239,7 @@ body {
     border-radius: 0 4px 4px 0;
 }
 
-/* ===== CARD DO FORM ===== */
+/* ===== CARDS ===== */
 .form-card {
     background: white;
     border-radius: 10px;
@@ -93,23 +248,27 @@ body {
     max-width: 780px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
 }
-
-/* ===== CAMPOS ===== */
-.campo-grupo {
-    margin-bottom: 22px;
+.secao-titulo {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--teal);
+    border-bottom: 2px solid var(--teal-lt);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
 }
+
+/* ===== CHECKBOXES DE SERVIÇO ===== */
 .campo-label {
     display: block;
     font-size: 13px;
     font-weight: 700;
     color: var(--label);
-    margin-bottom: 7px;
+    margin-bottom: 14px;
     letter-spacing: 0.3px;
 }
-.campo-label .obrig {
-    color: var(--red);
-    margin-left: 3px;
-}
+.campo-label .obrig { color: var(--red); margin-left: 3px; }
 .campo-hint {
     font-size: 11px;
     color: #999;
@@ -117,6 +276,67 @@ body {
     display: block;
     margin-top: 2px;
 }
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+@media (max-width: 600px) {
+    .checkbox-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 400px) {
+    .checkbox-grid { grid-template-columns: 1fr; }
+}
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: border .15s, background .15s;
+    user-select: none;
+    font-size: 13px;
+    color: var(--text);
+    background: #fafbfc;
+}
+.checkbox-item:hover { border-color: var(--teal); background: var(--teal-lt); }
+.checkbox-item input[type="checkbox"] { display: none; }
+.checkbox-item .check-box {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    border: 2px solid #b0bec5;
+    border-radius: 4px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+}
+.checkbox-item.marcado {
+    border-color: var(--teal);
+    background: var(--teal-lt);
+    font-weight: 600;
+}
+.checkbox-item.marcado .check-box {
+    background: var(--teal);
+    border-color: var(--teal);
+}
+.checkbox-item.marcado .check-box::after {
+    content: '';
+    width: 5px;
+    height: 9px;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+    display: block;
+}
+
+/* ===== CAMPOS COMUNS ===== */
+.campo-grupo { margin-bottom: 22px; }
 .campo-input,
 .campo-select,
 .campo-textarea {
@@ -129,48 +349,20 @@ body {
     color: var(--text);
     background: #fafbfc;
     outline: none;
-    transition: border 0.2s, background 0.2s;
+    transition: border .2s, background .2s;
     font-family: 'Segoe UI', Arial, sans-serif;
 }
-.campo-textarea {
-    height: 100px;
-    padding: 10px 14px;
-    resize: vertical;
+.campo-textarea { height: 100px; padding: 10px 14px; resize: vertical; }
+.campo-input:focus, .campo-select:focus, .campo-textarea:focus {
+    border-color: var(--teal); background: white;
 }
-.campo-input:focus,
-.campo-select:focus,
-.campo-textarea:focus {
-    border-color: var(--teal);
-    background: white;
-}
-.campo-select { cursor: pointer; }
 
 /* Grids */
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
-.grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 18px;
-}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
 @media (max-width: 600px) {
     .grid-2, .grid-3 { grid-template-columns: 1fr; }
     .form-header, .form-card { margin: 12px; padding: 20px 18px; }
-}
-
-/* Separador de seção */
-.secao-titulo {
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--teal);
-    border-bottom: 2px solid var(--teal-lt);
-    padding-bottom: 8px;
-    margin-bottom: 20px;
 }
 
 /* ===== BOTÃO ENVIAR ===== */
@@ -185,7 +377,7 @@ body {
     color: #1a2535;
     cursor: pointer;
     letter-spacing: 1px;
-    transition: background 0.2s, transform 0.1s;
+    transition: background .2s, transform .1s;
     margin-top: 8px;
     display: flex;
     align-items: center;
@@ -196,7 +388,7 @@ body {
 .btn-enviar:active { transform: scale(0.99); }
 .btn-enviar:disabled { background: #ccc; cursor: not-allowed; transform: none; }
 
-/* ===== TELA DE SUCESSO ===== */
+/* ===== TELA SUCESSO ===== */
 #tela-sucesso {
     display: none;
     max-width: 780px;
@@ -209,18 +401,8 @@ body {
     border-top: 6px solid #27ae60;
 }
 #tela-sucesso .sucesso-icone { font-size: 56px; margin-bottom: 16px; }
-#tela-sucesso .sucesso-titulo {
-    font-size: 22px;
-    font-weight: 800;
-    color: #27ae60;
-    margin-bottom: 10px;
-}
-#tela-sucesso .sucesso-texto {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 28px;
-}
+#tela-sucesso .sucesso-titulo { font-size: 22px; font-weight: 800; color: #27ae60; margin-bottom: 10px; }
+#tela-sucesso .sucesso-texto { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 28px; }
 .btn-nova {
     background: var(--teal);
     color: white;
@@ -230,12 +412,9 @@ body {
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: background 0.2s;
+    transition: background .2s;
 }
 .btn-nova:hover { background: var(--teal-dk); }
-
-/* Número do protocolo */
 .protocolo-box {
     background: var(--teal-lt);
     border: 1.5px solid var(--teal);
@@ -250,12 +429,47 @@ body {
 </head>
 <body>
 
-<!-- TOPO -->
-<div class="topbar">
-    <span class="topbar-titulo">Solicitação de Serviço Extra — GPS Vigilância</span>
+<!-- ===== TELA DE ACESSO ===== -->
+<div id="tela-acesso">
+    <div class="acesso-card">
+        <div class="acesso-marca">GPS Vigilância e Especializada</div>
+        <div class="acesso-titulo">Solicitação de<br>Serviço Extra</div>
+
+        <div class="acesso-erro" id="acesso-erro">E-mail ou senha incorretos.</div>
+
+        <input class="acesso-input" type="email" id="acesso-email" placeholder="Seu e-mail" autocomplete="email">
+        <input class="acesso-input" type="password" id="acesso-senha" placeholder="Senha" autocomplete="current-password">
+
+        <button class="btn-entrar" id="btn-entrar" onclick="validarAcesso()">ENTRAR</button>
+
+        <a class="link-recuperar" onclick="abrirRecuperar()">Esqueci minha senha</a>
+    </div>
 </div>
 
-<!-- TELA DE SUCESSO (oculta por padrão) -->
+<!-- ===== MODAL RECUPERAÇÃO ===== -->
+<div id="modal-recuperar" class="modal-overlay" onclick="if(event.target===this)fecharRecuperar()">
+    <div class="modal-box">
+        <div class="modal-titulo">Recuperar Senha</div>
+        <p class="modal-texto">
+            Digite o e-mail cadastrado. Se ele estiver registrado,
+            você receberá a senha por e-mail.
+        </p>
+        <input class="modal-input" type="email" id="recuperar-email" placeholder="Seu e-mail cadastrado">
+        <div class="modal-btns">
+            <button class="btn-modal-cancelar" onclick="fecharRecuperar()">Cancelar</button>
+            <button class="btn-modal-enviar" id="btn-recuperar" onclick="enviarRecuperacao()">Enviar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TOPBAR (visível após login) ===== -->
+<div id="topbar-form" style="display:none;">
+    <div class="topbar">
+        <span class="topbar-titulo">Solicitação de Serviço Extra — GPS Vigilância</span>
+    </div>
+</div>
+
+<!-- ===== TELA DE SUCESSO ===== -->
 <div id="tela-sucesso">
     <div class="sucesso-icone">✅</div>
     <div class="sucesso-titulo">Solicitação Enviada!</div>
@@ -271,10 +485,9 @@ body {
     <button class="btn-nova" onclick="novaSolicitacao()">Nova Solicitação</button>
 </div>
 
-<!-- CONTEÚDO DO FORMULÁRIO -->
-<div id="conteudo-form">
+<!-- ===== FORMULÁRIO ===== -->
+<div id="conteudo-form" style="display:none;">
 
-    <!-- Cabeçalho -->
     <div class="form-header">
         <div class="form-header-titulo">Formulário de Solicitação para Serviço Extra</div>
         <div class="form-header-subtitulo">Contrato GPS Vigilância e Especializada</div>
@@ -283,42 +496,88 @@ body {
         </div>
     </div>
 
-    <!-- SEÇÃO 1 — TIPO DE SERVIÇO -->
+    <!-- TIPO DE SERVIÇO — checkboxes -->
     <div class="form-card">
         <div class="secao-titulo">Tipo de Serviço</div>
-
-        <div class="campo-grupo">
-            <label class="campo-label" for="tipo-servico">
-                Assinale o serviço solicitado <span class="obrig">*</span>
+        <label class="campo-label">
+            Assinale o(s) serviço(s) solicitado(s) <span class="obrig">*</span>
+            <span class="campo-hint">Selecione um ou mais serviços</span>
+        </label>
+        <div class="checkbox-grid" id="servicos-grid">
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Vigilância">
+                <span class="check-box"></span>
+                Serviço de Vigilância
             </label>
-            <select class="campo-select" id="tipo-servico">
-                <option value="">— Selecione o serviço —</option>
-                <option value="Serviço de Vigilância">Serviço de Vigilância</option>
-                <option value="Serviço de Recepcionista">Serviço de Recepcionista</option>
-                <option value="Serviço de Recep. Bilíngue">Serviço de Recep. Bilíngue</option>
-                <option value="Serviço de Motorista">Serviço de Motorista</option>
-                <option value="Serviço de Segurança Pessoal">Serviço de Segurança Pessoal</option>
-                <option value="Serviço de Porteiro(a)">Serviço de Porteiro(a)</option>
-                <option value="Serviço de Aux. ADM">Serviço de Aux. ADM</option>
-                <option value="Serviço de Operador PCS">Serviço de Operador PCS</option>
-                <option value="Serviço de Aux. Ser. Gerais">Serviço de Aux. Ser. Gerais</option>
-                <option value="Serviço de Bombeiro">Serviço de Bombeiro</option>
-                <option value="Serviço de Escolta">Serviço de Escolta</option>
-                <option value="Serviço de Inspetor">Serviço de Inspetor</option>
-                <option value="Outros Serviços">Outros Serviços</option>
-                <option value="Outra">Outra</option>
-            </select>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Recepcionista">
+                <span class="check-box"></span>
+                Serviço de Recepcionista
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Recep. Bilíngue">
+                <span class="check-box"></span>
+                Serviço de Recep. Bilíngue
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Motorista">
+                <span class="check-box"></span>
+                Serviço de Motorista
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Segurança Pessoal">
+                <span class="check-box"></span>
+                Serviço de Segurança Pessoal
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Porteiro(a)">
+                <span class="check-box"></span>
+                Serviço de Porteiro(a)
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Aux. ADM">
+                <span class="check-box"></span>
+                Serviço de Aux. ADM
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Operador PCS">
+                <span class="check-box"></span>
+                Serviço de Operador PCS
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Aux. Ser. Gerais">
+                <span class="check-box"></span>
+                Serviço de Aux. Ser. Gerais
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Bombeiro">
+                <span class="check-box"></span>
+                Serviço de Bombeiro
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Escolta">
+                <span class="check-box"></span>
+                Serviço de Escolta
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Serviço de Inspetor">
+                <span class="check-box"></span>
+                Serviço de Inspetor
+            </label>
+            <label class="checkbox-item" onclick="toggleServico(this)">
+                <input type="checkbox" value="Outros Serviços">
+                <span class="check-box"></span>
+                Outros Serviços
+            </label>
         </div>
     </div>
 
-    <!-- SEÇÃO 2 — DADOS DO SOLICITANTE -->
+    <!-- DADOS DO SOLICITANTE -->
     <div class="form-card">
         <div class="secao-titulo">Dados do Solicitante</div>
 
         <div class="campo-grupo">
-            <label class="campo-label" for="nome-solicitante">
-                Nome do Solicitante <span class="obrig">*</span>
-            </label>
+            <label class="campo-label" for="nome-solicitante">Nome do Solicitante <span class="obrig">*</span></label>
             <input class="campo-input" type="text" id="nome-solicitante" placeholder="Nome completo">
         </div>
 
@@ -326,7 +585,7 @@ body {
             <div class="campo-grupo">
                 <label class="campo-label" for="email">
                     E-mail <span class="obrig">*</span>
-                    <span class="campo-hint">Para incluir pessoas em cópia, separe com " ; " (ponto e vírgula)</span>
+                    <span class="campo-hint">Para cópia, separe com " ; " (ponto e vírgula)</span>
                 </label>
                 <input class="campo-input" type="text" id="email" placeholder="ex: inspetor.vigilancia@renault.com">
             </div>
@@ -340,43 +599,33 @@ body {
         </div>
 
         <div class="campo-grupo">
-            <label class="campo-label" for="departamento">
-                Departamento <span class="obrig">*</span>
-            </label>
+            <label class="campo-label" for="departamento">Departamento <span class="obrig">*</span></label>
             <input class="campo-input" type="text" id="departamento" placeholder="Nome do departamento">
         </div>
     </div>
 
-    <!-- SEÇÃO 3 — DADOS FINANCEIROS -->
+    <!-- DADOS FINANCEIROS -->
     <div class="form-card">
         <div class="secao-titulo">Dados Financeiros</div>
-
         <div class="grid-3">
             <div class="campo-grupo">
-                <label class="campo-label" for="centro-custo">
-                    Centro de Custo <span class="obrig">*</span>
-                </label>
+                <label class="campo-label" for="centro-custo">Centro de Custo <span class="obrig">*</span></label>
                 <input class="campo-input" type="text" id="centro-custo" placeholder="Ex: 1234">
             </div>
             <div class="campo-grupo">
-                <label class="campo-label" for="conta-contabil">
-                    Conta Contábil <span class="obrig">*</span>
-                </label>
+                <label class="campo-label" for="conta-contabil">Conta Contábil <span class="obrig">*</span></label>
                 <input class="campo-input" type="text" id="conta-contabil" placeholder="Ex: 6.1.1.05">
             </div>
             <div class="campo-grupo">
-                <label class="campo-label" for="zedoa">
-                    ZEDOA / Ordem Interna <span class="obrig">*</span>
-                </label>
-                <input class="campo-input" type="text" id="zedoa" placeholder="Ex: Z0001 ou ORD-123">
+                <label class="campo-label" for="zedoa">ZEDOA / Ordem Interna <span class="obrig">*</span></label>
+                <input class="campo-input" type="text" id="zedoa" placeholder="Ex: Z0001">
             </div>
         </div>
     </div>
 
-    <!-- SEÇÃO 4 — DETALHES DO SERVIÇO -->
+    <!-- DETALHES DO SERVIÇO -->
     <div class="form-card">
         <div class="secao-titulo">Detalhes do Serviço</div>
-
         <div class="grid-2">
             <div class="campo-grupo">
                 <label class="campo-label" for="local-servico">
@@ -386,60 +635,44 @@ body {
                 <input class="campo-input" type="text" id="local-servico" placeholder="Ex: Fábrica Renault - SJP">
             </div>
             <div class="campo-grupo">
-                <label class="campo-label" for="postos">
-                    Quantidade de Postos <span class="obrig">*</span>
-                </label>
+                <label class="campo-label" for="postos">Quantidade de Postos <span class="obrig">*</span></label>
                 <input class="campo-input" type="number" id="postos" min="1" placeholder="Ex: 2">
             </div>
         </div>
-
         <div class="campo-grupo">
-            <label class="campo-label" for="motivo">
-                Motivo do Serviço <span class="obrig">*</span>
-            </label>
+            <label class="campo-label" for="motivo">Motivo do Serviço <span class="obrig">*</span></label>
             <input class="campo-input" type="text" id="motivo" placeholder="Descreva o motivo da solicitação">
         </div>
     </div>
 
-    <!-- SEÇÃO 5 — PERÍODO DO SERVIÇO -->
+    <!-- PERÍODO -->
     <div class="form-card">
         <div class="secao-titulo">Período do Serviço</div>
-
         <div class="grid-2">
             <div class="campo-grupo">
-                <label class="campo-label" for="data-inicio">
-                    Data de Início <span class="obrig">*</span>
-                </label>
+                <label class="campo-label" for="data-inicio">Data de Início <span class="obrig">*</span></label>
                 <input class="campo-input" type="date" id="data-inicio">
             </div>
             <div class="campo-grupo">
-                <label class="campo-label" for="hora-inicio">
-                    Hora de Início <span class="obrig">*</span>
-                </label>
+                <label class="campo-label" for="hora-inicio">Hora de Início <span class="obrig">*</span></label>
                 <input class="campo-input" type="time" id="hora-inicio">
             </div>
         </div>
-
         <div class="grid-2">
             <div class="campo-grupo">
-                <label class="campo-label" for="data-final">
-                    Data Final <span class="obrig">*</span>
-                </label>
+                <label class="campo-label" for="data-final">Data Final <span class="obrig">*</span></label>
                 <input class="campo-input" type="date" id="data-final">
             </div>
             <div class="campo-grupo">
-                <label class="campo-label" for="hora-final">
-                    Hora Final <span class="obrig">*</span>
-                </label>
+                <label class="campo-label" for="hora-final">Hora Final <span class="obrig">*</span></label>
                 <input class="campo-input" type="time" id="hora-final">
             </div>
         </div>
     </div>
 
-    <!-- SEÇÃO 6 — OBSERVAÇÕES + ENVIAR -->
+    <!-- OBSERVAÇÕES -->
     <div class="form-card">
         <div class="secao-titulo">Observações</div>
-
         <div class="campo-grupo">
             <label class="campo-label" for="observacoes">
                 Observações adicionais
@@ -459,39 +692,137 @@ body {
 </div><!-- /conteudo-form -->
 
 <script>
+// Restaura sessão se já logou antes
+(function() {
+    if (sessionStorage.getItem('gps-extra-auth')) mostrarFormulario();
+})();
+
+// Enter nas inputs de acesso
+document.getElementById('acesso-email').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('acesso-senha').focus();
+});
+document.getElementById('acesso-senha').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') validarAcesso();
+});
+
+// ===== ACESSO =====
+async function validarAcesso() {
+    var email = document.getElementById('acesso-email').value.trim().toLowerCase();
+    var senha = document.getElementById('acesso-senha').value;
+    var erro  = document.getElementById('acesso-erro');
+    var btn   = document.getElementById('btn-entrar');
+
+    erro.style.display = 'none';
+    if (!email || !senha) { erro.textContent = 'Preencha e-mail e senha.'; erro.style.display = 'block'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+
+    var hash = await hashSenha(email, senha);
+    var resultado = await dbBuscar('gps-acesso-extra', { email: email, senha: hash }, { limit: 1 });
+
+    btn.disabled = false;
+    btn.textContent = 'ENTRAR';
+
+    if (resultado && resultado.length > 0) {
+        sessionStorage.setItem('gps-extra-auth', email);
+        mostrarFormulario();
+    } else {
+        erro.textContent = 'E-mail ou senha incorretos.';
+        erro.style.display = 'block';
+        document.getElementById('acesso-senha').value = '';
+        document.getElementById('acesso-senha').focus();
+    }
+}
+
+function mostrarFormulario() {
+    document.getElementById('tela-acesso').style.display = 'none';
+    document.getElementById('topbar-form').style.display = 'block';
+    document.getElementById('conteudo-form').style.display = 'block';
+}
+
+// ===== RECUPERAÇÃO =====
+function abrirRecuperar() {
+    document.getElementById('recuperar-email').value = document.getElementById('acesso-email').value || '';
+    document.getElementById('modal-recuperar').classList.add('aberto');
+}
+function fecharRecuperar() {
+    document.getElementById('modal-recuperar').classList.remove('aberto');
+    document.getElementById('recuperar-email').value = '';
+}
+
+async function enviarRecuperacao() {
+    var email = document.getElementById('recuperar-email').value.trim().toLowerCase();
+    var btn   = document.getElementById('btn-recuperar');
+
+    if (!email) { notify('Digite seu e-mail.', 'aviso'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    try {
+        await fetch(N8N_URL + '/servico-extra-recuperar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, _api_key: N8N_API_KEY })
+        });
+    } catch(e) {}
+
+    btn.disabled = false;
+    btn.textContent = 'Enviar';
+    fecharRecuperar();
+    notify('Se o e-mail estiver cadastrado, você receberá sua senha em instantes.', 'sucesso');
+}
+
+// ===== CHECKBOXES =====
+function toggleServico(label) {
+    var cb = label.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    label.classList.toggle('marcado', cb.checked);
+}
+
+function getServicosSelecionados() {
+    var marcados = document.querySelectorAll('#servicos-grid input[type="checkbox"]:checked');
+    return Array.from(marcados).map(function(cb) { return cb.value; });
+}
+
+// ===== FORMULÁRIO =====
 function gerarProtocolo() {
-    var agora = Date.now();
-    var sufixo = String(agora).slice(-6);
     var d = new Date();
     var mes = String(d.getMonth() + 1).padStart(2, '0');
     var ano = String(d.getFullYear()).slice(-2);
-    return 'GPS' + ano + mes + sufixo;
+    return 'GPS' + ano + mes + String(Date.now()).slice(-6);
 }
 
 function formatarData(val) {
     if (!val) return '';
-    var partes = val.split('-');
-    if (partes.length !== 3) return val;
-    return partes[2] + '/' + partes[1] + '/' + partes[0];
+    var p = val.split('-');
+    return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : val;
 }
 
 async function enviarSolicitacao() {
+    var servicos = getServicosSelecionados();
+    if (servicos.length === 0) {
+        notify('Selecione pelo menos um serviço.', 'aviso');
+        document.getElementById('servicos-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
     var campos = [
-        { id: 'tipo-servico',      label: 'Tipo de serviço' },
-        { id: 'nome-solicitante',  label: 'Nome do solicitante' },
-        { id: 'email',             label: 'E-mail' },
-        { id: 'telefone',          label: 'Telefone' },
-        { id: 'departamento',      label: 'Departamento' },
-        { id: 'centro-custo',      label: 'Centro de Custo' },
-        { id: 'conta-contabil',    label: 'Conta Contábil' },
-        { id: 'zedoa',             label: 'ZEDOA / Ordem Interna' },
-        { id: 'local-servico',     label: 'Local do Serviço' },
-        { id: 'postos',            label: 'Quantidade de Postos' },
-        { id: 'motivo',            label: 'Motivo do Serviço' },
-        { id: 'data-inicio',       label: 'Data de Início' },
-        { id: 'hora-inicio',       label: 'Hora de Início' },
-        { id: 'data-final',        label: 'Data Final' },
-        { id: 'hora-final',        label: 'Hora Final' }
+        { id: 'nome-solicitante', label: 'Nome do solicitante' },
+        { id: 'email',            label: 'E-mail' },
+        { id: 'telefone',         label: 'Telefone' },
+        { id: 'departamento',     label: 'Departamento' },
+        { id: 'centro-custo',     label: 'Centro de Custo' },
+        { id: 'conta-contabil',   label: 'Conta Contábil' },
+        { id: 'zedoa',            label: 'ZEDOA / Ordem Interna' },
+        { id: 'local-servico',    label: 'Local do Serviço' },
+        { id: 'postos',           label: 'Quantidade de Postos' },
+        { id: 'motivo',           label: 'Motivo do Serviço' },
+        { id: 'data-inicio',      label: 'Data de Início' },
+        { id: 'hora-inicio',      label: 'Hora de Início' },
+        { id: 'data-final',       label: 'Data Final' },
+        { id: 'hora-final',       label: 'Hora Final' }
     ];
 
     for (var i = 0; i < campos.length; i++) {
@@ -517,32 +848,30 @@ async function enviarSolicitacao() {
 
     var protocolo = gerarProtocolo();
     var agora = new Date();
-    var hojeStr = String(agora.getDate()).padStart(2,'0') + '/' +
-                  String(agora.getMonth()+1).padStart(2,'0') + '/' + agora.getFullYear();
-    var horaStr = String(agora.getHours()).padStart(2,'0') + ':' +
-                  String(agora.getMinutes()).padStart(2,'0');
+    var hojeStr = String(agora.getDate()).padStart(2,'0') + '/' + String(agora.getMonth()+1).padStart(2,'0') + '/' + agora.getFullYear();
+    var horaStr = String(agora.getHours()).padStart(2,'0') + ':' + String(agora.getMinutes()).padStart(2,'0');
 
     var dados = {
-        protocolo:         protocolo,
-        tipo_servico:      document.getElementById('tipo-servico').value,
-        nome_solicitante:  document.getElementById('nome-solicitante').value.trim().toUpperCase(),
-        email:             document.getElementById('email').value.trim().toLowerCase(),
-        telefone:          document.getElementById('telefone').value.trim(),
-        departamento:      document.getElementById('departamento').value.trim().toUpperCase(),
-        centro_custo:      document.getElementById('centro-custo').value.trim(),
-        conta_contabil:    document.getElementById('conta-contabil').value.trim(),
-        zedoa:             document.getElementById('zedoa').value.trim().toUpperCase(),
-        local_servico:     document.getElementById('local-servico').value.trim().toUpperCase(),
-        motivo:            document.getElementById('motivo').value.trim().toUpperCase(),
-        postos:            parseInt(document.getElementById('postos').value) || 1,
-        data_inicio:       formatarData(di),
-        hora_inicio:       document.getElementById('hora-inicio').value,
-        data_final:        formatarData(df),
-        hora_final:        document.getElementById('hora-final').value,
-        observacoes:       document.getElementById('observacoes').value.trim(),
-        data_solicitacao:  hojeStr,
-        hora_solicitacao:  horaStr,
-        status:            'PENDENTE'
+        protocolo:        protocolo,
+        tipo_servico:     servicos.join(', '),
+        nome_solicitante: document.getElementById('nome-solicitante').value.trim().toUpperCase(),
+        email:            document.getElementById('email').value.trim().toLowerCase(),
+        telefone:         document.getElementById('telefone').value.trim(),
+        departamento:     document.getElementById('departamento').value.trim().toUpperCase(),
+        centro_custo:     document.getElementById('centro-custo').value.trim(),
+        conta_contabil:   document.getElementById('conta-contabil').value.trim(),
+        zedoa:            document.getElementById('zedoa').value.trim().toUpperCase(),
+        local_servico:    document.getElementById('local-servico').value.trim().toUpperCase(),
+        motivo:           document.getElementById('motivo').value.trim().toUpperCase(),
+        postos:           parseInt(document.getElementById('postos').value) || 1,
+        data_inicio:      formatarData(di),
+        hora_inicio:      document.getElementById('hora-inicio').value,
+        data_final:       formatarData(df),
+        hora_final:       document.getElementById('hora-final').value,
+        observacoes:      document.getElementById('observacoes').value.trim(),
+        data_solicitacao: hojeStr,
+        hora_solicitacao: horaStr,
+        status:           'PENDENTE'
     };
 
     var resultado = await dbSalvar('gps-servico-extra', dados);
@@ -554,6 +883,7 @@ async function enviarSolicitacao() {
         document.getElementById('protocolo-num').textContent = protocolo;
         document.getElementById('conteudo-form').style.display = 'none';
         document.getElementById('tela-sucesso').style.display = 'block';
+        document.getElementById('topbar-form').style.display = 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
         notify('Erro ao enviar solicitação. Tente novamente.', 'erro');
@@ -562,9 +892,13 @@ async function enviarSolicitacao() {
 
 function novaSolicitacao() {
     document.getElementById('tela-sucesso').style.display = 'none';
+    document.getElementById('topbar-form').style.display = 'block';
     document.getElementById('conteudo-form').style.display = 'block';
     document.querySelectorAll('.campo-input, .campo-textarea').forEach(function(el) { el.value = ''; });
-    document.querySelectorAll('.campo-select').forEach(function(el) { el.selectedIndex = 0; });
+    document.querySelectorAll('.checkbox-item').forEach(function(el) {
+        el.querySelector('input').checked = false;
+        el.classList.remove('marcado');
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
