@@ -7,6 +7,15 @@
 const TABELA_JIT = 'portaria-02-jit';
 let dadosJitGlobal = [];
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('jit-cpf').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') jitPesquisar();
+    });
+    document.getElementById('jit-placa').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') jitPesquisar();
+    });
+});
+
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function jitRegistrar(acesso) {
     const dados = {
