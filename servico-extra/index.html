@@ -116,6 +116,45 @@ body {
 .link-recuperar:hover { text-decoration: underline; }
 .link-cadastrar { margin-top: 8px; color: #6a8090; }
 
+/* ===== CAMPO SENHA COM OLHO ===== */
+.senha-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 12px;
+}
+.senha-wrapper .acesso-input,
+.senha-wrapper .modal-input {
+    margin-bottom: 0;
+    padding-right: 44px;
+    width: 100%;
+}
+.btn-olho {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #8a9bb0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: color .2s;
+}
+.btn-olho:hover { color: var(--teal); }
+.cad-match {
+    font-size: 11px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    min-height: 16px;
+    text-align: left;
+}
+.cad-match.ok  { color: #27ae60; }
+.cad-match.nok { color: var(--red); }
+
 /* ===== MODAL RECUPERAÇÃO ===== */
 .modal-overlay {
     display: none;
@@ -200,7 +239,7 @@ body {
     height: 56px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     position: sticky;
     top: 0;
@@ -212,6 +251,33 @@ body {
     letter-spacing: 1px;
     text-transform: uppercase;
 }
+.topbar-usuario {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    opacity: .9;
+}
+.topbar-nome {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.btn-sair {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    white-space: nowrap;
+}
+.btn-sair:hover { background: rgba(255,255,255,0.28); }
 
 /* ===== CABEÇALHO DO FORM ===== */
 .form-header {
@@ -439,7 +505,15 @@ body {
         <div class="acesso-erro" id="acesso-erro">E-mail ou senha incorretos.</div>
 
         <input class="acesso-input" type="email" id="acesso-email" placeholder="Seu e-mail" autocomplete="email">
-        <input class="acesso-input" type="password" id="acesso-senha" placeholder="Senha" autocomplete="current-password">
+        <div class="senha-wrapper">
+            <input class="acesso-input" type="password" id="acesso-senha" placeholder="Senha" autocomplete="current-password">
+            <button type="button" class="btn-olho" onclick="toggleOlho(this,'acesso-senha')" tabindex="-1">
+                <svg id="olho-login" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                </svg>
+            </button>
+        </div>
 
         <button class="btn-entrar" id="btn-entrar" onclick="validarAcesso()">ENTRAR</button>
 
@@ -473,8 +547,25 @@ body {
         </p>
         <input class="modal-input" type="text" id="cad-nome" placeholder="Nome completo">
         <input class="modal-input" type="email" id="cad-email" placeholder="Seu e-mail">
-        <input class="modal-input" type="password" id="cad-senha" placeholder="Crie uma senha">
-        <input class="modal-input" type="password" id="cad-confirma" placeholder="Confirme a senha">
+        <div class="senha-wrapper">
+            <input class="modal-input" type="password" id="cad-senha" placeholder="Crie uma senha" oninput="verificarMatch()">
+            <button type="button" class="btn-olho" onclick="toggleOlho(this,'cad-senha')" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="senha-wrapper">
+            <input class="modal-input" type="password" id="cad-confirma" placeholder="Confirme a senha" oninput="verificarMatch()">
+            <button type="button" class="btn-olho" onclick="toggleOlho(this,'cad-confirma')" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="cad-match" id="cad-match"></div>
         <div class="modal-btns">
             <button class="btn-modal-cancelar" onclick="fecharCadastro()">Cancelar</button>
             <button class="btn-modal-enviar" id="btn-cadastrar" onclick="enviarCadastro()">Cadastrar</button>
@@ -486,6 +577,10 @@ body {
 <div id="topbar-form" style="display:none;">
     <div class="topbar">
         <span class="topbar-titulo">Solicitação de Serviço Extra — GPS Vigilância</span>
+        <div class="topbar-usuario">
+            <span class="topbar-nome" id="topbar-nome"></span>
+            <button class="btn-sair" onclick="sair()">Sair</button>
+        </div>
     </div>
 </div>
 
@@ -768,6 +863,40 @@ function _preencherDadosLogin() {
     var nome  = sessionStorage.getItem('gps-extra-nome') || '';
     if (email) document.getElementById('email').value = email;
     if (nome)  document.getElementById('nome-solicitante').value = nome;
+    var el = document.getElementById('topbar-nome');
+    if (el) el.textContent = nome || email;
+}
+
+function sair() {
+    sessionStorage.removeItem('gps-extra-auth');
+    sessionStorage.removeItem('gps-extra-nome');
+    document.getElementById('topbar-form').style.display = 'none';
+    document.getElementById('conteudo-form').style.display = 'none';
+    document.getElementById('tela-sucesso').style.display = 'none';
+    document.getElementById('tela-acesso').style.display = 'flex';
+    document.getElementById('acesso-email').value = '';
+    document.getElementById('acesso-senha').value = '';
+    document.getElementById('acesso-erro').style.display = 'none';
+}
+
+// ===== OLHO SENHA =====
+function toggleOlho(btn, inputId) {
+    var input = document.getElementById(inputId);
+    var mostrar = input.type === 'password';
+    input.type = mostrar ? 'text' : 'password';
+    btn.querySelector('svg').innerHTML = mostrar
+        ? '<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238zM13.646 14.354l-12-12 .708-.708 12 12z"/>'
+        : '<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>';
+}
+
+// ===== MATCH SENHA CADASTRO =====
+function verificarMatch() {
+    var s1 = document.getElementById('cad-senha').value;
+    var s2 = document.getElementById('cad-confirma').value;
+    var el = document.getElementById('cad-match');
+    if (!s2) { el.textContent = ''; el.className = 'cad-match'; return; }
+    if (s1 === s2) { el.textContent = '✓ Senhas coincidem'; el.className = 'cad-match ok'; }
+    else           { el.textContent = '✗ Senhas não coincidem'; el.className = 'cad-match nok'; }
 }
 
 // ===== RECUPERAÇÃO =====
@@ -814,6 +943,8 @@ function abrirCadastro() {
 }
 function fecharCadastro() {
     document.getElementById('modal-cadastro').classList.remove('aberto');
+    document.getElementById('cad-match').textContent = '';
+    document.getElementById('cad-match').className = 'cad-match';
 }
 
 async function enviarCadastro() {
