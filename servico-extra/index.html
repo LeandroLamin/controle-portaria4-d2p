@@ -746,6 +746,7 @@ async function validarAcesso() {
 
     if (resultado && resultado.length > 0) {
         sessionStorage.setItem('gps-extra-auth', email);
+        sessionStorage.setItem('gps-extra-nome', resultado[0].nome || '');
         mostrarFormulario();
     } else {
         erro.textContent = 'E-mail ou senha incorretos.';
@@ -759,6 +760,14 @@ function mostrarFormulario() {
     document.getElementById('tela-acesso').style.display = 'none';
     document.getElementById('topbar-form').style.display = 'block';
     document.getElementById('conteudo-form').style.display = 'block';
+    _preencherDadosLogin();
+}
+
+function _preencherDadosLogin() {
+    var email = sessionStorage.getItem('gps-extra-auth') || '';
+    var nome  = sessionStorage.getItem('gps-extra-nome') || '';
+    if (email) document.getElementById('email').value = email;
+    if (nome)  document.getElementById('nome-solicitante').value = nome;
 }
 
 // ===== RECUPERAÇÃO =====
@@ -973,6 +982,7 @@ function novaSolicitacao() {
         el.querySelector('input').checked = false;
         el.classList.remove('marcado');
     });
+    _preencherDadosLogin();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
