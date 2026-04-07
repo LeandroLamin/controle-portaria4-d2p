@@ -45,7 +45,10 @@ async function fazerLogin(portariaAtual) {
         return;
     }
     const niveis = resultado.nivel_acesso.toLowerCase().split(',').map(n => n.trim());
-    if (niveis.includes('administrador') || niveis.includes(portariaAtual.toLowerCase())) {
+    // Aceita tanto o nome curto (p02, p04) quanto o nome completo (portaria-02, portaria-04)
+    const portariaAlias = { 'portaria-02': 'p02', 'portaria-04': 'p04' };
+    const nivelCurto = portariaAlias[portariaAtual.toLowerCase()] || '';
+    if (niveis.includes('administrador') || niveis.includes(portariaAtual.toLowerCase()) || (nivelCurto && niveis.includes(nivelCurto))) {
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('sistema-principal').style.display = 'block';
         document.getElementById('nome-logado').innerText = resultado.nome_completo;
