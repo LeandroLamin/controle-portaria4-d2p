@@ -114,6 +114,7 @@ body {
     text-decoration: none;
 }
 .link-recuperar:hover { text-decoration: underline; }
+.link-cadastrar { margin-top: 8px; color: #6a8090; }
 
 /* ===== MODAL RECUPERAÇÃO ===== */
 .modal-overlay {
@@ -443,6 +444,7 @@ body {
         <button class="btn-entrar" id="btn-entrar" onclick="validarAcesso()">ENTRAR</button>
 
         <a class="link-recuperar" onclick="abrirRecuperar()">Esqueci minha senha</a>
+        <a class="link-recuperar link-cadastrar" onclick="abrirCadastro()">Não tenho cadastro — Cadastrar-se</a>
     </div>
 </div>
 
@@ -458,6 +460,24 @@ body {
         <div class="modal-btns">
             <button class="btn-modal-cancelar" onclick="fecharRecuperar()">Cancelar</button>
             <button class="btn-modal-enviar" id="btn-recuperar" onclick="enviarRecuperacao()">Enviar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL CADASTRO ===== -->
+<div id="modal-cadastro" class="modal-overlay" onclick="if(event.target===this)fecharCadastro()">
+    <div class="modal-box">
+        <div class="modal-titulo">Criar Cadastro</div>
+        <p class="modal-texto">
+            Preencha os dados abaixo para solicitar acesso ao sistema.
+        </p>
+        <input class="modal-input" type="text" id="cad-nome" placeholder="Nome completo">
+        <input class="modal-input" type="email" id="cad-email" placeholder="Seu e-mail">
+        <input class="modal-input" type="password" id="cad-senha" placeholder="Crie uma senha">
+        <input class="modal-input" type="password" id="cad-confirma" placeholder="Confirme a senha">
+        <div class="modal-btns">
+            <button class="btn-modal-cancelar" onclick="fecharCadastro()">Cancelar</button>
+            <button class="btn-modal-enviar" id="btn-cadastrar" onclick="enviarCadastro()">Cadastrar</button>
         </div>
     </div>
 </div>
@@ -772,6 +792,60 @@ async function enviarRecuperacao() {
     btn.textContent = 'Enviar';
     fecharRecuperar();
     notify('Se o e-mail estiver cadastrado, você receberá sua senha em instantes.', 'sucesso');
+}
+
+// ===== CADASTRO =====
+function abrirCadastro() {
+    document.getElementById('cad-email').value = document.getElementById('acesso-email').value || '';
+    document.getElementById('cad-nome').value = '';
+    document.getElementById('cad-senha').value = '';
+    document.getElementById('cad-confirma').value = '';
+    document.getElementById('modal-cadastro').classList.add('aberto');
+    document.getElementById('cad-nome').focus();
+}
+function fecharCadastro() {
+    document.getElementById('modal-cadastro').classList.remove('aberto');
+}
+
+async function enviarCadastro() {
+    var nome     = document.getElementById('cad-nome').value.trim();
+    var email    = document.getElementById('cad-email').value.trim().toLowerCase();
+    var senha    = document.getElementById('cad-senha').value;
+    var confirma = document.getElementById('cad-confirma').value;
+    var btn      = document.getElementById('btn-cadastrar');
+
+    if (!nome)     { notify('Preencha o nome completo.', 'aviso'); return; }
+    if (!email)    { notify('Preencha o e-mail.', 'aviso'); return; }
+    if (!senha)    { notify('Crie uma senha.', 'aviso'); return; }
+    if (senha !== confirma) { notify('As senhas não coincidem.', 'aviso'); return; }
+    if (senha.length < 6)  { notify('A senha deve ter ao menos 6 caracteres.', 'aviso'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Cadastrando...';
+
+    // Verifica se e-mail já existe
+    var existe = await dbBuscar('gps-acesso-extra', { email: email }, { limit: 1 });
+    if (existe && existe.length > 0) {
+        notify('Este e-mail já está cadastrado. Use "Esqueci minha senha" para recuperar.', 'aviso');
+        btn.disabled = false;
+        btn.textContent = 'Cadastrar';
+        return;
+    }
+
+    var hash = await hashSenha(email, senha);
+    var resultado = await dbSalvar('gps-acesso-extra', { nome: nome.toUpperCase(), email: email, senha: hash });
+
+    btn.disabled = false;
+    btn.textContent = 'Cadastrar';
+
+    if (resultado && resultado.ok !== false) {
+        fecharCadastro();
+        notify('Cadastro realizado! Você já pode entrar com seu e-mail e senha.', 'sucesso');
+        document.getElementById('acesso-email').value = email;
+        document.getElementById('acesso-senha').focus();
+    } else {
+        notify('Erro ao cadastrar. Tente novamente.', 'erro');
+    }
 }
 
 // ===== CHECKBOXES =====
