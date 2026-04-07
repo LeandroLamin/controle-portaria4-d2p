@@ -10,72 +10,11 @@
     var auth = sessionStorage.getItem('d2p-auth');
     if (!auth) { location.replace('/menu/index.html'); return; }
     var niveis = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
-    if (!niveis.includes('p04') && !niveis.includes('portaria-04') && !niveis.includes('administrador')) { location.replace('/portarias.html'); }
+    if (!niveis.includes('p04') && !niveis.includes('portaria-04') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Portaria+04'); }
 })();
 </script>
-<style>
-/* ===== LOGIN — mesmo visual da Portaria 02 ===== */
-body {
-  display:flex; justify-content:center; align-items:center;
-  margin:0; padding:0;
-}
-#tela-login {
-  display:flex; align-items:center; justify-content:center;
-  width:100vw !important; height:100vh !important;
-  background-color:#1a2535 !important;
-  background-image:none !important;
-  overflow:hidden;
-}
-.login-card {
-  background:#fff; border-radius:10px; padding:30px !important;
-  width:340px !important; text-align:center;
-  box-shadow:0 8px 40px rgba(0,0,0,0.4);
-}
-.login-marca { font-size:11px; color:#6a8090; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:2px; }
-.login-titulo { font-size:20px; font-weight:800; color:#136b5e; margin:14px 0 28px; line-height:1.3; }
-.login-input {
-  width:100%; height:45px; padding:0 14px; border:1.5px solid #d0dce8;
-  border-radius:6px; font-size:14px; color:#1a2a38;
-  background:#f2f6fa; margin-bottom:12px; outline:none; transition:border .2s;
-  box-sizing:border-box;
-}
-.login-input:focus { border-color:#1a8a7a; background:#fff; }
-.btn-login {
-  width:100%; height:45px; background:#f5c518; border:none;
-  border-radius:6px; font-size:15px; font-weight:800; color:#1a2535;
-  cursor:pointer; letter-spacing:1px; margin-top:6px; transition:background .2s;
-}
-.btn-login:hover { background:#d4a800; }
-.btn-login:disabled { background:#ccc; cursor:not-allowed; }
-.login-voltar {
-  display:block; margin-top:18px; font-size:12px;
-  color:#1a8a7a; text-decoration:none; cursor:pointer;
-}
-.login-voltar:hover { text-decoration:underline; }
-.login-erro {
-  background:#fdecea; color:#e03030; border-radius:6px;
-  padding:10px 14px; font-size:13px; margin-bottom:14px;
-  display:none; text-align:left; border:1px solid #f5c6c6;
-}
-</style>
 </head>
 <body>
-
-    <div id="tela-login">
-      <div class="login-card">
-        <div class="login-marca">D2P-BRAZIL<br>Segurança Patrimonial</div>
-        <div class="login-titulo">ACESSO RESTRITO<br>PORTARIA 04</div>
-
-        <div class="login-erro" id="msg-erro">⚠️ <span id="txt-erro"></span></div>
-
-        <input type="text"     class="login-input" id="user-login" placeholder="Usuário" autocomplete="username">
-        <input type="password" class="login-input" id="user-pass"  placeholder="Senha"   autocomplete="current-password">
-
-        <button class="btn-login" id="btn-entrar" onclick="fazerLogin('portaria-04')">ENTRAR</button>
-
-        <a class="login-voltar" href="../portarias.html">← VOLTAR</a>
-      </div>
-    </div>
 
     <div id="sistema-principal" style="display: none;">
         <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="fazerLogout()">Sair</a></div>
@@ -181,60 +120,22 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../conexao/config.js"></script>
-<script src="../conexao/crypto.js"></script>
 <script src="../conexao/db.js"></script>
-<script src="../js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="../js/ui.js"></script>
 <script>
 // Auto-login via sessão existente
+// Exibe o sistema ao carregar (guard já validou a sessão)
 document.addEventListener('DOMContentLoaded', function() {
-    var auth = sessionStorage.getItem('d2p-auth');
-    if (auth) {
-        document.getElementById('tela-login').style.display = 'none';
-        document.getElementById('sistema-principal').style.display = 'block';
-        document.getElementById('nome-logado').innerText = auth;
-        document.body.classList.add('sistema-aberto');
-    }
+    document.getElementById('sistema-principal').style.display = 'block';
+    document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
+    document.body.classList.add('sistema-aberto');
 });
 
-// Logout
+// Logout — volta para seleção de portarias
 function fazerLogout() {
-  document.getElementById('user-pass').value = '';
-  document.getElementById('msg-erro').style.display = 'none';
-  document.getElementById('sistema-principal').style.display = 'none';
-  document.getElementById('tela-login').style.display = 'flex';
-  document.body.classList.remove('sistema-aberto');
+  location.href = '/portarias.html';
 }
-
-// Gatilho ENTER no campo senha
-document.getElementById('user-pass').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') fazerLogin('portaria-04');
-});
-
-// Login com loading e erro inline (mesmo padrão da Portaria 02)
-const _fazerLoginOriginal = fazerLogin;
-window.fazerLogin = async function(portaria) {
-  const btn    = document.getElementById('btn-entrar');
-  const msgErro = document.getElementById('msg-erro');
-  const txtErro = document.getElementById('txt-erro');
-
-  msgErro.style.display = 'none';
-  btn.disabled    = true;
-  btn.textContent = 'AGUARDE...';
-
-  const _alert = window.alert;
-  window.alert = function(msg) {
-    txtErro.textContent = msg;
-    msgErro.style.display = 'block';
-  };
-
-  await _fazerLoginOriginal(portaria);
-
-  window.alert    = _alert;
-  btn.disabled    = false;
-  btn.textContent = 'ENTRAR';
-};
 </script>
 </body>
 </html>

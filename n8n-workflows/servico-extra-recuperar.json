@@ -1,0 +1,152 @@
+{
+  "name": "Servico Extra - Recuperar Senha",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "servico-extra-recuperar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body._api_key }}",
+              "operation": "equals",
+              "value2": "D2P-2025-9xKmPv3nLqRw7j"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Validar API Key",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://n8n-supabase.tbjno4.easypanel.host/rest/v1/gps-acesso-extra?email=eq.{{ encodeURIComponent($json.body.email) }}&select=nome,email,senha_plain&limit=1",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.ltgccMHjFZd9KWoa9zyrzI5J160DoDM7YpfzNj-MMOk" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.ltgccMHjFZd9KWoa9zyrzI5J160DoDM7YpfzNj-MMOk" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3",
+      "name": "Buscar Usuario",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.length }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "id": "4",
+      "name": "Usuário Existe?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "fromEmail": "leandro.lamin@gpssa.com.br",
+        "toEmail": "={{ $json[0].email }}",
+        "subject": "GPS Vigilância — Recuperação de Senha",
+        "emailType": "html",
+        "message": "=<div style=\"font-family:'Segoe UI',Arial,sans-serif; max-width:520px; margin:0 auto; background:#f4f7f6; padding:32px 16px;\">\n  <div style=\"background:#136b5e; padding:24px 32px; border-radius:10px 10px 0 0; text-align:center;\">\n    <div style=\"font-size:11px; color:#a8d8d2; letter-spacing:2px; text-transform:uppercase;\">GPS Vigilância e Especializada</div>\n    <div style=\"font-size:20px; font-weight:800; color:#fff; margin-top:8px;\">Recuperação de Senha</div>\n  </div>\n  <div style=\"background:#fff; padding:32px; border-radius:0 0 10px 10px; box-shadow:0 4px 16px rgba(0,0,0,0.07);\">\n    <p style=\"font-size:15px; color:#1a2a38;\">Olá, <b>{{ $json[0].nome }}</b>!</p>\n    <p style=\"font-size:14px; color:#555; margin-top:12px;\">Recebemos uma solicitação de recuperação de senha para o sistema de <b>Solicitação de Serviço Extra</b>.</p>\n    <div style=\"background:#e8f5f3; border:1.5px solid #1a8a7a; border-radius:8px; padding:16px 24px; margin:24px 0; text-align:center;\">\n      <div style=\"font-size:11px; color:#136b5e; font-weight:700; text-transform:uppercase; letter-spacing:1px;\">Sua senha é</div>\n      <div style=\"font-size:26px; font-weight:900; color:#136b5e; letter-spacing:4px; margin-top:6px;\">{{ $json[0].senha_plain }}</div>\n    </div>\n    <p style=\"font-size:13px; color:#888; margin-top:16px;\">Acesse o formulário em: <a href=\"https://servico-extra.laminlpp.com.br\" style=\"color:#1a8a7a;\">servico-extra.laminlpp.com.br</a></p>\n    <hr style=\"border:none; border-top:1px solid #eee; margin:24px 0;\">\n    <p style=\"font-size:11px; color:#aaa; text-align:center;\">Dúvidas? Ligue (41) 99697-9238 ou (41) 3380-2744</p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "id": "5",
+      "name": "Enviar E-mail",
+      "type": "n8n-nodes-base.sendEmail",
+      "typeVersion": 2,
+      "position": [1120, 100],
+      "credentials": {
+        "smtp": {
+          "id": "SUBSTITUIR_PELO_ID_DA_CREDENCIAL_SMTP",
+          "name": "Outlook GPS"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"ok\": true }"
+      },
+      "id": "6",
+      "name": "Resposta OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 100]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"ok\": false, \"erro\": \"api_key invalida\" }",
+        "options": { "responseCode": 401 }
+      },
+      "id": "7",
+      "name": "Resposta API Key Invalida",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 420]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"ok\": true, \"mensagem\": \"se cadastrado, e-mail enviado\" }"
+      },
+      "id": "8",
+      "name": "Resposta Email Nao Encontrado",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1120, 320]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Validar API Key", "type": "main", "index": 0 }]]
+    },
+    "Validar API Key": {
+      "main": [
+        [{ "node": "Buscar Usuario", "type": "main", "index": 0 }],
+        [{ "node": "Resposta API Key Invalida", "type": "main", "index": 0 }]
+      ]
+    },
+    "Buscar Usuario": {
+      "main": [[{ "node": "Usuário Existe?", "type": "main", "index": 0 }]]
+    },
+    "Usuário Existe?": {
+      "main": [
+        [{ "node": "Enviar E-mail", "type": "main", "index": 0 }],
+        [{ "node": "Resposta Email Nao Encontrado", "type": "main", "index": 0 }]
+      ]
+    },
+    "Enviar E-mail": {
+      "main": [[{ "node": "Resposta OK", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

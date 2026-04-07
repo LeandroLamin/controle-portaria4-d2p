@@ -145,7 +145,20 @@ function irParaAdmin() {
 
 function fecharModal() {
     document.getElementById('modal-acesso').classList.remove('aberto');
+    history.replaceState(null, '', location.pathname);
 }
+
+// Exibe modal se redirecionado por acesso negado
+(function() {
+    var negado = new URLSearchParams(location.search).get('negado');
+    if (negado) {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('#modal-acesso .modal-texto').textContent =
+                'Seu usuário não tem permissão para acessar a ' + negado + '.';
+            document.getElementById('modal-acesso').classList.add('aberto');
+        });
+    }
+})();
 </script>
 
 <div class="header">
