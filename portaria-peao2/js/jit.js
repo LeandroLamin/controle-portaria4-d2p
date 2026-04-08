@@ -25,6 +25,7 @@ async function pjSalvar() {
         transportadora: document.getElementById('pj-transp').value.trim().toUpperCase(),
         placa:          document.getElementById('pj-placa').value.trim().toUpperCase(),
         carreta:        document.getElementById('pj-carreta').value.trim().toUpperCase(),
+        fcr:            document.getElementById('pj-fcr').value.trim().toUpperCase(),
         acesso:         acesso
     };
     if (!dados.nome || !dados.rg || !dados.transportadora || !dados.placa || !dados.acesso) {
@@ -52,11 +53,12 @@ async function pjPesquisar() {
 
     if (data && data.length > 0) {
         const u = data[0];
-        document.getElementById('pj-nome').value  = u.nome           || '';
-        document.getElementById('pj-rg').value    = u.rg             || '';
-        document.getElementById('pj-transp').value = u.transportadora || '';
-        document.getElementById('pj-placa').value  = u.placa          || '';
-        document.getElementById('pj-carreta').value = u.carreta       || '';
+        document.getElementById('pj-nome').value    = u.nome           || '';
+        document.getElementById('pj-rg').value      = u.rg             || '';
+        document.getElementById('pj-transp').value  = u.transportadora || '';
+        document.getElementById('pj-placa').value   = u.placa          || '';
+        document.getElementById('pj-carreta').value = u.carreta        || '';
+        document.getElementById('pj-fcr').value     = u.fcr            || '';
         notify('Registro localizado!', 'sucesso');
     } else {
         notify('Nenhum registro encontrado.', 'aviso');
@@ -123,6 +125,7 @@ function _pjRenderizarTabela(lista) {
             <td style="padding:7px 10px;">${item.transportadora || ''}</td>
             <td style="padding:7px 10px;">${item.placa          || ''}</td>
             <td style="padding:7px 10px;">${item.carreta        || ''}</td>
+            <td style="padding:7px 10px;">${item.fcr            || ''}</td>
             <td style="padding:7px 10px; font-weight:700;">${item.acesso || ''}</td>
         `;
         tbody.appendChild(tr);
@@ -133,7 +136,7 @@ function _pjRenderizarTabela(lista) {
 function pjExportarXLSX() {
     if (dadosPJGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    const cabecalho = ['Data','Hora','Nome','RG','Transportadora','Placa','Carreta','Acesso'];
+    const cabecalho = ['Data','Hora','Nome','RG','Transportadora','Placa','Carreta','FCR','Acesso'];
     const linhas = dadosPJGlobal.map(r => [
         _formatarDataPJ(r.data),
         r.hora           || '',
@@ -142,6 +145,7 @@ function pjExportarXLSX() {
         r.transportadora || '',
         r.placa          || '',
         r.carreta        || '',
+        r.fcr            || '',
         r.acesso         || ''
     ]);
 
