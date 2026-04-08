@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pa-placa').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') paPesquisar();
     });
-    document.getElementById('pa-rg').addEventListener('keydown', (e) => {
+    document.getElementById('pa-cpf').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') paPesquisar();
     });
 });
@@ -21,7 +21,7 @@ async function paSalvar() {
     const acesso = document.getElementById('pa-acesso').value;
     const dados = {
         nome:    document.getElementById('pa-nome').value.trim().toUpperCase(),
-        rg:      document.getElementById('pa-rg').value.trim(),
+        cpf:      document.getElementById('pa-cpf').value.trim(),
         empresa: document.getElementById('pa-empresa').value.trim().toUpperCase(),
         cavalo:  document.getElementById('pa-cavalo').value.trim().toUpperCase(),
         placa:   document.getElementById('pa-placa').value.trim().toUpperCase(),
@@ -29,7 +29,7 @@ async function paSalvar() {
         motivo:  document.getElementById('pa-motivo').value,
         acesso:  acesso
     };
-    if (!dados.nome || !dados.rg || !dados.empresa || !dados.placa || !dados.motivo || !dados.acesso) {
+    if (!dados.nome || !dados.cpf || !dados.empresa || !dados.placa || !dados.motivo || !dados.acesso) {
         return notify('Preencha todos os campos obrigatórios antes de salvar.', 'aviso');
     }
     const result = await dbSalvar(TABELA_PA, dados);
@@ -42,20 +42,20 @@ async function paSalvar() {
     }
 }
 
-// ── 2. PESQUISAR por Placa ou RG ─────────────────────────────────────────────
+// ── 2. PESQUISAR por Placa ou CPF ────────────────────────────────────────────
 async function paPesquisar() {
     const placa = document.getElementById('pa-placa').value.trim().toUpperCase();
-    const rg    = document.getElementById('pa-rg').value.trim();
+    const cpf    = document.getElementById('pa-cpf').value.trim();
 
-    if (!placa && !rg) return notify('Digite a Placa ou RG para pesquisar.', 'aviso');
+    if (!placa && !cpf) return notify('Digite a Placa ou CPF para pesquisar.', 'aviso');
 
-    const filtros = placa ? { placa } : { rg };
+    const filtros = placa ? { placa } : { cpf };
     const data = await dbBuscar(TABELA_PA, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
         const u = data[0];
         document.getElementById('pa-nome').value    = u.nome    || '';
-        document.getElementById('pa-rg').value      = u.rg      || '';
+        document.getElementById('pa-cpf').value      = u.cpf      || '';
         document.getElementById('pa-empresa').value = u.empresa || '';
         document.getElementById('pa-cavalo').value  = u.cavalo  || '';
         document.getElementById('pa-placa').value   = u.placa   || '';
@@ -123,7 +123,7 @@ function _paRenderizarTabela(lista) {
             <td style="padding:7px 10px;">${_formatarDataPA(item.data)}</td>
             <td style="padding:7px 10px;">${item.hora    || ''}</td>
             <td style="padding:7px 10px;">${item.nome    || ''}</td>
-            <td style="padding:7px 10px;">${item.rg      || ''}</td>
+            <td style="padding:7px 10px;">${item.cpf      || ''}</td>
             <td style="padding:7px 10px;">${item.empresa || ''}</td>
             <td style="padding:7px 10px;">${item.cavalo  || ''}</td>
             <td style="padding:7px 10px;">${item.placa   || ''}</td>
@@ -139,12 +139,12 @@ function _paRenderizarTabela(lista) {
 function paExportarXLSX() {
     if (dadosPAGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    const cabecalho = ['Data','Hora','Nome','RG','Empresa','Cavalo','Placa','Carreta','Motivo','Acesso'];
+    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Cavalo','Placa','Carreta','Motivo','Acesso'];
     const linhas = dadosPAGlobal.map(r => [
         _formatarDataPA(r.data),
         r.hora    || '',
         r.nome    || '',
-        String(r.rg || ''),
+        String(r.cpf || ''),
         r.empresa || '',
         r.cavalo  || '',
         r.placa   || '',

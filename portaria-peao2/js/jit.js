@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pj-placa').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') pjPesquisar();
     });
-    document.getElementById('pj-rg').addEventListener('keydown', (e) => {
+    document.getElementById('pj-cpf').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') pjPesquisar();
     });
 });
@@ -21,14 +21,14 @@ async function pjSalvar() {
     const acesso = document.getElementById('pj-acesso').value;
     const dados = {
         nome:           document.getElementById('pj-nome').value.trim().toUpperCase(),
-        rg:             document.getElementById('pj-rg').value.trim(),
+        cpf:             document.getElementById('pj-cpf').value.trim(),
         transportadora: document.getElementById('pj-transp').value.trim().toUpperCase(),
         placa:          document.getElementById('pj-placa').value.trim().toUpperCase(),
         carreta:        document.getElementById('pj-carreta').value.trim().toUpperCase(),
         fcr:            document.getElementById('pj-fcr').value.trim().toUpperCase(),
         acesso:         acesso
     };
-    if (!dados.nome || !dados.rg || !dados.transportadora || !dados.placa || !dados.acesso) {
+    if (!dados.nome || !dados.cpf || !dados.transportadora || !dados.placa || !dados.acesso) {
         return notify('Preencha todos os campos obrigatórios antes de salvar.', 'aviso');
     }
     const result = await dbSalvar(TABELA_PJ, dados);
@@ -41,20 +41,20 @@ async function pjSalvar() {
     }
 }
 
-// ── 2. PESQUISAR por Placa ou RG ─────────────────────────────────────────────
+// ── 2. PESQUISAR por Placa ou CPF ─────────────────────────────────────────────
 async function pjPesquisar() {
     const placa = document.getElementById('pj-placa').value.trim().toUpperCase();
-    const rg    = document.getElementById('pj-rg').value.trim();
+    const cpf    = document.getElementById('pj-cpf').value.trim();
 
-    if (!placa && !rg) return notify('Digite a Placa ou RG para pesquisar.', 'aviso');
+    if (!placa && !cpf) return notify('Digite a Placa ou CPF para pesquisar.', 'aviso');
 
-    const filtros = placa ? { placa } : { rg };
+    const filtros = placa ? { placa } : { cpf };
     const data = await dbBuscar(TABELA_PJ, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
         const u = data[0];
         document.getElementById('pj-nome').value    = u.nome           || '';
-        document.getElementById('pj-rg').value      = u.rg             || '';
+        document.getElementById('pj-cpf').value      = u.cpf             || '';
         document.getElementById('pj-transp').value  = u.transportadora || '';
         document.getElementById('pj-placa').value   = u.placa          || '';
         document.getElementById('pj-carreta').value = u.carreta        || '';
@@ -121,7 +121,7 @@ function _pjRenderizarTabela(lista) {
             <td style="padding:7px 10px;">${_formatarDataPJ(item.data)}</td>
             <td style="padding:7px 10px;">${item.hora           || ''}</td>
             <td style="padding:7px 10px;">${item.nome           || ''}</td>
-            <td style="padding:7px 10px;">${item.rg             || ''}</td>
+            <td style="padding:7px 10px;">${item.cpf             || ''}</td>
             <td style="padding:7px 10px;">${item.transportadora || ''}</td>
             <td style="padding:7px 10px;">${item.placa          || ''}</td>
             <td style="padding:7px 10px;">${item.carreta        || ''}</td>
@@ -136,12 +136,12 @@ function _pjRenderizarTabela(lista) {
 function pjExportarXLSX() {
     if (dadosPJGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    const cabecalho = ['Data','Hora','Nome','RG','Transportadora','Placa','Carreta','FCR','Acesso'];
+    const cabecalho = ['Data','Hora','Nome','CPF','Transportadora','Placa','Carreta','FCR','Acesso'];
     const linhas = dadosPJGlobal.map(r => [
         _formatarDataPJ(r.data),
         r.hora           || '',
         r.nome           || '',
-        String(r.rg      || ''),
+        String(r.cpf      || ''),
         r.transportadora || '',
         r.placa          || '',
         r.carreta        || '',
