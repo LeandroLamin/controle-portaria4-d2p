@@ -13,15 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         cpfInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') p2Pesquisar();
         });
-
-        // Máscara CPF: 000.000.000-00
-        cpfInput.addEventListener('input', () => {
-            let v = cpfInput.value.replace(/\D/g, '').slice(0, 11);
-            if (v.length > 9)      v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
-            else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
-            else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/, '$1.$2');
-            cpfInput.value = v;
-        });
     }
 });
 

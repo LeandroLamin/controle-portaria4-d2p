@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Acesso - Peão 2</title>
+
+<!-- Proteção de sessão -->
+<script>
+(function() {
+    var auth = sessionStorage.getItem('d2p-auth');
+    if (!auth) { location.replace('/menu/index.html'); return; }
+    var niveis = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
+    if (!niveis.includes('peao2') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Peão+2'); }
+})();
+</script>
+
+<!-- Arquivos compartilhados do projeto -->
+<script src="/portaria-peao2/js/xlsx.full.min.js"></script>
+<script src="../conexao/config.js"></script>
+<script src="../conexao/crypto.js"></script>
+<script src="../conexao/db.js"></script>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --teal:#1a8a7a; --teal-dk:#136b5e; --teal-lt:#e8f5f3;
+  --yellow:#f5c518; --yellow-dk:#d4a800;
+  --red:#e03030; --red-dk:#b82020;
+  --gray-bg:#f0f2f5;
+  --border:#d0d8e0; --text:#1a2a38;
+  --label:#4a6070; --green-field:#d4f5d4;
+}
+body {
+  font-family:'Segoe UI',Arial,sans-serif; color:var(--text);
+  background:var(--gray-bg); margin:0; padding:0;
+}
+#sistema-principal { width:100%; display:none; }
+
+/* TOPBAR */
+.topbar {
+  background:var(--teal); display:flex; align-items:center;
+  justify-content:space-between; padding:0 24px; height:52px;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.topbar-logo { font-size:11px; font-weight:800; color:rgba(255,255,255,.7); letter-spacing:3px; text-transform:uppercase; }
+.topbar-titulo { font-size:16px; font-weight:700; color:#fff; letter-spacing:1px; }
+.topbar-user { font-size:12px; color:rgba(255,255,255,.85); }
+.topbar-user span { font-weight:700; color:#fff; }
+.topbar-user a { color:var(--yellow); cursor:pointer; margin-left:8px; text-decoration:none; font-weight:600; }
+.topbar-user a:hover { text-decoration:underline; }
+.divisor-top { height:3px; background:linear-gradient(to right,var(--yellow),var(--teal-lt)); }
+
+/* LAYOUT */
+.layout { display:flex; min-height:calc(100vh - 55px); }
+
+/* SIDEBAR */
+.sidebar {
+  width:130px; background:#fff; border-right:1px solid var(--border);
+  padding:20px 10px; display:flex; flex-direction:column; gap:6px;
+}
+.nav-btn {
+  background:none; border:none; border-radius:6px; padding:11px 8px;
+  font-size:12px; font-weight:700; color:var(--label); cursor:pointer;
+  text-align:center; letter-spacing:.5px; transition:all .15s;
+}
+.nav-btn:hover { background:var(--teal-lt); color:var(--teal-dk); }
+.nav-btn.active { background:var(--teal); color:#fff; box-shadow:0 2px 8px rgba(26,138,122,.3); }
+
+/* CONTENT */
+.content { flex:1; padding:28px 32px; }
+
+/* CARD */
+.card {
+  background:#fff; border-radius:10px; padding:28px 32px 32px;
+  box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border);
+  max-width:860px; margin:0 auto;
+}
+
+.tela { display:none; }
+.tela.ativa { display:block; }
+
+.sec-header {
+  font-size:13px; font-weight:700; color:var(--teal-dk);
+  letter-spacing:1.5px; text-transform:uppercase;
+  padding-bottom:10px; border-bottom:2px solid var(--yellow); margin-bottom:24px;
+}
+.grupo-titulo {
+  font-size:11px; font-weight:700; color:var(--label);
+  letter-spacing:1.5px; text-transform:uppercase; margin:20px 0 12px;
+}
+.campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
+.campo-group { display:flex; flex-direction:column; gap:4px; }
+.campo-label { font-size:11px; font-weight:600; color:var(--label); letter-spacing:.5px; text-transform:uppercase; }
+
+input[type="text"], select {
+  border:1.5px solid var(--border); border-radius:5px; padding:7px 10px;
+  font-size:13px; color:var(--text); background:#fff; outline:none;
+  transition:border .2s; height:36px;
+}
+input[type="text"]:focus, select:focus { border-color:var(--teal); }
+input.rg-field { background:var(--green-field); }
+select { cursor:pointer; }
+
+.acoes { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; align-items:center; }
+.btn-acao { padding:9px 22px; border-radius:6px; font-size:13px; font-weight:700; border:none; cursor:pointer; letter-spacing:.5px; transition:all .15s; }
+.btn-filtro    { background:#4a7080; color:#fff; } .btn-filtro:hover    { background:#385868; }
+.btn-limpar    { background:#607080; color:#fff; } .btn-limpar:hover    { background:#4a5a68; }
+.btn-pesquisar { background:var(--teal); color:#fff; } .btn-pesquisar:hover { background:var(--teal-dk); }
+.btn-salvar    { background:var(--yellow); color:#1a2535; } .btn-salvar:hover { background:var(--yellow-dk); }
+</style>
+</head>
+<body>
+
+<div id="sistema-principal">
+  <div class="topbar">
+    <div class="topbar-logo">D2P·BRAZIL</div>
+    <div class="topbar-titulo">CONTROLE DE ACESSO — PEÃO 2</div>
+    <div class="topbar-user">
+      Usuário: <span id="nome-logado">—</span>
+      <a onclick="fazerLogout()">| Sair</a>
+    </div>
+  </div>
+  <div class="divisor-top"></div>
+
+  <div class="layout">
+    <div class="sidebar">
+      <button class="nav-btn active" onclick="mudarTela('acessos',this)">ACESSOS</button>
+      <button class="nav-btn" onclick="mudarTela('jit',this)">JIT-PARANÁ</button>
+    </div>
+
+    <div class="content">
+
+      <!-- ACESSOS -->
+      <div id="tela-acessos" class="tela ativa">
+        <div class="card">
+          <div class="sec-header">Cadastro Acessos — Coleta / Entrega</div>
+          <div class="grupo-titulo">Dados Motorista</div>
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="pa-nome" style="width:230px"></div>
+            <div class="campo-group"><span class="campo-label">RG</span><input type="text" id="pa-rg" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="pa-empresa" style="width:200px"></div>
+          </div>
+          <div class="grupo-titulo">Dados Veículo / Cavalo / Carreta</div>
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Cavalo</span><input type="text" id="pa-cavalo" style="width:160px"></div>
+            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="pa-placa" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Carreta</span><input type="text" id="pa-carreta" style="width:150px"></div>
+            <div class="campo-group"><span class="campo-label">Motivo</span>
+              <select id="pa-motivo" style="width:180px">
+                <option value="">Selecione</option>
+                <option>Entrega</option>
+                <option>Coleta</option>
+                <option>Visita</option>
+                <option>Manutenção</option>
+                <option>Outros</option>
+              </select>
+            </div>
+          </div>
+          <div class="campos-linha" style="margin-top:8px;">
+            <div class="campo-group"><span class="campo-label">Acesso</span>
+              <select id="pa-acesso" style="width:160px">
+                <option value="">Selecione</option>
+                <option>ENTRADA</option>
+                <option>SAÍDA</option>
+              </select>
+            </div>
+          </div>
+          <div class="acoes">
+            <button class="btn-acao btn-filtro" onclick="paAbrirFiltro()">FILTRO</button>
+            <button class="btn-acao btn-limpar" onclick="limparCampos('tela-acessos')">LIMPAR</button>
+            <button class="btn-acao btn-pesquisar" onclick="paPesquisar()">PESQUISAR</button>
+            <button class="btn-acao btn-salvar" onclick="paSalvar()">SALVAR</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- JIT-PARANÁ -->
+      <div id="tela-jit" class="tela">
+        <div class="card">
+          <div class="sec-header">JIT — Rota Paraná</div>
+          <div class="grupo-titulo">Dados Motorista</div>
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="pj-nome" style="width:230px"></div>
+            <div class="campo-group"><span class="campo-label">RG</span><input type="text" id="pj-rg" class="rg-field" style="width:130px"></div>
+          </div>
+          <div class="grupo-titulo">Dados Veículo / Cavalo / Carreta</div>
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="pj-placa" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Carreta</span><input type="text" id="pj-carreta" style="width:150px"></div>
+            <div class="campo-group"><span class="campo-label">Transportadora</span><input type="text" id="pj-transp" style="width:200px"></div>
+          </div>
+          <div class="campos-linha" style="margin-top:8px;">
+            <div class="campo-group"><span class="campo-label">Acesso</span>
+              <select id="pj-acesso" style="width:160px">
+                <option value="">Selecione</option>
+                <option>ENTRADA</option>
+                <option>SAÍDA</option>
+              </select>
+            </div>
+          </div>
+          <div class="acoes">
+            <button class="btn-acao btn-filtro" onclick="pjAbrirFiltro()">FILTRO</button>
+            <button class="btn-acao btn-limpar" onclick="limparCampos('tela-jit')">LIMPAR</button>
+            <button class="btn-acao btn-pesquisar" onclick="pjPesquisar()">PESQUISAR</button>
+            <button class="btn-acao btn-salvar" onclick="pjSalvar()">SALVAR</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /layout -->
+</div><!-- /sistema-principal -->
+
+<!-- MODAL FILTRO ACESSOS -->
+<div id="modal-pa" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:960px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — ACESSOS</span>
+      <button onclick="paFecharFiltro()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="pa-f-inicio" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="pa-f-fim" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="pa-f-busca" style="width:200px" placeholder="Buscar por Placa..."></div>
+      <button class="btn-acao btn-pesquisar" onclick="paBuscarRelatorio()">FILTRAR</button>
+      <button class="btn-acao btn-limpar" onclick="paLimparFiltro()">LIMPAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="pa-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px;">Data</th>
+            <th style="padding:8px 10px;">Hora</th>
+            <th style="padding:8px 10px;">Nome</th>
+            <th style="padding:8px 10px;">RG</th>
+            <th style="padding:8px 10px;">Empresa</th>
+            <th style="padding:8px 10px;">Cavalo</th>
+            <th style="padding:8px 10px;">Placa</th>
+            <th style="padding:8px 10px;">Carreta</th>
+            <th style="padding:8px 10px;">Motivo</th>
+            <th style="padding:8px 10px;">Acesso</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button onclick="paExportarXLSX()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
+  </div>
+</div>
+
+<!-- MODAL FILTRO JIT -->
+<div id="modal-pj" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:860px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — JIT PARANÁ</span>
+      <button onclick="pjFecharFiltro()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="pj-f-inicio" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="pj-f-fim" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="pj-f-busca" style="width:200px" placeholder="Buscar por Placa..."></div>
+      <button class="btn-acao btn-pesquisar" onclick="pjBuscarRelatorio()">FILTRAR</button>
+      <button class="btn-acao btn-limpar" onclick="pjLimparFiltro()">LIMPAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="pj-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px;">Data</th>
+            <th style="padding:8px 10px;">Hora</th>
+            <th style="padding:8px 10px;">Nome</th>
+            <th style="padding:8px 10px;">RG</th>
+            <th style="padding:8px 10px;">Transportadora</th>
+            <th style="padding:8px 10px;">Placa</th>
+            <th style="padding:8px 10px;">Carreta</th>
+            <th style="padding:8px 10px;">Acesso</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button onclick="pjExportarXLSX()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
+  </div>
+</div>
+
+<script src="../js/ui.js"></script>
+<script src="js/acessos.js"></script>
+<script src="js/jit.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('sistema-principal').style.display = 'block';
+    document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
+    document.body.classList.add('sistema-aberto');
+});
+
+function fazerLogout() {
+  location.href = '/portarias.html';
+}
+
+function mudarTela(id, btn) {
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tela-' + id).classList.add('ativa');
+  btn.classList.add('active');
+}
+
+function limparCampos(telaId) {
+  const t = document.getElementById(telaId);
+  t.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+  t.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+}
+</script>
+</body>
+</html>

@@ -352,7 +352,7 @@ select { cursor:pointer; }
           <div class="grupo-titulo">Dados do Visitante</div>
           <div class="campos-linha">
             <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="p2-nome" style="width:230px"></div>
-            <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p2-cpf" class="rg-field" style="width:140px" placeholder="000.000.000-00" maxlength="14"></div>
+            <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p2-cpf" class="rg-field" style="width:140px"></div>
             <div class="campo-group"><span class="campo-label">Responsável</span><input type="text" id="p2-responsavel" style="width:200px"></div>
           </div>
           <div class="campos-linha">
@@ -371,11 +371,7 @@ select { cursor:pointer; }
           </div>
           <div class="campos-linha">
             <div class="campo-group"><span class="campo-label">Liberado</span>
-              <select id="p2-liberado" style="width:120px">
-                <option value="">Selecione</option>
-                <option>SIM</option>
-                <option>NÃO</option>
-              </select>
+              <input type="text" id="p2-liberado" style="width:200px">
             </div>
             <div class="campo-group"><span class="campo-label">Porteiro</span>
               <select id="p2-porteiro" style="width:180px">
