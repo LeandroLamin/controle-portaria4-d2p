@@ -11,10 +11,8 @@ let dadosFiltradosGlobal = [];
 document.addEventListener('DOMContentLoaded', () => {
     function atualizarRelogio() {
         const agora = new Date();
-        const data = agora.toLocaleDateString('pt-BR');
-        const hora = agora.toTimeString().slice(0, 8);
-        document.getElementById('p05-data-display').textContent = data;
-        document.getElementById('p05-hora-display').textContent = hora;
+        document.getElementById('p05-data-display').value = agora.toLocaleDateString('pt-BR');
+        document.getElementById('p05-hora-display').value = agora.toTimeString().slice(0, 8);
     }
     atualizarRelogio();
     setInterval(atualizarRelogio, 1000);
@@ -76,16 +74,6 @@ async function salvar() {
     } else {
         notify('Erro ao salvar no servidor.', 'erro');
     }
-}
-
-// ── 3. LIMPAR ─────────────────────────────────────────────────────────────────
-function limpar() {
-    ['p05-nome','p05-cpf','p05-empresa','p05-responsavel','p05-num-cracha','p05-vigilante','p05-obs'].forEach(id => {
-        document.getElementById(id).value = '';
-    });
-    ['p05-motivo','p05-liberado','p05-acesso'].forEach(id => {
-        document.getElementById(id).selectedIndex = 0;
-    });
 }
 
 // ── 4. BUSCAR RELATÓRIO ───────────────────────────────────────────────────────
