@@ -9,9 +9,12 @@ let dadosFiltradosGlobal = [];
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('p05-cpf').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') localizar();
-    });
+    const cpfInput = document.getElementById('p05-cpf');
+    if (cpfInput) {
+        cpfInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') localizar();
+        });
+    }
 });
 
 // ── 1. LOCALIZAR por CPF ──────────────────────────────────────────────────────
@@ -19,6 +22,7 @@ async function localizar() {
     const cpf = document.getElementById('p05-cpf').value.trim();
     if (!cpf) return notify('Digite o CPF para localizar.', 'aviso');
 
+    // Regra de Ouro: Busca o ID mais alto (último registro)
     const data = await dbBuscar(TABELA_P05, { cpf }, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
@@ -28,9 +32,12 @@ async function localizar() {
         document.getElementById('p05-responsavel').value = u.responsavel || '';
         document.getElementById('p05-num-cracha').value  = u.num_cracha  || '';
         document.getElementById('p05-vigilante').value   = u.vigilante   || '';
-        document.getElementById('p05-motivo').value      = u.motivo      || '';
-        document.getElementById('p05-liberado').value    = u.liberado    || '';
-        notify('Registro localizado!', 'sucesso');
+        
+        // CORREÇÃO: Motivo e Liberado devem iniciar como "Selecione" (vazio) para novo registro
+        document.getElementById('p05-motivo').value   = '';
+        document.getElementById('p05-liberado').value = '';
+        
+        notify('Registro localizado! Preencha os dados do acesso.', 'sucesso');
     } else {
         notify('CPF não localizado na base.', 'aviso');
     }
@@ -54,21 +61,53 @@ async function salvar() {
         hora:        agora.toTimeString().slice(0, 8)
     };
 
-    if (!dados.nome || !dados.cpf || !dados.empresa || !dados.responsavel ||
-        !dados.motivo || !dados.liberado || !dados.num_cracha || !dados.vigilante || !dados.acesso) {
-        return notify('Preencha todos os campos obrigatórios antes de salvar.', 'aviso');
+    if (!dados.nome || !dados.cpf || !dados.acesso) {
+        return notify('Nome, CPF e Acesso são obrigatórios.', 'aviso');
     }
 
     const result = await dbSalvar(TABELA_P05, dados);
     if (result && result.ok) {
         notify('Acesso registrado com sucesso!', 'sucesso');
-        limpar();
+        p05Limpar(); // Chama a função padronizada
     } else {
         notify('Erro ao salvar no servidor.', 'erro');
     }
 }
 
-// ── 4. BUSCAR RELATÓRIO ───────────────────────────────────────────────────────
+// ── 3. LIMPAR TELA ────────────────────────────────────────────────────────────
+function p05Limpar() {
+    const campos = [
+        'p05-nome','p05-cpf','p05-empresa','p05-responsavel',
+        'p05-num-cracha','p05-vigilante','p05-obs','p05-motivo',
+        'p05-liberado','p05-acesso'
+    ];
+    campos.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+}
+
+// ── 4. RELATÓRIO — CONTROLES ──────────────────────────────────────────────────
+function p05AbrirRelatorio() {
+    document.getElementById('modal-p05').style.display = 'block';
+    const hoje = new Date().toLocaleDateString('en-CA');
+    if (!document.getElementById('filtro-inicio').value) document.getElementById('filtro-inicio').value = hoje;
+    if (!document.getElementById('filtro-fim').value) document.getElementById('filtro-fim').value = hoje;
+}
+
+function p05FecharRelatorio() {
+    p05LimparFiltro();
+    document.getElementById('modal-p05').style.display = 'none';
+}
+
+function p05LimparFiltro() {
+    document.getElementById('filtro-inicio').value = '';
+    document.getElementById('filtro-fim').value = '';
+    document.getElementById('filtro-nome').value = '';
+    document.querySelector('#tabela-resultados tbody').innerHTML = '';
+    dadosFiltradosGlobal = [];
+}
+
 async function buscarRelatorio() {
     const inicio = document.getElementById('filtro-inicio').value;
     const fim    = document.getElementById('filtro-fim').value;
@@ -81,10 +120,10 @@ async function buscarRelatorio() {
         filtros[/^\d+$/.test(busca) ? 'cpf' : 'nome_like'] = busca;
     }
 
-    const data = await dbBuscar(TABELA_P05, filtros);
-    if (data === null) return;
-
-    if (data.length > 0) {
+    // Regra: Sempre ordenar pelo ID decrescente para ver os mais novos primeiro
+    const data = await dbBuscar(TABELA_P05, filtros, { order: 'id.desc' });
+    
+    if (data && data.length > 0) {
         dadosFiltradosGlobal = data;
         renderizarTabela(data);
     } else {
@@ -104,20 +143,16 @@ function renderizarTabela(lista) {
     const tbody = document.querySelector('#tabela-resultados tbody');
     tbody.innerHTML = '';
     lista.forEach(item => {
-        tbody.innerHTML += `<tr>
-            <td>${_formatarData(item.data)}</td>
-            <td>${item.hora        || ''}</td>
-            <td>${item.cpf         || ''}</td>
-            <td>${item.nome        || ''}</td>
-            <td>${item.empresa     || ''}</td>
-            <td>${item.responsavel || ''}</td>
-            <td>${item.motivo      || ''}</td>
-            <td>${item.liberado    || ''}</td>
-            <td>${item.num_cracha  || ''}</td>
-            <td>${item.vigilante   || ''}</td>
-            <td>${item.obs         || ''}</td>
-            <td style="font-weight:700;">${item.acesso || ''}</td>
-        </tr>`;
+        tbody.innerHTML += `
+            <tr>
+                <td style="padding:7px; border-bottom:1px solid #eee;">${_formatarData(item.data)}</td>
+                <td style="padding:7px; border-bottom:1px solid #eee;">${item.hora.slice(0,5)}</td>
+                <td style="padding:7px; border-bottom:1px solid #eee;">${item.cpf}</td>
+                <td style="padding:7px; border-bottom:1px solid #eee;">${item.nome}</td>
+                <td style="padding:7px; border-bottom:1px solid #eee;">${item.empresa}</td>
+                <td style="padding:7px; border-bottom:1px solid #eee;">${item.motivo}</td>
+                <td style="padding:7px; border-bottom:1px solid #eee; font-weight:700;">${item.acesso}</td>
+            </tr>`;
     });
 }
 
@@ -131,6 +166,6 @@ function exportarExcel() {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'relatorio_p05.csv';
+    link.download = `relatorio_p05_${new Date().getTime()}.csv`;
     link.click();
 }
