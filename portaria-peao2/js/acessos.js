@@ -96,6 +96,8 @@ async function paBuscarRelatorio() {
     if (busca) filtros.placa_like = busca;
 
     const data = await dbBuscar(TABELA_PA, filtros);
+    console.log('[peao2-acessos] filtros:', filtros);
+    console.log('[peao2-acessos] resposta:', data);
     if (data === null) return;
 
     if (data.length > 0) {
