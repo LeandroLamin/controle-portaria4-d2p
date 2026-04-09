@@ -99,6 +99,8 @@ async function paBuscarRelatorio() {
     if (busca) filtros.placa_like = busca;
 
     const data = await dbBuscar(TABELA_PA, filtros);
+    console.log('[PA] filtros enviados:', JSON.stringify(filtros));
+    console.log('[PA] resposta n8n:', JSON.stringify(data));
     if (data === null) return;
 
     if (data.length > 0) {
