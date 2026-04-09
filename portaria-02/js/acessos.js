@@ -64,6 +64,38 @@ async function acsPesquisar() {
     } else {
         notify('Nenhum registro encontrado.', 'aviso');
     }
+
+    // ── Verifica passagem pelo Peão 2 ────────────────────────────────────────
+    const cpfBusca = document.getElementById('acs-cpf').value.trim();
+    const statusEl = document.getElementById('acs-peao2-status');
+    if (cpfBusca) {
+        const hoje = new Date().toLocaleDateString('en-CA');
+        const peao2 = await dbBuscar('portaria-peao2-acessos', { cpf: cpfBusca, data_gte: hoje, data_lte: hoje }, { order: 'id.desc', limit: 1 });
+        if (peao2 && peao2.length > 0) {
+            const ultimo = peao2[0];
+            if (ultimo.acesso === 'ENTRADA') {
+                statusEl.style.display = 'block';
+                statusEl.style.background = '#d4edda';
+                statusEl.style.color = '#155724';
+                statusEl.style.border = '1.5px solid #28a745';
+                statusEl.textContent = `✓ PASSOU PELO PEÃO 2 — ENTRADA às ${ultimo.hora.slice(0, 5)}`;
+            } else {
+                statusEl.style.display = 'block';
+                statusEl.style.background = '#fff3cd';
+                statusEl.style.color = '#856404';
+                statusEl.style.border = '1.5px solid #ffc107';
+                statusEl.textContent = `⚠ ÚLTIMO REGISTRO NO PEÃO 2: SAÍDA às ${ultimo.hora.slice(0, 5)}`;
+            }
+        } else {
+            statusEl.style.display = 'block';
+            statusEl.style.background = '#f8d7da';
+            statusEl.style.color = '#721c24';
+            statusEl.style.border = '1.5px solid #dc3545';
+            statusEl.textContent = '✗ SEM REGISTRO NO PEÃO 2 HOJE';
+        }
+    } else {
+        statusEl.style.display = 'none';
+    }
 }
 
 // ── 3. FILTRO / RELATÓRIO ─────────────────────────────────────────────────────
