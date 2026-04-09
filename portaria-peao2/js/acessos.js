@@ -147,7 +147,7 @@ function _paRenderizarTabela(lista) {
 function paExportarXLSX() {
     if (dadosPAGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Cavalo','Placa','Carreta','Motivo','Acesso'];
+    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Veículo','Placa','Carreta','Motivo','Acesso'];
     const linhas = dadosPAGlobal.map(r => [
         _formatarDataPA(r.data),
         r.hora    || '',
