@@ -23,14 +23,15 @@ async function acsRegistrar(acesso) {
         nome:    document.getElementById('acs-nome').value.trim().toUpperCase(),
         cpf:     document.getElementById('acs-cpf').value.trim(),
         empresa: document.getElementById('acs-empresa').value.trim().toUpperCase(),
-        veiculo: document.getElementById('acs-veiculo').value.trim().toUpperCase(),
         placa:   document.getElementById('acs-placa').value.trim().toUpperCase(),
+        veiculo: document.getElementById('acs-veiculo').value.trim().toUpperCase(),
+        carreta: document.getElementById('acs-carreta').value.trim().toUpperCase(),
         motivo:  document.getElementById('acs-motivo').value,
         acesso:  acesso,
         data:    agora.toLocaleDateString('en-CA'),
         hora:    agora.toTimeString().slice(0, 8)
     };
-    if (!dados.nome || !dados.cpf || !dados.empresa || !dados.veiculo || !dados.placa || !dados.motivo) {
+    if (!dados.nome || !dados.cpf || !dados.empresa || !dados.placa || !dados.motivo) {
         return notify('Preencha todos os campos antes de salvar.', 'aviso');
     }
     const result = await dbSalvar(TABELA_ACS, dados);
@@ -70,8 +71,9 @@ async function acsPesquisar() {
         document.getElementById('acs-nome').value    = u.nome    || '';
         document.getElementById('acs-cpf').value     = u.cpf     || '';
         document.getElementById('acs-empresa').value = u.empresa || '';
-        document.getElementById('acs-veiculo').value = u.veiculo || '';
         document.getElementById('acs-placa').value   = u.placa   || '';
+        document.getElementById('acs-veiculo').value = u.veiculo || '';
+        document.getElementById('acs-carreta').value = u.carreta || '';
         document.getElementById('acs-motivo').value  = u.motivo  || '';
         notify('Registro localizado!', 'sucesso');
     } else {
@@ -169,8 +171,9 @@ function _acsRenderizarTabela(lista) {
             <td style="padding:7px 10px;">${item.nome    || ''}</td>
             <td style="padding:7px 10px;">${item.cpf     || ''}</td>
             <td style="padding:7px 10px;">${item.empresa || ''}</td>
-            <td style="padding:7px 10px;">${item.veiculo || ''}</td>
             <td style="padding:7px 10px;">${item.placa   || ''}</td>
+            <td style="padding:7px 10px;">${item.veiculo || ''}</td>
+            <td style="padding:7px 10px;">${item.carreta || ''}</td>
             <td style="padding:7px 10px;">${item.motivo  || ''}</td>
             <td style="padding:7px 10px; font-weight:700;">${item.acesso || ''}</td>
         `;
@@ -182,15 +185,16 @@ function _acsRenderizarTabela(lista) {
 function acsExportarXLSX() {
     if (dadosAcsGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Veículo','Placa','Motivo','Acesso'];
+    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Placa - Veículo','Carreta 1','Carreta 2','Motivo','Acesso'];
     const linhas = dadosAcsGlobal.map(r => [
         _formatarData(r.data),
         r.hora    || '',
         r.nome    || '',
         String(r.cpf     || ''),
         r.empresa || '',
-        r.veiculo || '',
         r.placa   || '',
+        r.veiculo || '',
+        r.carreta || '',
         r.motivo  || '',
         r.acesso  || ''
     ]);
