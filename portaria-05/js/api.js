@@ -59,7 +59,7 @@ async function salvar() {
     };
 
     if (!dados.nome || !dados.cpf || !dados.acesso || !dados.motivo) {
-        return notify('Campos Nome, CPF, Motivo e Acesso são obrigatórios.', 'aviso');
+        return notify('Preencha todos os campos obrigatórios antes de salvar.', 'aviso');
     }
 
     const result = await dbSalvar(TABELA_P05, dados);
