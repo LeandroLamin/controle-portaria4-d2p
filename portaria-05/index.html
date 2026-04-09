@@ -1,133 +1,141 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" class="notranslate">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portaria 05 - CVU</title>
+    <meta name="google" content="notranslate">
+    <title>Controle de Acesso - Portaria 05 CVU</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+    (function() {
+        var auth = sessionStorage.getItem('d2p-auth');
+        if (!auth) { location.replace('/menu/index.html'); return; }
+        var niveis = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
+        if (!niveis.includes('p05') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Portaria+05'); }
+    })();
+    </script>
 </head>
 <body>
 
-    <div class="topbar">
-        <div class="topbar-titulo">CONTROLE DE ACESSO — PORTARIA 05 CVU</div>
-        <div class="topbar-user">
-            Usuário: <span id="nome-logado"></span>
-            <a href="#" onclick="sessionStorage.clear(); location.href='/menu/index.html';">SAIR</a>
-        </div>
-    </div>
+    <div id="sistema-principal" style="display:none;">
+        <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="fazerLogout()">Sair</a></div>
 
-    <div class="container">
-        <div class="card">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>CPF (Apenas números)</label>
-                    <input type="text" id="p05-cpf" placeholder="000.000.000-00">
-                </div>
-                <div class="form-group btn-align">
-                    <button class="btn-buscar" onclick="localizar()">BUSCAR CADASTRO</button>
-                </div>
+        <div class="container-corporativo">
+            <div style="position:relative; display:flex; align-items:center; justify-content:center; margin-bottom:25px; border-bottom:2px solid #f1c40f; padding-bottom:15px; min-height:50px;">
+                <h1 style="margin:0; color:#2c3e50; font-size:24px; text-transform:uppercase;">CONTROLE DE ACESSO — PORTARIA 05 CVU</h1>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="p05-nome">
+            <div class="grid">
+                <div class="campo" style="grid-column:span 2;"><label>NOME:</label><input type="text" id="p05-nome"></div>
+                <div class="campo">
+                    <label>CPF:</label>
+                    <input type="text" id="p05-cpf" style="background:#e8f5e9; border:1px solid #27ae60;" placeholder="Digite e aperte Enter">
                 </div>
-                <div class="form-group">
-                    <label>Empresa</label>
-                    <input type="text" id="p05-empresa">
-                </div>
-            </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Responsável / Destino</label>
-                    <input type="text" id="p05-responsavel">
-                </div>
-                <div class="form-group">
-                    <label>Motivo do Acesso</label>
+                <div class="campo"><label>EMPRESA:</label><input type="text" id="p05-empresa"></div>
+                <div class="campo"><label>RESPONSÁVEL:</label><input type="text" id="p05-responsavel"></div>
+                
+                <div class="campo">
+                    <label>MOTIVO:</label>
                     <select id="p05-motivo">
-                        <option value="">Selecione...</option>
-                        <option value="PRESTADOR">PRESTADOR</option>
-                        <option value="VISITANTE">VISITANTE</option>
-                        <option value="ENTREGA">ENTREGA</option>
-                        <option value="OUTROS">OUTROS</option>
+                        <option value="">SELECIONE</option>
+                        <option>Esqueceu crachá</option>
+                        <option>Transbordo</option>
+                        <option>Crachá vencido</option>
+                        <option>Visita técnica</option>
+                        <option>Reunião</option>
+                        <option>Banco Santander</option>
+                        <option>Perícia Trabalhista</option>
+                        <option>Primeiro dia de trabalho</option>
+                        <option>Não acessou</option>
+                        <option>Pendência SG3</option>
+                        <option>Outros</option>
                     </select>
                 </div>
-            </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Liberado por</label>
+                <div class="campo">
+                    <label>LIBERADO:</label>
                     <select id="p05-liberado">
-                        <option value="">Selecione...</option>
-                        <option value="MONITORAMENTO">MONITORAMENTO</option>
-                        <option value="ADM">ADM</option>
-                        <option value="RH">RH</option>
-                        <option value="DIRETORIA">DIRETORIA</option>
+                        <option value="">SELECIONE</option>
+                        <option>Segurança Patrimonial</option>
+                        <option>Acessos/CAS</option>
+                        <option>Identificação</option>
+                        <option>Central de Segurança</option>
+                        <option>E-mail</option>
+                        <option>GDV</option>
+                        <option>Não acessou</option>
+                        <option>Outros</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Nº Crachá</label>
-                    <input type="text" id="p05-num-cracha">
-                </div>
-            </div>
+                
+                <div class="campo"><label>Nº CRACHÁ:</label><input type="text" id="p05-num-cracha"></div>
+                <div class="campo"><label>VIGILANTE/PORTEIRO:</label><input type="text" id="p05-vigilante"></div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Vigilante de Turno</label>
-                    <input type="text" id="p05-vigilante">
-                </div>
-                <div class="form-group">
-                    <label>Tipo de Acesso</label>
-                    <select id="p05-acesso" style="font-weight: bold; color: #d32f2f;">
-                        <option value="">Selecione...</option>
-                        <option value="ENTRADA">ENTRADA</option>
-                        <option value="SAÍDA">SAÍDA</option>
+                <div class="campo" style="grid-column:span 3;"><label>OBSERVAÇÃO:</label><input type="text" id="p05-obs" placeholder="Detalhes importantes do acesso..."></div>
+
+                <div class="campo">
+                    <label>ACESSO:</label>
+                    <select id="p05-acesso">
+                        <option value="">SELECIONE</option>
+                        <option>ENTRADA</option>
+                        <option>SAÍDA</option>
                     </select>
                 </div>
+                <div class="campo">
+                    <label>DATA</label>
+                    <input type="text" id="p05-data-display" readonly style="background:#f0f4f8; font-weight:700; color:#1a3c5e;">
+                </div>
+                <div class="campo">
+                    <label>HORA</label>
+                    <input type="text" id="p05-hora-display" readonly style="background:#f0f4f8; font-weight:700; color:#1a3c5e;">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Observações</label>
-                <textarea id="p05-obs" rows="2"></textarea>
-            </div>
-
-            <div class="form-buttons">
-                <button class="btn-salvar" onclick="salvar()">SALVAR ACESSO</button>
-                <button class="btn-relatorio" onclick="p05AbrirRelatorio()">RELATÓRIO</button>
+            <div class="botoes">
+                <button class="btn-limpar"    onclick="p05Limpar()">LIMPAR TELA</button>
+                <button class="btn-relatorio" onclick="p05AbrirRelatorio()">RELATÓRIO / BUSCA</button>
+                <button class="btn-localizar" onclick="localizar()">LOCALIZAR</button>
+                <button class="btn-salvar"    onclick="salvar()">SALVAR ACESSO</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-p05" class="modal">
+    <div id="modal-busca" class="modal" style="display:none;">
         <div class="modal-content">
-            <span class="close" onclick="p05FecharRelatorio()">&times;</span>
-            <h3>Relatório de Acessos - P05</h3>
-            
-            <div class="filtro-row">
-                <input type="date" id="filtro-inicio">
-                <input type="date" id="filtro-fim">
-                <input type="text" id="filtro-nome" placeholder="Buscar por Nome ou CPF">
-                <button onclick="buscarRelatorio()">BUSCAR</button>
-                <button class="btn-excel" onclick="exportarExcel()">EXCEL</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="color:#34495e; margin:0;">Busca e Relatório — Portaria 05</h2>
+                <button class="btn-fechar" onclick="p05FecharRelatorio()">X FECHAR</button>
             </div>
-
+            <div class="filtro-linha">
+                <div class="filtro-item" style="width:200px;">
+                    <label>DATA INICIAL:</label>
+                    <input type="date" id="filtro-inicio">
+                </div>
+                <div class="filtro-item" style="width:200px;">
+                    <label>DATA FINAL:</label>
+                    <input type="date" id="filtro-fim">
+                </div>
+                <div class="filtro-item" style="width:350px;">
+                    <label>NOME / CPF:</label>
+                    <input type="text" id="filtro-nome">
+                </div>
+                <div class="botoes-filtro-modal">
+                    <button class="btn-relatorio-modal" onclick="buscarRelatorio()">FILTRAR</button>
+                    <button class="btn-limpar-modal"    onclick="p05LimparFiltro()">LIMPAR</button>
+                </div>
+            </div>
             <div class="tabela-container">
                 <table id="tabela-resultados">
                     <thead>
                         <tr>
-                            <th>Data</th>
-                            <th>Hora</th>
-                            <th>Nome</th>
-                            <th>Empresa</th>
-                            <th>Motivo</th>
-                            <th>Acesso</th>
+                            <th>Data</th><th>Hora</th><th>CPF</th><th>Nome</th><th>Empresa</th>
+                            <th>Responsável</th><th>Motivo</th><th>Liberado</th>
+                            <th>Nº Crachá</th><th>Vigilante</th><th>OBS</th><th>Acesso</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
+            <button class="btn-exportar" onclick="exportarExcel()">GERAR EXCEL (.CSV)</button>
         </div>
     </div>
 
@@ -136,9 +144,17 @@
     <script src="../conexao/db.js?v=2"></script>
     <script src="../js/ui.js?v=2"></script>
     <script src="js/api.js?v=5"></script>
-    
     <script>
-        document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth') || 'Usuário';
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('sistema-principal').style.display = 'block';
+            document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
+            
+            // Atualiza Data/Hora no display
+            const agora = new Date();
+            document.getElementById('p05-data-display').value = agora.toLocaleDateString('pt-BR');
+            document.getElementById('p05-hora-display').value = agora.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+        });
+        function fazerLogout() { sessionStorage.clear(); location.href = '/menu/index.html'; }
     </script>
 </body>
 </html>
