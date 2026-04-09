@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function acsRegistrar(acesso) {
+    const agora  = new Date();
     const dados = {
         nome:    document.getElementById('acs-nome').value.trim().toUpperCase(),
         cpf:     document.getElementById('acs-cpf').value.trim(),
@@ -25,7 +26,9 @@ async function acsRegistrar(acesso) {
         veiculo: document.getElementById('acs-veiculo').value.trim().toUpperCase(),
         placa:   document.getElementById('acs-placa').value.trim().toUpperCase(),
         motivo:  document.getElementById('acs-motivo').value,
-        acesso:  acesso
+        acesso:  acesso,
+        data:    agora.toLocaleDateString('en-CA'),
+        hora:    agora.toTimeString().slice(0, 8)
     };
     if (!dados.nome || !dados.cpf || !dados.empresa || !dados.veiculo || !dados.placa || !dados.motivo) {
         return notify('Preencha todos os campos antes de salvar.', 'aviso');

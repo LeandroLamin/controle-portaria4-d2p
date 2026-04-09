@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function jitRegistrar(acesso) {
+    const agora  = new Date();
     const dados = {
         nome:           document.getElementById('jit-nome').value.trim().toUpperCase(),
         cpf:            document.getElementById('jit-cpf').value.trim(),
@@ -25,7 +26,9 @@ async function jitRegistrar(acesso) {
         placa:          document.getElementById('jit-placa').value.trim().toUpperCase(),
         carreta:        document.getElementById('jit-carreta').value.trim().toUpperCase(),
         transportadora: document.getElementById('jit-transportadora').value.trim().toUpperCase(),
-        acesso:         acesso
+        acesso:         acesso,
+        data:           agora.toLocaleDateString('en-CA'),
+        hora:           agora.toTimeString().slice(0, 8)
     };
     if (!dados.nome || !dados.cpf || !dados.empresa || !dados.placa || !dados.carreta || !dados.transportadora) {
         return notify('Preencha todos os campos antes de salvar.', 'aviso');

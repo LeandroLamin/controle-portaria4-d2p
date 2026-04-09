@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function p2Registrar(acesso) {
+    const agora  = new Date();
     const dados = {
         nome:        document.getElementById('p2-nome').value.trim().toUpperCase(),
         cpf:         document.getElementById('p2-cpf').value.trim(),
@@ -28,7 +29,9 @@ async function p2Registrar(acesso) {
         liberado:    document.getElementById('p2-liberado').value,
         porteiro:    document.getElementById('p2-porteiro').value,
         observacao:  document.getElementById('p2-obs').value.trim(),
-        acesso:      acesso
+        acesso:      acesso,
+        data:        agora.toLocaleDateString('en-CA'),
+        hora:        agora.toTimeString().slice(0, 8)
     };
     if (!dados.nome || !dados.cpf || !dados.responsavel || !dados.empresa || !dados.motivo || !dados.liberado || !dados.porteiro) {
         return notify('Preencha todos os campos obrigatórios antes de salvar.', 'aviso');

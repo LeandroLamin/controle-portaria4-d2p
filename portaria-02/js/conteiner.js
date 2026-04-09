@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function cntRegistrar(acesso) {
+    const agora  = new Date();
     const dados = {
         cpf: document.getElementById('cnt-cpf').value.replace(/\D/g, ''),
         nome: document.getElementById('cnt-nome').value.trim().toUpperCase(),
@@ -29,7 +30,9 @@ async function cntRegistrar(acesso) {
         lacre1: document.getElementById('cnt-lacre1').value.trim().toUpperCase(),
         conteiner2: document.getElementById('cnt-conteiner2').value.trim().toUpperCase(),
         lacre2: document.getElementById('cnt-lacre2').value.trim().toUpperCase(),
-        acesso: acesso
+        acesso: acesso,
+        data:   agora.toLocaleDateString('en-CA'),
+        hora:   agora.toTimeString().slice(0, 8)
     };
     if (!dados.cpf || !dados.nome || !dados.transportadora || !dados.placa ||
         !dados.carreta1 || !dados.carreta2 || !dados.conteiner1 || !dados.lacre1 ||

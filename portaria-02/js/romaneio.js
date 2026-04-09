@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function romRegistrar(acesso) {
+    const agora  = new Date();
     const dados = {
         nome:      document.getElementById('rom-nome').value.trim().toUpperCase(),
         cpf:       document.getElementById('rom-cpf').value.trim(),
@@ -32,7 +33,9 @@ async function romRegistrar(acesso) {
         serie5:    document.getElementById('rom-serie5').value.trim().toUpperCase(),
         serie6:    document.getElementById('rom-serie6').value.trim().toUpperCase(),
         observacao: document.getElementById('rom-obs').value.trim(),
-        acesso:    acesso
+        acesso:    acesso,
+        data:      agora.toLocaleDateString('en-CA'),
+        hora:      agora.toTimeString().slice(0, 8)
     };
     if (!dados.nome || !dados.cpf || !dados.empresa || !dados.placa ||
         !dados.carreta1 || !dados.carreta2 || !dados.serie1 || !dados.serie2 ||
