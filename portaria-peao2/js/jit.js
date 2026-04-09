@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── 1. SALVAR ────────────────────────────────────────────────────────────────
 async function pjSalvar() {
     const acesso = document.getElementById('pj-acesso').value;
-    const agora  = new Date();
     const dados = {
         nome:           document.getElementById('pj-nome').value.trim().toUpperCase(),
         cpf:             document.getElementById('pj-cpf').value.trim(),
@@ -27,9 +26,7 @@ async function pjSalvar() {
         placa:          document.getElementById('pj-placa').value.trim().toUpperCase(),
         carreta:        document.getElementById('pj-carreta').value.trim().toUpperCase(),
         fcr:            document.getElementById('pj-fcr').value.trim().toUpperCase(),
-        acesso:         acesso,
-        data:           agora.toISOString().split('T')[0],
-        hora:           agora.toTimeString().split(' ')[0]
+        acesso:         acesso
     };
     if (!dados.nome || !dados.cpf || !dados.transportadora || !dados.placa || !dados.acesso) {
         return notify('Preencha todos os campos obrigatórios antes de salvar.', 'aviso');

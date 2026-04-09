@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── 1. SALVAR ────────────────────────────────────────────────────────────────
 async function paSalvar() {
     const acesso = document.getElementById('pa-acesso').value;
-    const agora  = new Date();
     const dados = {
         nome:    document.getElementById('pa-nome').value.trim().toUpperCase(),
         cpf:      document.getElementById('pa-cpf').value.trim(),
@@ -28,9 +27,7 @@ async function paSalvar() {
         placa:   document.getElementById('pa-placa').value.trim().toUpperCase(),
         carreta: document.getElementById('pa-carreta').value.trim().toUpperCase(),
         motivo:  document.getElementById('pa-motivo').value,
-        acesso:  acesso,
-        data:    agora.toISOString().split('T')[0],
-        hora:    agora.toTimeString().split(' ')[0]
+        acesso:  acesso
     };
     if (!dados.nome || !dados.cpf || !dados.empresa || !dados.placa || !dados.motivo || !dados.acesso) {
         return notify('Preencha todos os campos obrigatórios antes de salvar.', 'aviso');
