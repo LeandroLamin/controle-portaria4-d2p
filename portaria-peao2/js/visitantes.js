@@ -72,6 +72,9 @@ async function pvPesquisar() {
 // ── 3. FILTRO / RELATÓRIO ─────────────────────────────────────────────────────
 function pvAbrirFiltro() {
     document.getElementById('modal-pv').style.display = 'block';
+    const hoje = new Date().toLocaleDateString('en-CA');
+    if (!document.getElementById('pv-f-inicio').value) document.getElementById('pv-f-inicio').value = hoje;
+    if (!document.getElementById('pv-f-fim').value)    document.getElementById('pv-f-fim').value    = hoje;
 }
 
 function pvFecharFiltro() {

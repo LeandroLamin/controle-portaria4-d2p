@@ -71,6 +71,9 @@ async function pjPesquisar() {
 // ── 3. FILTRO / RELATÓRIO ─────────────────────────────────────────────────────
 function pjAbrirFiltro() {
     document.getElementById('modal-pj').style.display = 'block';
+    const hoje = new Date().toLocaleDateString('en-CA');
+    if (!document.getElementById('pj-f-inicio').value) document.getElementById('pj-f-inicio').value = hoje;
+    if (!document.getElementById('pj-f-fim').value)    document.getElementById('pj-f-fim').value    = hoje;
 }
 
 function pjFecharFiltro() {

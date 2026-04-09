@@ -73,6 +73,9 @@ async function paPesquisar() {
 // ── 3. FILTRO / RELATÓRIO ─────────────────────────────────────────────────────
 function paAbrirFiltro() {
     document.getElementById('modal-pa').style.display = 'block';
+    const hoje = new Date().toLocaleDateString('en-CA');
+    if (!document.getElementById('pa-f-inicio').value) document.getElementById('pa-f-inicio').value = hoje;
+    if (!document.getElementById('pa-f-fim').value)    document.getElementById('pa-f-fim').value    = hoje;
 }
 
 function paFecharFiltro() {
