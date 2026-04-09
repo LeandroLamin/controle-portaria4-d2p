@@ -57,8 +57,13 @@ function limparFiltrosBusca() {
     dadosFiltradosGlobal = [];
 }
 
-function abrirBusca() { 
-    document.getElementById('modal-busca').style.display = 'block'; 
+function abrirBusca() {
+    document.getElementById('modal-busca').style.display = 'block';
+    const hoje = new Date().toLocaleDateString('en-CA');
+    const inicio = document.getElementById('filtro-inicio');
+    const fim    = document.getElementById('filtro-fim');
+    if (!inicio.value) inicio.value = hoje;
+    if (!fim.value)    fim.value    = hoje;
 }
 
 function fecharBusca() { 
