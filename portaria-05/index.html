@@ -13,7 +13,6 @@
         })();
     </script>
     <style>
-        /* Mantenha seu CSS original aqui (aquele do Teal/Verde Água) */
         * { margin:0; padding:0; box-sizing:border-box; }
         :root { --teal:#1a8a7a; --teal-dk:#136b5e; --teal-lt:#e8f5f3; --yellow:#f5c518; --yellow-dk:#d4a800; --red:#e03030; --red-dk:#b82020; --gray-bg:#f0f2f5; --border:#d0d8e0; --text:#1a2a38; --label:#4a6070; --green-field:#d4f5d4; }
         body { font-family:'Segoe UI',Arial,sans-serif; color:var(--text); background:var(--gray-bg); }
@@ -157,14 +156,15 @@
         <tbody></tbody>
       </table>
     </div>
-    <button onclick="exportarExcel()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
+    <button onclick="exportarExcel()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/xlsx.full.min.js"></script>
 <script src="../conexao/config.js?v=2"></script>
 <script src="../conexao/db.js?v=2"></script>
-<script src="../js/ui.js?v=2"></script> <script src="js/api.js?v=5"></script>
+<script src="../js/ui.js?v=2"></script>
+<script src="js/api.js?v=5"></script>
 <script>
   document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
 </script>

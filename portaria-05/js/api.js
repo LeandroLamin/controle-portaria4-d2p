@@ -22,7 +22,6 @@ async function localizar() {
     const cpf = document.getElementById('p05-cpf').value.trim();
     if (!cpf) return notify('Digite o CPF para localizar.', 'aviso');
 
-    // Busca o último registro desse CPF (ID mais alto)
     const data = await dbBuscar(TABELA_P05, { cpf }, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
@@ -32,11 +31,9 @@ async function localizar() {
         document.getElementById('p05-responsavel').value = u.responsavel || '';
         document.getElementById('p05-num-cracha').value  = u.num_cracha  || '';
         document.getElementById('p05-vigilante').value   = u.vigilante   || '';
-        
         // Mantém "Selecione" vazio para obrigar preenchimento do novo acesso
         document.getElementById('p05-motivo').value   = '';
         document.getElementById('p05-liberado').value = '';
-        
         notify('Cadastro localizado! Preencha Motivo e Acesso.', 'sucesso');
     } else {
         notify('CPF não localizado na base.', 'aviso');
@@ -57,7 +54,7 @@ async function salvar() {
         vigilante:   document.getElementById('p05-vigilante').value.trim().toUpperCase(),
         obs:         document.getElementById('p05-obs').value.trim().toUpperCase(),
         acesso:      document.getElementById('p05-acesso').value,
-        data:        agora.toLocaleDateString('en-CA'), // Formato YYYY-MM-DD
+        data:        agora.toLocaleDateString('en-CA'),
         hora:        agora.toTimeString().slice(0, 8)
     };
 
@@ -88,20 +85,23 @@ function p05AbrirRelatorio() {
     document.getElementById('modal-p05').style.display = 'block';
     const hoje = new Date().toLocaleDateString('en-CA');
     document.getElementById('filtro-inicio').value = hoje;
-    document.getElementById('filtro-fim').value = hoje;
+    document.getElementById('filtro-fim').value    = hoje;
 }
 
 function p05FecharRelatorio() {
+    p05LimparFiltro();
     document.getElementById('modal-p05').style.display = 'none';
 }
 
 function p05LimparFiltro() {
     document.getElementById('filtro-inicio').value = '';
-    document.getElementById('filtro-fim').value = '';
-    document.getElementById('filtro-nome').value = '';
+    document.getElementById('filtro-fim').value    = '';
+    document.getElementById('filtro-nome').value   = '';
     document.querySelector('#tabela-resultados tbody').innerHTML = '';
+    dadosFiltradosGlobal = [];
 }
 
+// ── 5. BUSCAR RELATÓRIO ───────────────────────────────────────────────────────
 async function buscarRelatorio() {
     const inicio = document.getElementById('filtro-inicio').value;
     const fim    = document.getElementById('filtro-fim').value;
@@ -115,8 +115,9 @@ async function buscarRelatorio() {
     }
 
     const data = await dbBuscar(TABELA_P05, filtros, { order: 'id.desc' });
-    
-    if (data && data.length > 0) {
+    if (data === null) return;
+
+    if (data.length > 0) {
         dadosFiltradosGlobal = data;
         renderizarTabela(data);
     } else {
@@ -125,46 +126,65 @@ async function buscarRelatorio() {
     }
 }
 
-// ── 5. RENDERIZAR TABELA (CORREÇÃO DE DADOS FALTANTES) ───────────────────────
+// ── 6. RENDERIZAR TABELA ──────────────────────────────────────────────────────
+function _formatarData(data) {
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('-');
+    return `${dia}/${mes}/${ano}`;
+}
+
 function renderizarTabela(lista) {
     const tbody = document.querySelector('#tabela-resultados tbody');
     tbody.innerHTML = '';
-    
     lista.forEach(item => {
-        // Formata a data de YYYY-MM-DD para DD/MM/YYYY
-        const dataFormatada = item.data ? item.data.split('-').reverse().join('/') : '';
-        const horaFormatada = item.hora ? item.hora.slice(0, 5) : '';
-
-        tbody.innerHTML += `
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding:8px;">${dataFormatada}</td>
-                <td style="padding:8px;">${horaFormatada}</td>
-                <td style="padding:8px;">${item.cpf || ''}</td>
-                <td style="padding:8px;">${item.nome || ''}</td>
-                <td style="padding:8px;">${item.empresa || ''}</td>
-                <td style="padding:8px;">${item.responsavel || ''}</td>
-                <td style="padding:8px;">${item.motivo || ''}</td>
-                <td style="padding:8px;">${item.liberado || ''}</td>
-                <td style="padding:8px;">${item.num_cracha || ''}</td>
-                <td style="padding:8px;">${item.vigilante || ''}</td>
-                <td style="padding:8px;">${item.obs || ''}</td>
-                <td style="padding:8px; font-weight:700; color:${item.acesso === 'ENTRADA' ? '#27ae60' : '#e03030'};">
-                    ${item.acesso || ''}
-                </td>
-            </tr>`;
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #e8ecf0';
+        tr.innerHTML = `
+            <td style="padding:7px 10px;">${_formatarData(item.data)}</td>
+            <td style="padding:7px 10px;">${item.hora        || ''}</td>
+            <td style="padding:7px 10px;">${item.cpf         || ''}</td>
+            <td style="padding:7px 10px;">${item.nome        || ''}</td>
+            <td style="padding:7px 10px;">${item.empresa     || ''}</td>
+            <td style="padding:7px 10px;">${item.responsavel || ''}</td>
+            <td style="padding:7px 10px;">${item.motivo      || ''}</td>
+            <td style="padding:7px 10px;">${item.liberado    || ''}</td>
+            <td style="padding:7px 10px;">${item.num_cracha  || ''}</td>
+            <td style="padding:7px 10px;">${item.vigilante   || ''}</td>
+            <td style="padding:7px 10px;">${item.obs         || ''}</td>
+            <td style="padding:7px 10px; font-weight:700;">${item.acesso || ''}</td>
+        `;
+        tbody.appendChild(tr);
     });
 }
 
-// ── 6. EXPORTAR EXCEL ─────────────────────────────────────────────────────────
+// ── 7. EXPORTAR XLSX ─────────────────────────────────────────────────────────
 function exportarExcel() {
     if (dadosFiltradosGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
-    let csv = '\uFEFFData;Hora;CPF;Nome;Empresa;Responsável;Motivo;Liberado;Crachá;Vigilante;OBS;Acesso\n';
-    dadosFiltradosGlobal.forEach(r => {
-        csv += `${r.data};${r.hora};${r.cpf};${r.nome};${r.empresa};${r.responsavel};${r.motivo};${r.liberado};${r.num_cracha};${r.vigilante};${r.obs};${r.acesso}\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `relatorio_p05_${new Date().getTime()}.csv`;
+
+    const cabecalho = ['Data','Hora','CPF','Nome','Empresa','Responsável','Motivo','Liberado','Nº Crachá','Vigilante','OBS','Acesso'];
+    const linhas = dadosFiltradosGlobal.map(r => [
+        _formatarData(r.data),
+        r.hora        || '',
+        String(r.cpf  || ''),
+        r.nome        || '',
+        r.empresa     || '',
+        r.responsavel || '',
+        r.motivo      || '',
+        r.liberado    || '',
+        r.num_cracha  || '',
+        r.vigilante   || '',
+        r.obs         || '',
+        r.acesso      || ''
+    ]);
+
+    const ws = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Portaria 05');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob  = new Blob([wbout], { type: 'application/octet-stream' });
+    const link  = document.createElement('a');
+    link.href     = URL.createObjectURL(blob);
+    link.download = 'relatorio_p05.xlsx';
     link.click();
+    URL.revokeObjectURL(link.href);
 }
