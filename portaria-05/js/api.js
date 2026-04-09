@@ -7,16 +7,8 @@
 const TABELA_P05 = 'portaria-05-acessos';
 let dadosFiltradosGlobal = [];
 
-// ── Relógio em tempo real ─────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    function atualizarRelogio() {
-        const agora = new Date();
-        document.getElementById('p05-data-display').value = agora.toLocaleDateString('pt-BR');
-        document.getElementById('p05-hora-display').value = agora.toTimeString().slice(0, 8);
-    }
-    atualizarRelogio();
-    setInterval(atualizarRelogio, 1000);
-
     document.getElementById('p05-cpf').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') localizar();
     });

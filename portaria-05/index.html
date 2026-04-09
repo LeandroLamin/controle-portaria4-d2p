@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="notranslate">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="google" content="notranslate">
-    <title>Controle de Acesso - Portaria 05 CVU</title>
-    <link rel="stylesheet" href="../css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Acesso - Portaria 05 CVU</title>
+
 <script>
 (function() {
     var auth = sessionStorage.getItem('d2p-auth');
@@ -13,138 +13,207 @@
     if (!niveis.includes('p05') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Portaria+05'); }
 })();
 </script>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --teal:#1a8a7a; --teal-dk:#136b5e; --teal-lt:#e8f5f3;
+  --yellow:#f5c518; --yellow-dk:#d4a800;
+  --red:#e03030; --red-dk:#b82020;
+  --gray-bg:#f0f2f5;
+  --border:#d0d8e0; --text:#1a2a38;
+  --label:#4a6070; --green-field:#d4f5d4;
+}
+body { font-family:'Segoe UI',Arial,sans-serif; color:var(--text); background:var(--gray-bg); margin:0; padding:0; }
+
+/* TOPBAR */
+.topbar {
+  background:var(--teal); display:flex; align-items:center;
+  justify-content:space-between; padding:0 24px; height:52px;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.topbar-logo { font-size:11px; font-weight:800; color:rgba(255,255,255,.7); letter-spacing:3px; text-transform:uppercase; }
+.topbar-titulo { font-size:16px; font-weight:700; color:#fff; letter-spacing:1px; }
+.topbar-user { font-size:12px; color:rgba(255,255,255,.85); }
+.topbar-user span { font-weight:700; color:#fff; }
+.topbar-user a { color:var(--yellow); cursor:pointer; margin-left:8px; text-decoration:none; font-weight:600; }
+.topbar-user a:hover { text-decoration:underline; }
+.divisor-top { height:3px; background:linear-gradient(to right,var(--yellow),var(--teal-lt)); }
+
+/* CONTENT */
+.content { padding:28px 32px; }
+
+/* CARD */
+.card {
+  background:#fff; border-radius:10px; padding:28px 32px 32px;
+  box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border);
+  max-width:900px; margin:0 auto;
+}
+.sec-header {
+  font-size:13px; font-weight:700; color:var(--teal-dk);
+  letter-spacing:1.5px; text-transform:uppercase;
+  padding-bottom:10px; border-bottom:2px solid var(--yellow); margin-bottom:24px;
+}
+.grupo-titulo {
+  font-size:11px; font-weight:700; color:var(--label);
+  letter-spacing:1.5px; text-transform:uppercase; margin:20px 0 12px;
+}
+.campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
+.campo-group { display:flex; flex-direction:column; gap:4px; }
+.campo-label { font-size:11px; font-weight:600; color:var(--label); letter-spacing:.5px; text-transform:uppercase; }
+
+input[type="text"], select {
+  border:1.5px solid var(--border); border-radius:5px; padding:7px 10px;
+  font-size:13px; color:var(--text); background:#fff; outline:none;
+  transition:border .2s; height:36px;
+}
+input[type="text"]:focus, select:focus { border-color:var(--teal); }
+input.rg-field { background:var(--green-field); }
+input[readonly] { background:#f0f4f8; color:#1a3c5e; font-weight:700; cursor:default; }
+select { cursor:pointer; }
+
+.acoes { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; align-items:center; }
+.btn-acao { padding:9px 22px; border-radius:6px; font-size:13px; font-weight:700; border:none; cursor:pointer; letter-spacing:.5px; transition:all .15s; }
+.btn-filtro    { background:#4a7080; color:#fff; } .btn-filtro:hover    { background:#385868; }
+.btn-limpar    { background:#607080; color:#fff; } .btn-limpar:hover    { background:#4a5a68; }
+.btn-pesquisar { background:var(--teal); color:#fff; } .btn-pesquisar:hover { background:var(--teal-dk); }
+.btn-salvar    { background:#27ae60; color:#fff; } .btn-salvar:hover    { background:#1e8449; }
+</style>
 </head>
 <body>
 
-    <div id="sistema-principal" style="display:none;">
-        <div class="header-usuario">Usuário: <b id="nome-logado"></b> | <a href="#" onclick="fazerLogout()">Sair</a></div>
+<div class="topbar">
+  <div class="topbar-logo">D2P·BRAZIL</div>
+  <div class="topbar-titulo">CONTROLE DE ACESSO — PORTARIA 05 CVU</div>
+  <div class="topbar-user">
+    Usuário: <span id="nome-logado"></span>
+    <a href="/portarias.html">← PORTARIAS</a>
+    <a href="#" onclick="sessionStorage.clear(); location.href='/menu/index.html';">SAIR</a>
+  </div>
+</div>
+<div class="divisor-top"></div>
 
-        <div class="container-corporativo">
-            <div style="position:relative; display:flex; align-items:center; justify-content:center; margin-bottom:25px; border-bottom:2px solid #f1c40f; padding-bottom:15px; min-height:50px;">
-                <h1 style="margin:0; color:#2c3e50; font-size:24px; text-transform:uppercase;">CONTROLE DE ACESSO — PORTARIA 05 CVU</h1>
-            </div>
+<div class="content">
+  <div class="card">
+    <div class="sec-header">Cadastro de Acesso — CVU</div>
 
-            <div class="grid">
-                <div class="campo" style="grid-column:span 2;"><label>NOME:</label><input type="text" id="p05-nome"></div>
-                <div class="campo"><label>CPF:</label><input type="text" id="p05-cpf" style="background:#e8f5e9; border:1px solid #27ae60;"></div>
-
-                <div class="campo"><label>EMPRESA:</label><input type="text" id="p05-empresa"></div>
-                <div class="campo"><label>RESPONSÁVEL:</label><input type="text" id="p05-responsavel"></div>
-                <div class="campo">
-                    <label>MOTIVO:</label>
-                    <select id="p05-motivo">
-                        <option value="">SELECIONE</option>
-                        <option>Esqueceu crachá</option>
-                        <option>Transbordo</option>
-                        <option>Crachá vencido</option>
-                        <option>Visita técnica</option>
-                        <option>Reunião</option>
-                        <option>Banco Santander</option>
-                        <option>Perícia Trabalhista</option>
-                        <option>Primeiro dia de trabalho</option>
-                        <option>Não acessou</option>
-                        <option>Pendência SG3</option>
-                        <option>Outros</option>
-                    </select>
-                </div>
-
-                <div class="campo">
-                    <label>LIBERADO:</label>
-                    <select id="p05-liberado">
-                        <option value="">SELECIONE</option>
-                        <option>Segurança Patrimonial</option>
-                        <option>Acessos/CAS</option>
-                        <option>Identificação</option>
-                        <option>Central de Segurança</option>
-                        <option>E-mail</option>
-                        <option>GDV</option>
-                        <option>Não acessou</option>
-                        <option>Outros</option>
-                    </select>
-                </div>
-                <div class="campo"><label>Nº CRACHÁ:</label><input type="text" id="p05-num-cracha"></div>
-                <div class="campo"><label>VIGILANTE/PORTEIRO:</label><input type="text" id="p05-vigilante"></div>
-
-                <div class="campo" style="grid-column:span 3;"><label>OBSERVAÇÃO:</label><input type="text" id="p05-obs" placeholder="Detalhes importantes do acesso..."></div>
-
-                <div class="campo">
-                    <label>ACESSO:</label>
-                    <select id="p05-acesso">
-                        <option value="">SELECIONE</option>
-                        <option>ENTRADA</option>
-                        <option>SAÍDA</option>
-                    </select>
-                </div>
-                <div class="campo">
-                    <label>DATA</label>
-                    <input type="text" id="p05-data-display" readonly style="background:#f0f4f8; font-weight:700; color:#1a3c5e;">
-                </div>
-                <div class="campo">
-                    <label>HORA</label>
-                    <input type="text" id="p05-hora-display" readonly style="background:#f0f4f8; font-weight:700; color:#1a3c5e;">
-                </div>
-            </div>
-
-            <div class="botoes">
-                <button class="btn-limpar"    onclick="limpar()">LIMPAR TELA</button>
-                <button class="btn-relatorio" onclick="abrirBusca()">RELATÓRIO / BUSCA</button>
-                <button class="btn-localizar" onclick="localizar()">LOCALIZAR</button>
-                <button class="btn-salvar"    onclick="salvar()">SALVAR ACESSO</button>
-            </div>
-        </div>
+    <!-- Linha 1: Nome | CPF | Empresa -->
+    <div class="campos-linha">
+      <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="p05-nome" style="width:260px"></div>
+      <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p05-cpf" class="rg-field" style="width:130px"></div>
+      <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="p05-empresa" style="width:200px"></div>
     </div>
 
-    <div id="modal-busca">
-        <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 style="color:#34495e; margin:0;">Busca e Relatório — Portaria 05</h2>
-                <button class="btn-fechar" onclick="fecharBusca()">X FECHAR</button>
-            </div>
-            <div class="filtro-linha">
-                <div class="filtro-item" style="width:200px;">
-                    <label>DATA INICIAL:</label>
-                    <input type="date" id="filtro-inicio">
-                </div>
-                <div class="filtro-item" style="width:200px;">
-                    <label>DATA FINAL:</label>
-                    <input type="date" id="filtro-fim">
-                </div>
-                <div class="filtro-item" style="width:350px;">
-                    <label>NOME / CPF:</label>
-                    <input type="text" id="filtro-nome">
-                </div>
-                <div class="botoes-filtro-modal">
-                    <button class="btn-relatorio-modal" onclick="buscarRelatorio()">FILTRAR</button>
-                    <button class="btn-limpar-modal"    onclick="limparFiltrosBusca()">LIMPAR</button>
-                </div>
-            </div>
-            <div class="tabela-container">
-                <table id="tabela-resultados">
-                    <thead>
-                        <tr>
-                            <th>Data</th><th>Hora</th><th>CPF</th><th>Nome</th><th>Empresa</th>
-                            <th>Responsável</th><th>Motivo</th><th>Liberado</th>
-                            <th>Nº Crachá</th><th>Vigilante</th><th>OBS</th><th>Acesso</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            <button class="btn-exportar" onclick="exportarExcel()">GERAR EXCEL (.CSV)</button>
-        </div>
+    <!-- Linha 2: Responsável | Motivo -->
+    <div class="campos-linha">
+      <div class="campo-group"><span class="campo-label">Responsável</span><input type="text" id="p05-responsavel" style="width:260px"></div>
+      <div class="campo-group"><span class="campo-label">Motivo</span>
+        <select id="p05-motivo" style="width:220px">
+          <option value="">Selecione</option>
+          <option>Esqueceu crachá</option>
+          <option>Transbordo</option>
+          <option>Crachá vencido</option>
+          <option>Visita técnica</option>
+          <option>Reunião</option>
+          <option>Banco Santander</option>
+          <option>Perícia Trabalhista</option>
+          <option>Primeiro dia de trabalho</option>
+          <option>Não acessou</option>
+          <option>Pendência SG3</option>
+          <option>Outros</option>
+        </select>
+      </div>
     </div>
 
-    <script src="../conexao/config.js?v=2"></script>
-    <script src="../conexao/db.js?v=2"></script>
-    <script src="js/api.js?v=2"></script>
-    <script src="../js/ui.js?v=2"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('sistema-principal').style.display = 'block';
-            document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
-            document.body.classList.add('sistema-aberto');
-        });
-        function fazerLogout() { location.href = '/portarias.html'; }
-    </script>
+    <!-- Linha 3: Liberado | Nº Crachá | Vigilante -->
+    <div class="campos-linha">
+      <div class="campo-group"><span class="campo-label">Liberado</span>
+        <select id="p05-liberado" style="width:210px">
+          <option value="">Selecione</option>
+          <option>Segurança Patrimonial</option>
+          <option>Acessos/CAS</option>
+          <option>Identificação</option>
+          <option>Central de Segurança</option>
+          <option>E-mail</option>
+          <option>GDV</option>
+          <option>Não acessou</option>
+          <option>Outros</option>
+        </select>
+      </div>
+      <div class="campo-group"><span class="campo-label">Número do Crachá</span><input type="text" id="p05-num-cracha" style="width:140px"></div>
+      <div class="campo-group"><span class="campo-label">Vigilante/Porteiro</span><input type="text" id="p05-vigilante" style="width:190px"></div>
+    </div>
+
+    <!-- Linha 4: OBS -->
+    <div class="campos-linha">
+      <div class="campo-group"><span class="campo-label">OBS</span><input type="text" id="p05-obs" style="width:760px"></div>
+    </div>
+
+    <!-- Linha 5: Acesso -->
+    <div class="campos-linha">
+      <div class="campo-group"><span class="campo-label">Acesso</span>
+        <select id="p05-acesso" style="width:160px">
+          <option value="">Selecione</option>
+          <option>ENTRADA</option>
+          <option>SAÍDA</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Ações -->
+    <div class="acoes">
+      <button class="btn-acao btn-filtro"    onclick="p05AbrirRelatorio()">RELATÓRIO</button>
+      <button class="btn-acao btn-limpar"    onclick="p05Limpar()">LIMPAR TELA</button>
+      <button class="btn-acao btn-pesquisar" onclick="localizar()">LOCALIZAR</button>
+      <button class="btn-acao btn-salvar"    onclick="salvar()">SALVAR ACESSO</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RELATÓRIO -->
+<div id="modal-p05" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:1100px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — PORTARIA 05 CVU</span>
+      <button onclick="p05FecharRelatorio()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="filtro-inicio" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="filtro-fim" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Nome / CPF</span><input type="text" id="filtro-nome" style="width:220px" placeholder="Buscar..."></div>
+      <button class="btn-acao btn-pesquisar" onclick="buscarRelatorio()">FILTRAR</button>
+      <button class="btn-acao btn-limpar"    onclick="p05LimparFiltro()">LIMPAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="tabela-resultados" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px;">Data</th>
+            <th style="padding:8px 10px;">Hora</th>
+            <th style="padding:8px 10px;">CPF</th>
+            <th style="padding:8px 10px;">Nome</th>
+            <th style="padding:8px 10px;">Empresa</th>
+            <th style="padding:8px 10px;">Responsável</th>
+            <th style="padding:8px 10px;">Motivo</th>
+            <th style="padding:8px 10px;">Liberado</th>
+            <th style="padding:8px 10px;">Nº Crachá</th>
+            <th style="padding:8px 10px;">Vigilante</th>
+            <th style="padding:8px 10px;">OBS</th>
+            <th style="padding:8px 10px;">Acesso</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button onclick="exportarExcel()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL (.CSV)</button>
+  </div>
+</div>
+
+<script src="../conexao/config.js?v=2"></script>
+<script src="../conexao/db.js?v=2"></script>
+<script src="js/api.js?v=3"></script>
+<script>
+  document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
+</script>
 </body>
 </html>
