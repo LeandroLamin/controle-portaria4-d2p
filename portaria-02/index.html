@@ -168,7 +168,6 @@ select { cursor:pointer; }
       <button class="nav-btn" onclick="mudarTela('romaneio',this)">ROMANEIO</button>
       <button class="nav-btn" onclick="mudarTela('jit',this)">JIT</button>
       <button class="nav-btn" onclick="mudarTela('notas',this); notasFocar()">NOTAS</button>
-      <button class="nav-btn" onclick="mudarTela('peao2',this)">PEÃO 2</button>
     </div>
 
     <div class="content">
@@ -345,55 +344,6 @@ select { cursor:pointer; }
         </div>
       </div>
 
-      <!-- PEÃO 2 -->
-      <div id="tela-peao2" class="tela">
-        <div class="card">
-          <div class="sec-header">Portaria 2 — Peão 2</div>
-          <div class="grupo-titulo">Dados do Visitante</div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="p2-nome" style="width:230px"></div>
-            <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p2-cpf" class="rg-field" style="width:140px"></div>
-            <div class="campo-group"><span class="campo-label">Responsável</span><input type="text" id="p2-responsavel" style="width:200px"></div>
-          </div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="p2-empresa" style="width:200px"></div>
-            <div class="campo-group"><span class="campo-label">Motivo</span>
-              <select id="p2-motivo" style="width:180px">
-                <option value="">Selecione</option>
-                <option>Entrega</option>
-                <option>Coleta</option>
-                <option>Visita</option>
-                <option>Manutenção</option>
-                <option>Outros</option>
-              </select>
-            </div>
-            <div class="campo-group"><span class="campo-label">N° Crachá</span><input type="text" id="p2-cracha" style="width:120px"></div>
-          </div>
-          <div class="campos-linha">
-            <div class="campo-group"><span class="campo-label">Liberado</span>
-              <input type="text" id="p2-liberado" style="width:200px">
-            </div>
-            <div class="campo-group"><span class="campo-label">Porteiro</span>
-              <select id="p2-porteiro" style="width:180px">
-                <option value="">Selecione</option>
-                <option>VALTER RIBAS</option>
-                <option>DANIEL</option>
-                <option>VITOR</option>
-                <option>LUCAS</option>
-              </select>
-            </div>
-          </div>
-          <div class="grupo-titulo">Observação</div>
-          <input type="text" id="p2-obs" class="obs-input" placeholder="Observações adicionais...">
-          <div class="acoes">
-            <button class="btn-acao btn-filtro" onclick="p2AbrirFiltro()">FILTRO</button>
-            <button class="btn-acao btn-limpar" onclick="limparCampos('tela-peao2')">LIMPAR TELA</button>
-            <button class="btn-acao btn-pesquisar" onclick="p2Pesquisar()">PESQUISAR</button>
-            <button class="btn-acao btn-entrada" onclick="p2Registrar('ENTRADA')">ENTRADA</button>
-            <button class="btn-acao btn-saida" onclick="p2Registrar('SAÍDA')">SAÍDA</button>
-          </div>
-        </div>
-      </div>
 
     </div><!-- /content -->
   </div><!-- /layout -->
@@ -527,44 +477,6 @@ select { cursor:pointer; }
   </div>
 </div>
 
-<!-- MODAL FILTRO PEÃO 2 -->
-<div id="modal-p2" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
-  <div style="background:#fff; border-radius:10px; max-width:1100px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
-      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — PEÃO 2</span>
-      <button onclick="p2FecharFiltro()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
-    </div>
-    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
-      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="p2-f-inicio" style="width:150px"></div>
-      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="p2-f-fim" style="width:150px"></div>
-      <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p2-f-busca" style="width:200px" placeholder="Buscar por CPF..."></div>
-      <button class="btn-acao btn-pesquisar" onclick="p2BuscarRelatorio()">FILTRAR</button>
-      <button class="btn-acao btn-limpar" onclick="p2LimparFiltro()">LIMPAR</button>
-    </div>
-    <div style="overflow-x:auto;">
-      <table id="p2-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
-        <thead style="background:var(--teal); color:#fff;">
-          <tr>
-            <th style="padding:8px 10px;">Data</th>
-            <th style="padding:8px 10px;">Hora</th>
-            <th style="padding:8px 10px;">Nome</th>
-            <th style="padding:8px 10px;">CPF</th>
-            <th style="padding:8px 10px;">Responsável</th>
-            <th style="padding:8px 10px;">Empresa</th>
-            <th style="padding:8px 10px;">Motivo</th>
-            <th style="padding:8px 10px;">N° Crachá</th>
-            <th style="padding:8px 10px;">Liberado</th>
-            <th style="padding:8px 10px;">Porteiro</th>
-            <th style="padding:8px 10px;">Observação</th>
-            <th style="padding:8px 10px;">Acesso</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <button onclick="p2ExportarXLSX()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
-  </div>
-</div>
 
 <!-- MODAL FILTRO ACESSOS -->
 <div id="modal-acs" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
@@ -608,7 +520,6 @@ select { cursor:pointer; }
 <script src="js/romaneio.js"></script>
 <script src="js/jit.js"></script>
 <script src="js/notas.js"></script>
-<script src="js/peao2.js"></script>
 <script>
 // Exibe o sistema ao carregar (guard já validou a sessão)
 document.addEventListener('DOMContentLoaded', function() {
