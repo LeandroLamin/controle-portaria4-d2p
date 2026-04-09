@@ -547,6 +547,8 @@ function limparCampos(telaId) {
   const t = document.getElementById(telaId);
   t.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
   t.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+  const status = document.getElementById('acs-peao2-status');
+  if (status) status.style.display = 'none';
 }
 </script>
 </body>

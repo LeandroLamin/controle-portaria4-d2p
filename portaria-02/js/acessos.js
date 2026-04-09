@@ -36,6 +36,18 @@ async function acsRegistrar(acesso) {
     const result = await dbSalvar(TABELA_ACS, dados);
     if (result && result.ok) {
         notify(`${acesso} registrada com sucesso!`, 'sucesso');
+        if (acesso === 'SAÍDA') {
+            await dbSalvar('portaria-peao2-acessos', {
+                nome:    dados.nome,
+                cpf:     dados.cpf,
+                empresa: dados.empresa,
+                placa:   dados.placa,
+                motivo:  dados.motivo,
+                acesso:  'SAÍDA',
+                data:    dados.data,
+                hora:    dados.hora
+            });
+        }
         limparCampos('tela-acessos');
         document.getElementById('acs-peao2-status').style.display = 'none';
     } else {
