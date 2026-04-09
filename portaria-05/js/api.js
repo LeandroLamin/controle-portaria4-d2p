@@ -34,7 +34,7 @@ async function localizar() {
         // Mantém "Selecione" vazio para obrigar preenchimento do novo acesso
         document.getElementById('p05-motivo').value   = '';
         document.getElementById('p05-liberado').value = '';
-        notify('Cadastro localizado! Preencha Motivo e Acesso.', 'sucesso');
+        notify('Cadastro localizado!', 'sucesso');
     } else {
         notify('CPF não localizado na base.', 'aviso');
     }
