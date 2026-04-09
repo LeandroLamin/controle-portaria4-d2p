@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
 async function pvRegistrar(acesso) {
+    const agora  = new Date();
     const dados = {
         nome:        document.getElementById('pv-nome').value.trim().toUpperCase(),
         cpf:         document.getElementById('pv-cpf').value.trim(),
@@ -28,7 +29,9 @@ async function pvRegistrar(acesso) {
         liberado:    document.getElementById('pv-liberado').value.trim(),
         porteiro:    document.getElementById('pv-porteiro').value,
         observacao:  document.getElementById('pv-obs').value.trim(),
-        acesso:      acesso
+        acesso:      acesso,
+        data:        agora.toLocaleDateString('en-CA'),
+        hora:        agora.toTimeString().slice(0, 8)
     };
     if (!dados.nome || !dados.cpf || !dados.responsavel || !dados.empresa || !dados.motivo || !dados.porteiro) {
         return notify('Preencha todos os campos obrigatórios antes de salvar.', 'aviso');
