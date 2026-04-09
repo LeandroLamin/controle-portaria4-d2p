@@ -37,6 +37,7 @@ async function acsRegistrar(acesso) {
     if (result && result.ok) {
         notify(`${acesso} registrada com sucesso!`, 'sucesso');
         limparCampos('tela-acessos');
+        document.getElementById('acs-peao2-status').style.display = 'none';
     } else {
         notify('Erro ao salvar no servidor.', 'erro');
     }
