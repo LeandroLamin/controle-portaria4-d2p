@@ -34,6 +34,7 @@ async function localizar() {
 
 // --- 2. SALVAR ---
 async function salvar() {
+    const agora = new Date();
     const dados = {
         cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
         nome: document.getElementById('nome').value.trim().toUpperCase(),
@@ -44,7 +45,9 @@ async function salvar() {
         vigilante: document.getElementById('vigilante').value.trim().toUpperCase(),
         cracha: document.getElementById('cracha').value.trim(),
         acesso: document.getElementById('tipo').value,
-        obs: document.getElementById('obs').value.trim().toUpperCase()
+        obs: document.getElementById('obs').value.trim().toUpperCase(),
+        data: agora.toLocaleDateString('en-CA'),
+        hora: agora.toTimeString().slice(0, 8)
     };
 
     if (!dados.cpf || !dados.nome || !dados.empresa || !dados.responsavel ||
@@ -93,13 +96,20 @@ async function buscarRelatorio() {
     }
 }
 
+// --- FORMATAR DATA ---
+function _formatarData(data) {
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('-');
+    return `${dia}/${mes}/${ano}`;
+}
+
 // --- RENDERIZAR TABELA ---
 function renderizarTabela(lista) {
     const tbody = document.querySelector('#tabela-resultados tbody');
     tbody.innerHTML = '';
     lista.forEach(item => {
         tbody.innerHTML += `<tr>
-            <td>${item.data}</td><td>${item.hora}</td><td>${item.cpf}</td>
+            <td>${_formatarData(item.data)}</td><td>${item.hora}</td><td>${item.cpf}</td>
             <td>${item.nome}</td><td>${item.empresa}</td><td>${item.responsavel}</td>
             <td>${item.liberado}</td><td>${item.motivo}</td><td>${item.vigilante}</td>
             <td>${item.cracha || '-'}</td><td>${item.acesso}</td><td>${item.obs || ''}</td>
