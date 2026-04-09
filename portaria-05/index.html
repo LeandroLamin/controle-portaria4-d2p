@@ -9,7 +9,7 @@
             var auth = sessionStorage.getItem('d2p-auth');
             if (!auth) { location.replace('/menu/index.html'); return; }
             var niveis = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
-            if (!niveis.includes('p05') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Portaria+05'); }
+            if (!niveis.includes('p05') && !niveis.includes('portaria-05') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Portaria+05'); }
         })();
     </script>
     <style>
