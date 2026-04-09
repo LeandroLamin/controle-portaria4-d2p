@@ -101,10 +101,10 @@ async function acsPesquisar() {
                     statusEl.textContent = `✓ PASSOU PELO PEÃO 2 — ENTRADA às ${ultimo.hora.slice(0, 5)}`;
                 } else {
                     statusEl.style.display = 'block';
-                    statusEl.style.background = '#fff3cd';
-                    statusEl.style.color = '#856404';
-                    statusEl.style.border = '1.5px solid #ffc107';
-                    statusEl.textContent = `⚠ ÚLTIMO REGISTRO NO PEÃO 2: SAÍDA às ${ultimo.hora.slice(0, 5)}`;
+                    statusEl.style.background = '#f8d7da';
+                    statusEl.style.color = '#721c24';
+                    statusEl.style.border = '1.5px solid #dc3545';
+                    statusEl.textContent = '✗ SEM REGISTRO DE ENTRADA NO PEÃO 2';
                 }
             } else {
                 statusEl.style.display = 'block';
