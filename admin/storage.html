@@ -252,7 +252,7 @@ async function listarImagens() {
 
         grid.innerHTML = '';
         lista.forEach(item => {
-            const url = PUB_URL + item.name;
+            const url = PUB_URL + item.name.split('/').map(encodeURIComponent).join('/');
             const kb = item.metadata?.size ? (item.metadata.size / 1024).toFixed(1) + ' KB' : '';
 
             // Construção segura — sem innerHTML com dados do servidor
