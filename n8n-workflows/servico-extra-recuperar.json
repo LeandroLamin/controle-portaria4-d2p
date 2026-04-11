@@ -1,5 +1,5 @@
 {
-  "name": "Servico Extra - Recuperar Senha",
+  "name": "D2P - Serviço Extra Recuperar Senha",
   "nodes": [
     {
       "parameters": {
@@ -8,145 +8,119 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "1",
+      "id": "dddddddd-0004-0004-0004-000000000001",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [240, 300]
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "d2p-servico-extra-recuperar"
     },
     {
       "parameters": {
-        "conditions": {
-          "string": [
-            {
-              "value1": "={{ $json.body._api_key }}",
-              "operation": "equals",
-              "value2": "D2P-2025-9xKmPv3nLqRw7j"
-            }
-          ]
-        }
+        "jsCode": "const body = $input.first().json.body;\n\nif (!body || body._api_key !== 'D2P-2025-9xKmPv3nLqRw7j') {\n  throw new Error('API key inválida');\n}\n\nconst email = (body.email || '').trim().toLowerCase();\nif (!email) {\n  return [{ json: { found: false } }];\n}\n\nconst N8N_URL = 'https://n8n.laminlpp.com.br/webhook';\nconst API_KEY = 'D2P-2025-9xKmPv3nLqRw7j';\n\n// 1. Buscar usuário no banco\nconst usuarios = await this.helpers.httpRequest({\n  method: 'POST',\n  url: `${N8N_URL}/db-buscar`,\n  headers: { 'Content-Type': 'application/json' },\n  body: { tabela: 'gps-acesso-extra', filtros: { email }, limit: 1, _api_key: API_KEY }\n});\n\nif (!Array.isArray(usuarios) || usuarios.length === 0) {\n  return [{ json: { found: false } }];\n}\n\nconst usuario = usuarios[0];\n\n// 2. Gerar senha temporária (8 chars, sem ambiguidade 0/O, 1/l/I)\nconst chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';\nlet senhaTemp = '';\nfor (let i = 0; i < 8; i++) {\n  senhaTemp += chars[Math.floor(Math.random() * chars.length)];\n}\n\n// 3. Hash SHA-256 igual ao frontend: SHA256(email:senha)\nconst crypto = require('crypto');\nconst hash = crypto.createHash('sha256').update(email + ':' + senhaTemp).digest('hex');\n\n// 4. Atualizar senha no banco\nawait this.helpers.httpRequest({\n  method: 'POST',\n  url: `${N8N_URL}/db-atualizar`,\n  headers: { 'Content-Type': 'application/json' },\n  body: { tabela: 'gps-acesso-extra', filtros: { email }, dados: { senha: hash }, _api_key: API_KEY }\n});\n\nreturn [{ json: { found: true, email, nome: usuario.nome || 'Usuário', senhaTemp } }];"
       },
-      "id": "2",
-      "name": "Validar API Key",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
+      "id": "dddddddd-0004-0004-0004-000000000002",
+      "name": "Processar Recuperação",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [460, 300]
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "=https://n8n-supabase.tbjno4.easypanel.host/rest/v1/gps-acesso-extra?email=eq.{{ encodeURIComponent($json.body.email) }}&select=nome,email,senha_plain&limit=1",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "apikey", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.ltgccMHjFZd9KWoa9zyrzI5J160DoDM7YpfzNj-MMOk" },
-            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.ltgccMHjFZd9KWoa9zyrzI5J160DoDM7YpfzNj-MMOk" }
-          ]
+        "conditions": {
+          "options": { "caseSensitive": true },
+          "conditions": [
+            {
+              "id": "cond-found",
+              "leftValue": "={{ $json.found }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "id": "3",
-      "name": "Buscar Usuario",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4,
-      "position": [680, 200]
+      "id": "dddddddd-0004-0004-0004-000000000003",
+      "name": "Usuário encontrado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
     },
     {
       "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{ $json.length }}",
-              "operation": "larger",
-              "value2": 0
-            }
-          ]
+        "fromEmail": "SEU_EMAIL_GMAIL_AQUI@gmail.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Recuperação de Senha — Sistema Serviço Extra D2P",
+        "emailType": "html",
+        "message": "=<div style=\"font-family:'Segoe UI',Arial,sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#f8f9fa;border-radius:10px;\"><div style=\"background:#2c3e50;padding:20px 24px;border-radius:8px 8px 0 0;text-align:center;\"><div style=\"font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:3px;text-transform:uppercase;\">D2P-Brazil</div><div style=\"font-size:18px;font-weight:700;color:#f1c40f;margin-top:4px;\">Serviço Extra</div></div><div style=\"background:#ffffff;padding:28px 24px;border-radius:0 0 8px 8px;border:1px solid #e0e0e0;border-top:none;\"><p style=\"font-size:15px;color:#2c3e50;margin:0 0 16px;\">Olá, <strong>{{ $json.nome }}</strong>!</p><p style=\"font-size:14px;color:#555;line-height:1.6;margin:0 0 20px;\">Recebemos uma solicitação de recuperação de senha para a conta <strong>{{ $json.email }}</strong> no Sistema Serviço Extra D2P.</p><div style=\"background:#f0faf8;border:2px solid #1a8a7a;border-radius:8px;padding:20px;text-align:center;margin:0 0 24px;\"><div style=\"font-size:12px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;\">Sua nova senha temporária</div><div style=\"font-size:32px;font-weight:800;color:#1a8a7a;letter-spacing:6px;font-family:monospace;\">{{ $json.senhaTemp }}</div></div><p style=\"font-size:13px;color:#555;margin:0 0 8px;\">Para entrar no sistema, use:</p><ul style=\"font-size:13px;color:#555;margin:0 0 20px;padding-left:20px;line-height:1.8;\"><li><strong>E-mail:</strong> {{ $json.email }}</li><li><strong>Senha:</strong> {{ $json.senhaTemp }}</li></ul><div style=\"text-align:center;margin-bottom:20px;\"><a href=\"https://servico-extra.laminlpp.com.br/servico-extra/index.html\" style=\"background:#1a8a7a;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:6px;font-size:14px;font-weight:700;display:inline-block;\">ACESSAR O SISTEMA</a></div><p style=\"font-size:12px;color:#888;margin:0;\">Se você não solicitou esta recuperação, ignore este e-mail.</p></div></div>",
+        "options": {
+          "replyTo": "leandro.lamin@gpssa.com.br"
         }
       },
-      "id": "4",
-      "name": "Usuário Existe?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_NAS_CREDENTIALS_DO_N8N",
+          "name": "Gmail D2P Serviço Extra"
+        }
+      },
+      "id": "dddddddd-0004-0004-0004-000000000004",
+      "name": "Enviar E-mail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
       "position": [900, 200]
     },
     {
       "parameters": {
-        "fromEmail": "leandro.lamin@gpssa.com.br",
-        "toEmail": "={{ $json[0].email }}",
-        "subject": "GPS Vigilância — Recuperação de Senha",
-        "emailType": "html",
-        "message": "=<div style=\"font-family:'Segoe UI',Arial,sans-serif; max-width:520px; margin:0 auto; background:#f4f7f6; padding:32px 16px;\">\n  <div style=\"background:#136b5e; padding:24px 32px; border-radius:10px 10px 0 0; text-align:center;\">\n    <div style=\"font-size:11px; color:#a8d8d2; letter-spacing:2px; text-transform:uppercase;\">GPS Vigilância e Especializada</div>\n    <div style=\"font-size:20px; font-weight:800; color:#fff; margin-top:8px;\">Recuperação de Senha</div>\n  </div>\n  <div style=\"background:#fff; padding:32px; border-radius:0 0 10px 10px; box-shadow:0 4px 16px rgba(0,0,0,0.07);\">\n    <p style=\"font-size:15px; color:#1a2a38;\">Olá, <b>{{ $json[0].nome }}</b>!</p>\n    <p style=\"font-size:14px; color:#555; margin-top:12px;\">Recebemos uma solicitação de recuperação de senha para o sistema de <b>Solicitação de Serviço Extra</b>.</p>\n    <div style=\"background:#e8f5f3; border:1.5px solid #1a8a7a; border-radius:8px; padding:16px 24px; margin:24px 0; text-align:center;\">\n      <div style=\"font-size:11px; color:#136b5e; font-weight:700; text-transform:uppercase; letter-spacing:1px;\">Sua senha é</div>\n      <div style=\"font-size:26px; font-weight:900; color:#136b5e; letter-spacing:4px; margin-top:6px;\">{{ $json[0].senha_plain }}</div>\n    </div>\n    <p style=\"font-size:13px; color:#888; margin-top:16px;\">Acesse o formulário em: <a href=\"https://servico-extra.laminlpp.com.br\" style=\"color:#1a8a7a;\">servico-extra.laminlpp.com.br</a></p>\n    <hr style=\"border:none; border-top:1px solid #eee; margin:24px 0;\">\n    <p style=\"font-size:11px; color:#aaa; text-align:center;\">Dúvidas? Ligue (41) 99697-9238 ou (41) 3380-2744</p>\n  </div>\n</div>",
+        "respondWith": "json",
+        "responseBody": "{\"ok\":true}",
         "options": {}
       },
-      "id": "5",
-      "name": "Enviar E-mail",
-      "type": "n8n-nodes-base.sendEmail",
-      "typeVersion": 2,
-      "position": [1120, 100],
-      "credentials": {
-        "smtp": {
-          "id": "SUBSTITUIR_PELO_ID_DA_CREDENCIAL_SMTP",
-          "name": "Outlook GPS"
-        }
-      }
+      "id": "dddddddd-0004-0004-0004-000000000005",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1120, 200]
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={ \"ok\": true }"
+        "responseBody": "{\"ok\":true}",
+        "options": {}
       },
-      "id": "6",
-      "name": "Resposta OK",
+      "id": "dddddddd-0004-0004-0004-000000000006",
+      "name": "Responder OK (não encontrado)",
       "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [1340, 100]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={ \"ok\": false, \"erro\": \"api_key invalida\" }",
-        "options": { "responseCode": 401 }
-      },
-      "id": "7",
-      "name": "Resposta API Key Invalida",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [680, 420]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={ \"ok\": true, \"mensagem\": \"se cadastrado, e-mail enviado\" }"
-      },
-      "id": "8",
-      "name": "Resposta Email Nao Encontrado",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [1120, 320]
+      "typeVersion": 1.1,
+      "position": [900, 400]
     }
   ],
   "connections": {
     "Webhook": {
-      "main": [[{ "node": "Validar API Key", "type": "main", "index": 0 }]]
-    },
-    "Validar API Key": {
       "main": [
-        [{ "node": "Buscar Usuario", "type": "main", "index": 0 }],
-        [{ "node": "Resposta API Key Invalida", "type": "main", "index": 0 }]
+        [{ "node": "Processar Recuperação", "type": "main", "index": 0 }]
       ]
     },
-    "Buscar Usuario": {
-      "main": [[{ "node": "Usuário Existe?", "type": "main", "index": 0 }]]
+    "Processar Recuperação": {
+      "main": [
+        [{ "node": "Usuário encontrado?", "type": "main", "index": 0 }]
+      ]
     },
-    "Usuário Existe?": {
+    "Usuário encontrado?": {
       "main": [
         [{ "node": "Enviar E-mail", "type": "main", "index": 0 }],
-        [{ "node": "Resposta Email Nao Encontrado", "type": "main", "index": 0 }]
+        [{ "node": "Responder OK (não encontrado)", "type": "main", "index": 0 }]
       ]
     },
     "Enviar E-mail": {
-      "main": [[{ "node": "Resposta OK", "type": "main", "index": 0 }]]
+      "main": [
+        [{ "node": "Responder OK", "type": "main", "index": 0 }]
+      ]
     }
   },
-  "settings": { "executionOrder": "v1" }
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": []
 }
