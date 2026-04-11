@@ -446,25 +446,63 @@
             if (data.usuarios.length > 0) {
                 data.usuarios.forEach(user => {
                     const classeBadge = user.nivel_acesso === 'administrador' ? 'bg-admin' : 'bg-p04';
-                    const btnEditar = user.login !== 'Leandro' ?
-                        `<button class="btn-editar" onclick="abrirModal(this)" title="Editar"
-                            data-id="${user.id}"
-                            data-nome="${user.nome_completo}"
-                            data-login="${user.login}"
-                            data-nivel="${user.nivel_acesso}">✎</button>` : '';
-                    const btnRemover = user.login !== 'Leandro' ?
-                        `<button class="btn-x" onclick="solicitarExclusao(${user.id}, '${user.login}')" title="Remover">X</button>` :
-                        `<span style="color:#bdc3c7; font-size:12px;">(Master)</span>`;
 
-                    corpoTabela.insertAdjacentHTML('beforeend', `
-                        <tr>
-                            <td>${user.id}</td>
-                            <td><b>${user.login}</b></td>
-                            <td>${user.nome_completo}</td>
-                            <td><span class="badge ${classeBadge}">${user.nivel_acesso}</span></td>
-                            <td><div class="acoes-cell">${btnEditar} ${btnRemover}</div></td>
-                        </tr>
-                    `);
+                    const tr = document.createElement('tr');
+
+                    const tdId = document.createElement('td');
+                    tdId.textContent = user.id;
+
+                    const tdLogin = document.createElement('td');
+                    const b = document.createElement('b');
+                    b.textContent = user.login;
+                    tdLogin.appendChild(b);
+
+                    const tdNome = document.createElement('td');
+                    tdNome.textContent = user.nome_completo;
+
+                    const tdNivel = document.createElement('td');
+                    const badge = document.createElement('span');
+                    badge.className = 'badge ' + classeBadge;
+                    badge.textContent = user.nivel_acesso;
+                    tdNivel.appendChild(badge);
+
+                    const tdAcoes = document.createElement('td');
+                    const acoes = document.createElement('div');
+                    acoes.className = 'acoes-cell';
+
+                    if (user.login !== 'Leandro') {
+                        const btnEditar = document.createElement('button');
+                        btnEditar.className = 'btn-editar';
+                        btnEditar.title = 'Editar';
+                        btnEditar.textContent = '✎';
+                        btnEditar.dataset.id    = user.id;
+                        btnEditar.dataset.nome  = user.nome_completo;
+                        btnEditar.dataset.login = user.login;
+                        btnEditar.dataset.nivel = user.nivel_acesso;
+                        btnEditar.onclick = function() { abrirModal(this); };
+
+                        const btnRemover = document.createElement('button');
+                        btnRemover.className = 'btn-x';
+                        btnRemover.title = 'Remover';
+                        btnRemover.textContent = 'X';
+                        btnRemover.onclick = function() { solicitarExclusao(user.id, user.login); };
+
+                        acoes.appendChild(btnEditar);
+                        acoes.appendChild(btnRemover);
+                    } else {
+                        const master = document.createElement('span');
+                        master.style.cssText = 'color:#bdc3c7; font-size:12px;';
+                        master.textContent = '(Master)';
+                        acoes.appendChild(master);
+                    }
+
+                    tdAcoes.appendChild(acoes);
+                    tr.appendChild(tdId);
+                    tr.appendChild(tdLogin);
+                    tr.appendChild(tdNome);
+                    tr.appendChild(tdNivel);
+                    tr.appendChild(tdAcoes);
+                    corpoTabela.appendChild(tr);
                 });
             } else {
                 corpoTabela.innerHTML = '<tr><td colspan="5" style="text-align:center">Nenhum usuário cadastrado.</td></tr>';
