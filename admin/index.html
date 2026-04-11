@@ -184,6 +184,16 @@
             .dash-cards { grid-template-columns: 1fr; }
             .dash-duplo  { grid-template-columns: 1fr; }
         }
+
+        /* ── Modal Notificação ── */
+        #modal-notif { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:10000; align-items:center; justify-content:center; }
+        #modal-notif.show { display:flex; }
+        .modal-notif-card { background:#fff; border-radius:14px; padding:32px 28px; max-width:340px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation: modalIn .18s ease; }
+        @keyframes modalIn { from { transform:scale(.92); opacity:0; } to { transform:scale(1); opacity:1; } }
+        .modal-notif-icon { font-size:44px; margin-bottom:12px; line-height:1; }
+        .modal-notif-msg { font-size:15px; color:#2c3e50; margin-bottom:24px; line-height:1.5; }
+        .modal-notif-btn { background:var(--accent-gold); color:var(--primary-dark); border:none; border-radius:8px; padding:12px 40px; font-size:14px; font-weight:700; cursor:pointer; letter-spacing:1px; transition:background .2s; }
+        .modal-notif-btn:hover { background:var(--accent-hover); }
     </style>
 </head>
 <body>
@@ -381,10 +391,34 @@
         </div><!-- /secao-dashboard -->
     </main>
 
+    <!-- Modal Notificação -->
+    <div id="modal-notif">
+        <div class="modal-notif-card">
+            <div class="modal-notif-icon" id="modal-notif-icon"></div>
+            <div class="modal-notif-msg" id="modal-notif-msg"></div>
+            <button class="modal-notif-btn" id="modal-notif-btn">OK</button>
+        </div>
+    </div>
+
     <script src="../conexao/config.js"></script>
     <script src="../conexao/crypto.js"></script>
     <script src="../conexao/db.js"></script>
     <script>
+        // ── Modal Notificação ─────────────────────────────────
+        let _modalResolve = null;
+        function mostrarModal(msg, tipo) {
+            const icons = { sucesso: '✅', erro: '❌', aviso: '⚠️' };
+            document.getElementById('modal-notif-icon').textContent = icons[tipo] || 'ℹ️';
+            document.getElementById('modal-notif-msg').textContent = msg;
+            document.getElementById('modal-notif').classList.add('show');
+            return new Promise(r => { _modalResolve = r; });
+        }
+        function fecharModalNotif() {
+            document.getElementById('modal-notif').classList.remove('show');
+            if (_modalResolve) { _modalResolve(); _modalResolve = null; }
+        }
+        document.getElementById('modal-notif-btn').addEventListener('click', fecharModalNotif);
+
         // ── Sessão ────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
             // Bypass via login do menu principal (d2p-nivel = administrador)
@@ -425,7 +459,7 @@
                 document.getElementById('wrapper-login').style.display = 'none';
                 document.getElementById('nome-admin-logado').innerText = resultado.nome_completo;
             } else {
-                alert("Acesso Negado: Usuário não é Administrador ou senha incorreta.");
+                await mostrarModal('Acesso Negado: Usuário não é Administrador ou senha incorreta.', 'erro');
             }
         }
 
@@ -436,7 +470,7 @@
             const senha = document.getElementById('cad-senha').value.trim();
             const nivel = document.getElementById('cad-nivel').value;
 
-            if (!nome || !login || !senha) return alert("Atenção: Preencha todos os campos!");
+            if (!nome || !login || !senha) { await mostrarModal('Atenção: Preencha todos os campos!', 'aviso'); return; }
 
             const senhaHash = await hashSenha(login, senha);
             const resp = await fetch(`${N8N_URL}/admin-api`, {
@@ -451,13 +485,13 @@
             const result = resp ? await resp.json().catch(() => null) : null;
 
             if (result && result.ok) {
-                alert("Usuário " + nome + " cadastrado com sucesso!");
+                await mostrarModal('Usuário ' + nome + ' cadastrado com sucesso!', 'sucesso');
                 document.getElementById('cad-nome').value  = '';
                 document.getElementById('cad-login').value = '';
                 document.getElementById('cad-senha').value = '';
                 document.getElementById('cad-nivel').value = 'p04';
             } else {
-                alert("Erro ao cadastrar usuário.");
+                await mostrarModal('Erro ao cadastrar usuário.', 'erro');
             }
         }
 
