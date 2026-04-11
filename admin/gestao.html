@@ -332,6 +332,7 @@
 
     <script src="../conexao/config.js"></script>
     <script src="../conexao/db.js"></script>
+    <script src="../conexao/crypto.js"></script>
     <script>
         // ── Navegação entre seções ─────────────────────────────
         let dashCarregado = false;
@@ -381,17 +382,22 @@
 
         async function buscarUsuarios() {
             const corpoTabela = document.getElementById('corpo-tabela-usuarios');
-            const data = await dbBuscar('usuarios', {}, { order: 'id.asc' });
+            const resp = await fetch(`${N8N_URL}/webhook/gestao-usuarios`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'listar' })
+            }).catch(() => null);
+            const data = resp ? await resp.json().catch(() => null) : null;
 
-            if (data === null) {
+            if (!data || !data.ok) {
                 corpoTabela.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red">Erro ao carregar banco.</td></tr>';
                 return;
             }
 
             corpoTabela.innerHTML = '';
 
-            if (data.length > 0) {
-                data.forEach(user => {
+            if (data.usuarios.length > 0) {
+                data.usuarios.forEach(user => {
                     const classeBadge = user.nivel_acesso === 'administrador' ? 'bg-admin' : 'bg-p04';
                     const btnEditar = user.login !== 'Leandro' ?
                         `<button class="btn-editar" onclick="abrirModal(this)" title="Editar"
@@ -471,21 +477,48 @@
             if (niveis.length === 0) return alert("Selecione pelo menos um nível de acesso!");
 
             const campos = { nome_completo: nome, login: login, nivel_acesso: niveis.join(',') };
-            if (senha) campos.senha = senha;
 
-            const result = await dbAtualizar('usuarios', { id: Number(id) }, campos);
-            if (result && result.ok) {
-                alert("Operador atualizado com sucesso!");
-                fecharModal();
-                buscarUsuarios();
-            } else {
+            const resp = await fetch(`${N8N_URL}/webhook/gestao-usuarios`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'atualizar', id: Number(id), dados: campos })
+            }).catch(() => null);
+            const result = resp ? await resp.json().catch(() => null) : null;
+
+            if (!result || !result.ok) {
                 alert("Erro ao atualizar operador.");
+                return;
             }
+
+            if (senha) {
+                const senhaHash = await hashSenha(login, senha);
+                const rSenha = await fetch(`${N8N_URL}/webhook/usuario-senha`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ _api_key: N8N_API_KEY, login, senha_hash: senhaHash })
+                }).catch(() => null);
+                const dSenha = rSenha ? await rSenha.json().catch(() => null) : null;
+                if (!dSenha || !dSenha.ok) {
+                    alert("Dados atualizados, mas erro ao alterar senha.");
+                    fecharModal();
+                    buscarUsuarios();
+                    return;
+                }
+            }
+
+            alert("Operador atualizado com sucesso!");
+            fecharModal();
+            buscarUsuarios();
         }
 
         async function solicitarExclusao(idUsuario, loginUsuario) {
             if (confirm(`⚠️ Excluir '${loginUsuario.toUpperCase()}' permanentemente?`)) {
-                const result = await dbDeletar('usuarios', { id: idUsuario });
+                const resp = await fetch(`${N8N_URL}/webhook/gestao-usuarios`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'deletar', id: idUsuario })
+                }).catch(() => null);
+                const result = resp ? await resp.json().catch(() => null) : null;
                 if (result && result.ok) {
                     alert("Acesso removido!");
                     buscarUsuarios();
