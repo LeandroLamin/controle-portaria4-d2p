@@ -439,12 +439,12 @@
             if (!nome || !login || !senha) return alert("Atenção: Preencha todos os campos!");
 
             const senhaHash = await hashSenha(login, senha);
-            const resp = await fetch(`${N8N_URL}/gestao-usuarios`, {
+            const resp = await fetch(`${N8N_URL}/admin-api`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     _api_key: N8N_API_KEY,
-                    operacao: 'cadastrar',
+                    operacao: 'cadastrar-usuario',
                     dados: { nome_completo: nome, login, senha: senhaHash, nivel_acesso: nivel }
                 })
             }).catch(() => null);

@@ -379,10 +379,10 @@
 
         async function buscarUsuarios() {
             const corpoTabela = document.getElementById('corpo-tabela-usuarios');
-            const resp = await fetch(`${N8N_URL}/gestao-usuarios`, {
+            const resp = await fetch(`${N8N_URL}/admin-api`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'listar' })
+                body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'listar-usuarios' })
             }).catch(() => null);
 
             const data = resp ? await resp.json().catch(() => null) : null;
@@ -476,10 +476,10 @@
 
             const campos = { nome_completo: nome, login: login, nivel_acesso: niveis.join(',') };
 
-            const resp = await fetch(`${N8N_URL}/gestao-usuarios`, {
+            const resp = await fetch(`${N8N_URL}/admin-api`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'atualizar', id: Number(id), dados: campos })
+                body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'atualizar-usuario', id: Number(id), dados: campos })
             }).catch(() => null);
             const result = resp ? await resp.json().catch(() => null) : null;
 
@@ -490,10 +490,10 @@
 
             if (senha) {
                 const senhaHash = await hashSenha(login, senha);
-                const rSenha = await fetch(`${N8N_URL}/usuario-senha`, {
+                const rSenha = await fetch(`${N8N_URL}/admin-api`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ _api_key: N8N_API_KEY, login, senha_hash: senhaHash })
+                    body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'alterar-senha', login, senha_hash: senhaHash })
                 }).catch(() => null);
                 const dSenha = rSenha ? await rSenha.json().catch(() => null) : null;
                 if (!dSenha || !dSenha.ok) {
@@ -511,10 +511,10 @@
 
         async function solicitarExclusao(idUsuario, loginUsuario) {
             if (confirm(`⚠️ Excluir '${loginUsuario.toUpperCase()}' permanentemente?`)) {
-                const resp = await fetch(`${N8N_URL}/gestao-usuarios`, {
+                const resp = await fetch(`${N8N_URL}/admin-api`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'deletar', id: idUsuario })
+                    body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'deletar-usuario', id: idUsuario })
                 }).catch(() => null);
                 const result = resp ? await resp.json().catch(() => null) : null;
                 if (result && result.ok) {
@@ -551,10 +551,10 @@
             btn.classList.add('girando');
 
             try {
-                const resp = await fetch(`${N8N_URL}/dashboard-acessos`, {
+                const resp = await fetch(`${N8N_URL}/admin-api`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ _api_key: N8N_API_KEY })
+                    body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'dashboard-acessos' })
                 }).catch(() => null);
                 const resultado = resp ? await resp.json().catch(() => null) : null;
 
