@@ -268,18 +268,15 @@
                             <tr>
                                 <th>Data</th>
                                 <th>Hora</th>
+                                <th>Portaria</th>
                                 <th>Nome</th>
                                 <th>Empresa</th>
-                                <th>Responsável</th>
                                 <th>Motivo</th>
-                                <th>Crachá</th>
                                 <th>Tipo</th>
-                                <th>Liberado</th>
-                                <th>Vigilante</th>
                             </tr>
                         </thead>
                         <tbody id="d-corpo-hist">
-                            <tr><td colspan="10" class="dash-estado">Aguardando carregamento...</td></tr>
+                            <tr><td colspan="7" class="dash-estado">Aguardando carregamento...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -554,15 +551,19 @@
             btn.classList.add('girando');
 
             try {
-                console.log('BUSCANDO ACESSOS...');
-                const todos = await dbBuscar('acessos', {}, { order: 'id.desc' });
-                console.log('RESULTADO:', todos);
-                console.log('PRIMEIRO REGISTRO:', todos[0], 'HOJE:', dataHoje());
+                const resp = await fetch(`${N8N_URL}/dashboard-acessos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ _api_key: N8N_API_KEY })
+                }).catch(() => null);
+                const resultado = resp ? await resp.json().catch(() => null) : null;
 
-                if (!todos || !Array.isArray(todos)) {
+                if (!resultado || !resultado.ok || !Array.isArray(resultado.dados)) {
                     dashMostrarErro();
                     return;
                 }
+
+                const todos = resultado.dados;
 
                 const hoje     = dataHoje();
                 const deHoje   = todos.filter(r => (r.data || r.data_acesso || r.data_hora || r.created_at || '').slice(0,10) === hoje);
@@ -643,7 +644,7 @@
             document.getElementById('d-badge-hist').textContent = lista.length + ' registros';
 
             if (!lista.length) {
-                tbody.innerHTML = '<tr><td colspan="10" class="dash-estado">Nenhum registro encontrado</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="dash-estado">Nenhum registro encontrado</td></tr>';
                 return;
             }
 
@@ -656,14 +657,11 @@
                     <tr>
                         <td>${r.data || '—'}</td>
                         <td style="font-family:monospace">${r.hora || '—'}</td>
+                        <td style="color:#7f8c8d;font-size:11px">${r.portaria || '—'}</td>
                         <td style="font-weight:500">${r.nome || '—'}</td>
                         <td style="color:#7f8c8d">${r.empresa || '—'}</td>
-                        <td style="color:#7f8c8d">${r.responsavel || '—'}</td>
                         <td style="color:#7f8c8d">${r.motivo || '—'}</td>
-                        <td style="font-family:monospace;color:#7f8c8d">${r.cracha || '—'}</td>
                         <td>${badge}</td>
-                        <td style="color:#7f8c8d">${r.liberado || '—'}</td>
-                        <td style="color:#7f8c8d">${r.vigilante || '—'}</td>
                     </tr>`;
             }).join('');
         }
@@ -672,7 +670,7 @@
             const msg = '<div class="dash-estado"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Erro ao carregar dados</div>';
             document.getElementById('d-lista-eventos').innerHTML   = msg;
             document.getElementById('d-lista-presentes').innerHTML = msg;
-            document.getElementById('d-corpo-hist').innerHTML = '<tr><td colspan="10" class="dash-estado">Erro ao carregar dados</td></tr>';
+            document.getElementById('d-corpo-hist').innerHTML = '<tr><td colspan="7" class="dash-estado">Erro ao carregar dados</td></tr>';
         }
     </script>
 <script src="/js/session-timeout.js"></script>
