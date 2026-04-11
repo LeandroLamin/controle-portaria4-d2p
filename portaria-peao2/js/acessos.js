@@ -127,18 +127,19 @@ function _paRenderizarTabela(lista) {
     lista.forEach(item => {
         const tr = document.createElement('tr');
         tr.style.borderBottom = '1px solid #e8ecf0';
-        tr.innerHTML = `
-            <td style="padding:7px 10px;">${_formatarDataPA(item.data)}</td>
-            <td style="padding:7px 10px;">${item.hora    || ''}</td>
-            <td style="padding:7px 10px;">${item.nome    || ''}</td>
-            <td style="padding:7px 10px;">${item.cpf      || ''}</td>
-            <td style="padding:7px 10px;">${item.empresa || ''}</td>
-            <td style="padding:7px 10px;">${item.cavalo  || ''}</td>
-            <td style="padding:7px 10px;">${item.placa   || ''}</td>
-            <td style="padding:7px 10px;">${item.carreta || ''}</td>
-            <td style="padding:7px 10px;">${item.motivo  || ''}</td>
-            <td style="padding:7px 10px; font-weight:700;">${item.acesso || ''}</td>
-        `;
+        [
+            [_formatarDataPA(item.data), false], [item.hora || '', false],
+            [item.nome || '', false], [item.cpf || '', false],
+            [item.empresa || '', false], [item.cavalo || '', false],
+            [item.placa || '', false], [item.carreta || '', false],
+            [item.motivo || '', false], [item.acesso || '', true]
+        ].forEach(([val, bold]) => {
+            const td = document.createElement('td');
+            td.style.padding = '7px 10px';
+            if (bold) td.style.fontWeight = '700';
+            td.textContent = val;
+            tr.appendChild(td);
+        });
         tbody.appendChild(tr);
     });
 }

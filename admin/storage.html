@@ -8,11 +8,13 @@
     (function() {
         var auth = sessionStorage.getItem('d2p-auth');
         var session = sessionStorage.getItem('adminSession');
-        if (!auth && !session) { location.replace('/menu/index.html'); }
+        var nivel = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
+        if (!session && (!auth || !nivel.includes('administrador'))) { location.replace('/menu/index.html'); }
     })();
     </script>
     <link rel="stylesheet" href="../css/style.css">
     <script src="../conexao/config.js"></script>
+    <script src="../conexao/config-storage.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; display: flex; min-height: 100vh; }
@@ -138,9 +140,9 @@
 </main>
 
 <script>
-if (typeof SUPABASE_URL === 'undefined') {
-    document.getElementById('img-grid').innerHTML = '<div class="empty-state">Erro: config.js não carregou.</div>';
-    throw new Error('config.js não carregou');
+if (typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_SERVICE_KEY === 'undefined') {
+    document.getElementById('img-grid').innerHTML = '<div class="empty-state">Erro: arquivos de configuração não carregaram.</div>';
+    throw new Error('config.js ou config-storage.js não carregou');
 }
 const BASE = SUPABASE_URL + '/storage/v1';
 const HEADERS = { 'Authorization': 'Bearer ' + SUPABASE_SERVICE_KEY };

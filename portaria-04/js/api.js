@@ -108,13 +108,28 @@ function renderizarTabela(lista) {
     const tbody = document.querySelector('#tabela-resultados tbody');
     tbody.innerHTML = '';
     lista.forEach(item => {
-        tbody.innerHTML += `<tr>
-            <td>${_formatarData(item.data)}</td><td>${item.hora}</td><td>${item.cpf}</td>
-            <td>${item.nome}</td><td>${item.empresa}</td><td>${item.responsavel}</td>
-            <td>${item.liberado}</td><td>${item.motivo}</td><td>${item.vigilante}</td>
-            <td>${item.cracha || '-'}</td><td>${item.acesso}</td><td>${item.obs || ''}</td>
-        </tr>`;
+        const tr = document.createElement('tr');
+        [
+            _formatarData(item.data), item.hora || '', item.cpf || '',
+            item.nome || '', item.empresa || '', item.responsavel || '',
+            item.liberado || '', item.motivo || '', item.vigilante || '',
+            item.cracha || '-', item.acesso || '', item.obs || ''
+        ].forEach(val => {
+            const td = document.createElement('td');
+            td.textContent = val;
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
     });
+}
+
+// --- ESCAPAR CAMPO CSV ---
+function _escaparCsv(val) {
+    const s = String(val == null ? '' : val);
+    if (/[;\"\n\r]/.test(s) || /^[=+\-@\t\r]/.test(s)) {
+        return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
 }
 
 // --- EXPORTAR EXCEL ---
@@ -122,7 +137,12 @@ function exportarExcel() {
     if (dadosFiltradosGlobal.length === 0) return notify("Busque os dados primeiro.", 'aviso');
     let csv = '\uFEFFData;Hora;CPF;Nome;Empresa;Responsavel;Liberado;Motivo;Vigilante;Cracha;Acesso;Obs\n';
     dadosFiltradosGlobal.forEach(row => {
-        csv += `${row.data};${row.hora};${row.cpf};${row.nome};${row.empresa};${row.responsavel};${row.liberado};${row.motivo};${row.vigilante};${row.cracha};${row.acesso};${row.obs}\n`;
+        csv += [
+            _escaparCsv(row.data), _escaparCsv(row.hora), _escaparCsv(row.cpf),
+            _escaparCsv(row.nome), _escaparCsv(row.empresa), _escaparCsv(row.responsavel),
+            _escaparCsv(row.liberado), _escaparCsv(row.motivo), _escaparCsv(row.vigilante),
+            _escaparCsv(row.cracha), _escaparCsv(row.acesso), _escaparCsv(row.obs)
+        ].join(';') + '\n';
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");

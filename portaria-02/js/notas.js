@@ -153,12 +153,22 @@ function _nfRenderizarTabela(lista) {
     lista.forEach(item => {
         const tr = document.createElement('tr');
         tr.style.borderBottom = '1px solid #e8ecf0';
-        tr.innerHTML = `
-            <td style="padding:7px 10px;">${_nfFormatarData(item.data)}</td>
-            <td style="padding:7px 10px;">${item.hora || ''}</td>
-            <td style="padding:7px 10px; font-size:11px; color:#888;">${item.numero_nf || ''}</td>
-            <td style="padding:7px 10px; font-weight:700; color:var(--teal-dk);">${item.num_nf || _nfExtrairNumero(item.numero_nf) || ''}</td>
-        `;
+        const tdData = document.createElement('td');
+        tdData.style.padding = '7px 10px';
+        tdData.textContent = _nfFormatarData(item.data);
+        tr.appendChild(tdData);
+        const tdHora = document.createElement('td');
+        tdHora.style.padding = '7px 10px';
+        tdHora.textContent = item.hora || '';
+        tr.appendChild(tdHora);
+        const tdChave = document.createElement('td');
+        tdChave.style.cssText = 'padding:7px 10px; font-size:11px; color:#888;';
+        tdChave.textContent = item.numero_nf || '';
+        tr.appendChild(tdChave);
+        const tdNum = document.createElement('td');
+        tdNum.style.cssText = 'padding:7px 10px; font-weight:700; color:var(--teal-dk);';
+        tdNum.textContent = item.num_nf || _nfExtrairNumero(item.numero_nf) || '';
+        tr.appendChild(tdNum);
         tbody.appendChild(tr);
     });
 }

@@ -9,7 +9,8 @@
 (function() {
     var auth = sessionStorage.getItem('d2p-auth');
     var session = sessionStorage.getItem('adminSession');
-    if (!auth && !session) { location.replace('/menu/index.html'); }
+    var nivel = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
+    if (!session && (!auth || !nivel.includes('administrador'))) { location.replace('/menu/index.html'); }
 })();
 </script>
     <style>

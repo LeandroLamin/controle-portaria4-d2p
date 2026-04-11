@@ -124,20 +124,20 @@ function _pvRenderizarTabela(lista) {
     lista.forEach(item => {
         const tr = document.createElement('tr');
         tr.style.borderBottom = '1px solid #e8ecf0';
-        tr.innerHTML = `
-            <td style="padding:7px 10px;">${_formatarDataPV(item.data)}</td>
-            <td style="padding:7px 10px;">${item.hora        || ''}</td>
-            <td style="padding:7px 10px;">${item.nome        || ''}</td>
-            <td style="padding:7px 10px;">${item.cpf         || ''}</td>
-            <td style="padding:7px 10px;">${item.responsavel || ''}</td>
-            <td style="padding:7px 10px;">${item.empresa     || ''}</td>
-            <td style="padding:7px 10px;">${item.motivo      || ''}</td>
-            <td style="padding:7px 10px;">${item.num_cracha  || ''}</td>
-            <td style="padding:7px 10px;">${item.liberado    || ''}</td>
-            <td style="padding:7px 10px;">${item.porteiro    || ''}</td>
-            <td style="padding:7px 10px;">${item.observacao  || ''}</td>
-            <td style="padding:7px 10px; font-weight:700;">${item.acesso || ''}</td>
-        `;
+        [
+            [_formatarDataPV(item.data), false], [item.hora || '', false],
+            [item.nome || '', false], [item.cpf || '', false],
+            [item.responsavel || '', false], [item.empresa || '', false],
+            [item.motivo || '', false], [item.num_cracha || '', false],
+            [item.liberado || '', false], [item.porteiro || '', false],
+            [item.observacao || '', false], [item.acesso || '', true]
+        ].forEach(([val, bold]) => {
+            const td = document.createElement('td');
+            td.style.padding = '7px 10px';
+            if (bold) td.style.fontWeight = '700';
+            td.textContent = val;
+            tr.appendChild(td);
+        });
         tbody.appendChild(tr);
     });
 }
