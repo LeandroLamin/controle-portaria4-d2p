@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D2P - Migração de Segurança</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #121212; color: white; padding-top: 50px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background-color: #1e1e1e; border: 1px solid #333; border-radius: 15px; }
+        .form-control { background-color: #2b2b2b; border: 1px solid #444; color: white; }
+        .form-control:focus { background-color: #333; color: white; border-color: #0d6efd; box-shadow: none; }
+        .btn-primary { border-radius: 10px; font-weight: bold; background-color: #0d6efd; border: none; transition: 0.3s; }
+        .btn-primary:hover { background-color: #0b5ed7; transform: translateY(-1px); }
+        .status-msg { margin-top: 20px; font-size: 0.9rem; min-height: 24px; }
+        .text-muted { color: #888 !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-lg p-4">
+                    <h4 class="text-center mb-4">🛡️ Migração PBKDF2</h4>
+                    <p class="text-muted text-center" style="font-size: 0.85rem;">
+                        Este utilitário converte a senha do usuário para o padrão de segurança máxima (100k iterações) no servidor n8n.
+                    </p>
+                    
+                    <form id="formMigracao">
+                        <div class="mb-3">
+                            <label class="form-label">Login do Usuário</label>
+                            <input type="text" id="login" class="form-control" placeholder="Ex: leandro" required autocomplete="username">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Senha (Nova ou Atual)</label>
+                            <input type="password" id="nova_senha" class="form-control" required autocomplete="new-password">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 p-2" id="btnMigrar">
+                            EXECUTAR ATUALIZAÇÃO
+                        </button>
+                    </form>
+
+                    <div id="status" class="status-msg text-center"></div>
+                    
+                    <div class="text-center mt-4 border-top pt-3">
+                        <a href="index.html" class="text-secondary text-decoration-none small">← Voltar ao Gerenciamento</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = "D2P-2025-9xKmPv3nLqRw7j"; //
+        const WEBHOOK_URL = "https://n8n.laminlpp.com.br/webhook/usuario-senha"; //
+
+        document.getElementById('formMigracao').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btnMigrar');
+            const status = document.getElementById('status');
+            const login = document.getElementById('login').value.toLowerCase().trim();
+            const nova_senha = document.getElementById('nova_senha').value;
+
+            btn.disabled = true;
+            status.innerHTML = "⏳ Processando no servidor...";
+            status.style.color = "#ffc107";
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        login: login,
+                        nova_senha: nova_senha,
+                        _api_key: API_KEY
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    status.innerHTML = "✅ Sucesso! Usuário migrado para PBKDF2.";
+                    status.style.color = "#198754";
+                    document.getElementById('formMigracao').reset();
+                } else {
+                    status.innerHTML = "❌ Erro: " + (data.erro || "Falha na resposta");
+                    status.style.color = "#dc3545";
+                }
+            } catch (err) {
+                status.innerHTML = "❌ Erro de conexão com o n8n.";
+                status.style.color = "#dc3545";
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
+    <script src="/js/session-timeout.js"></script>
+</body>
+</html>
