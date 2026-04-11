@@ -382,11 +382,12 @@
 
         async function buscarUsuarios() {
             const corpoTabela = document.getElementById('corpo-tabela-usuarios');
-            const resp = await fetch(`${N8N_URL}/webhook/gestao-usuarios`, {
+            const resp = await fetch(`${N8N_URL}/gestao-usuarios`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'listar' })
             }).catch(() => null);
+
             const data = resp ? await resp.json().catch(() => null) : null;
 
             if (!data || !data.ok) {
@@ -478,7 +479,7 @@
 
             const campos = { nome_completo: nome, login: login, nivel_acesso: niveis.join(',') };
 
-            const resp = await fetch(`${N8N_URL}/webhook/gestao-usuarios`, {
+            const resp = await fetch(`${N8N_URL}/gestao-usuarios`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'atualizar', id: Number(id), dados: campos })
@@ -492,7 +493,7 @@
 
             if (senha) {
                 const senhaHash = await hashSenha(login, senha);
-                const rSenha = await fetch(`${N8N_URL}/webhook/usuario-senha`, {
+                const rSenha = await fetch(`${N8N_URL}/usuario-senha`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ _api_key: N8N_API_KEY, login, senha_hash: senhaHash })
@@ -513,7 +514,7 @@
 
         async function solicitarExclusao(idUsuario, loginUsuario) {
             if (confirm(`⚠️ Excluir '${loginUsuario.toUpperCase()}' permanentemente?`)) {
-                const resp = await fetch(`${N8N_URL}/webhook/gestao-usuarios`, {
+                const resp = await fetch(`${N8N_URL}/gestao-usuarios`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ _api_key: N8N_API_KEY, operacao: 'deletar', id: idUsuario })
