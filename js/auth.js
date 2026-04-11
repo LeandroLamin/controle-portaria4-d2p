@@ -9,15 +9,17 @@ async function fazerLogin(portariaAtual) {
     }
 
     // --- PASSO 1: ENVIAR CREDENCIAIS AO SERVIDOR (n8n) ---
-    // Senha enviada em plaintext via HTTPS — hash feito server-side com PBKDF2
+    // Senha hasheada no browser antes de sair (SHA-256 com login como salt)
+    // Verificação e comparação feita server-side no n8n
     let resultado;
     try {
+        const senhaHash = await hashSenha(userDigitado, passDigitada);
         const resposta = await fetch('https://n8n.laminlpp.com.br/webhook/login-portaria', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 login: userDigitado,
-                senha: passDigitada,
+                senha: senhaHash,
                 portaria: portariaAtual,
                 _api_key: N8N_API_KEY
             })
