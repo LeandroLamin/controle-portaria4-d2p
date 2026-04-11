@@ -1,0 +1,64 @@
+{
+  "name": "D2P - Storage Deletar",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "storage-deletar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "cccccccc-0003-0003-0003-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "d2p-storage-deletar"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\n\nif (!body || body._api_key !== 'D2P-2025-9xKmPv3nLqRw7j') {\n  throw new Error('API key inválida');\n}\n\nif (!body.nome && !body.prefixes) {\n  return [{ json: { ok: false, error: 'Parâmetro obrigatório ausente: nome (ou prefixes[])' } }];\n}\n\nconst bucket = body.bucket || 'assets';\nconst prefixes = body.prefixes || [body.nome];\n\nlet ok = false;\nlet errorMsg = '';\n\ntry {\n  await this.helpers.httpRequest({\n    method: 'DELETE',\n    url: `https://n8n-supabase.tbjno4.easypanel.host/storage/v1/object/${bucket}`,\n    headers: {\n      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.ltgccMHjFZd9KWoa9zyrzI5J160DoDM7YpfzNj-MMOk',\n      'Content-Type': 'application/json'\n    },\n    body: { prefixes }\n  });\n  ok = true;\n} catch (err) {\n  errorMsg = err.message || 'Falha ao deletar';\n}\n\nreturn [{ json: { ok, error: errorMsg } }];"
+      },
+      "id": "cccccccc-0003-0003-0003-000000000002",
+      "name": "Deletar no Supabase",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Content-Type", "value": "application/json" }
+            ]
+          }
+        }
+      },
+      "id": "cccccccc-0003-0003-0003-000000000003",
+      "name": "Responder",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [{ "node": "Deletar no Supabase", "type": "main", "index": 0 }]
+      ]
+    },
+    "Deletar no Supabase": {
+      "main": [
+        [{ "node": "Responder", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

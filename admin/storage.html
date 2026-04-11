@@ -14,7 +14,6 @@
     </script>
     <link rel="stylesheet" href="../css/style.css">
     <script src="../conexao/config.js"></script>
-    <script src="../conexao/config-storage.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; display: flex; min-height: 100vh; }
@@ -140,13 +139,8 @@
 </main>
 
 <script>
-if (typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_SERVICE_KEY === 'undefined') {
-    document.getElementById('img-grid').innerHTML = '<div class="empty-state">Erro: arquivos de configuração não carregaram.</div>';
-    throw new Error('config.js ou config-storage.js não carregou');
-}
-const BASE = SUPABASE_URL + '/storage/v1';
-const HEADERS = { 'Authorization': 'Bearer ' + SUPABASE_SERVICE_KEY };
-const PUB_URL = BASE + '/object/public/' + SUPABASE_BUCKET + '/';
+// URL pública do storage (sem autenticação — bucket é public)
+const PUB_URL = SUPABASE_URL + '/storage/v1/object/public/' + SUPABASE_BUCKET + '/';
 
 let arquivoSelecionado = null;
 
@@ -175,7 +169,7 @@ function selecionarArquivo(file) {
     document.getElementById('upload-status').textContent = '';
 }
 
-// ── Upload ───────────────────────────────────────────────────
+// ── Upload (via n8n) ─────────────────────────────────────────
 async function uploadImagem() {
     if (!arquivoSelecionado) return;
     const nome = document.getElementById('file-name').value.trim();
@@ -190,13 +184,28 @@ async function uploadImagem() {
     status.className = 'upload-status';
 
     try {
-        const resp = await fetch(`${BASE}/object/${SUPABASE_BUCKET}/${nome}`, {
+        // Converter arquivo para base64 para enviar via JSON ao n8n
+        const dados = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(arquivoSelecionado);
+        });
+
+        const resp = await fetch(`${N8N_URL}/storage-upload`, {
             method: 'POST',
-            headers: { ...HEADERS, 'Content-Type': arquivoSelecionado.type, 'x-upsert': upsert ? 'true' : 'false' },
-            body: arquivoSelecionado
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                _api_key: N8N_API_KEY,
+                bucket: SUPABASE_BUCKET,
+                nome,
+                content_type: arquivoSelecionado.type,
+                upsert,
+                dados
+            })
         });
         const json = await resp.json();
-        if (resp.ok) {
+        if (json.ok) {
             status.textContent = '✓ Imagem enviada com sucesso!';
             status.className = 'upload-status ok';
             arquivoSelecionado = null;
@@ -205,7 +214,7 @@ async function uploadImagem() {
             document.getElementById('file-input').value = '';
             listarImagens();
         } else {
-            status.textContent = '✗ Erro: ' + (json.error || json.message || 'falha no envio');
+            status.textContent = '✗ Erro: ' + (json.error || 'falha no envio');
             status.className = 'upload-status err';
         }
     } catch (e) {
@@ -217,47 +226,82 @@ async function uploadImagem() {
     btn.textContent = '⬆ ENVIAR IMAGEM';
 }
 
-// ── Listar ───────────────────────────────────────────────────
+// ── Listar (via n8n) ─────────────────────────────────────────
 async function listarImagens() {
     const grid = document.getElementById('img-grid');
     grid.innerHTML = '<div class="empty-state">Carregando...</div>';
     try {
-        const resp = await fetch(`${BASE}/object/list/${SUPABASE_BUCKET}`, {
+        const resp = await fetch(`${N8N_URL}/storage-listar`, {
             method: 'POST',
-            headers: { ...HEADERS, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prefix: '', limit: 200, offset: 0, sortBy: { column: 'name', order: 'asc' } })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ _api_key: N8N_API_KEY, bucket: SUPABASE_BUCKET })
         });
         let lista;
         try { lista = await resp.json(); } catch(err) { lista = null; }
-        if (!resp.ok) {
-            const msg = lista?.message || lista?.error || 'HTTP ' + resp.status;
-            grid.innerHTML = `<div class="empty-state">Erro ao carregar imagens.<br><small style="color:#aaa">${msg}</small></div>`;
+
+        if (!Array.isArray(lista)) {
+            const msg = lista?.message || lista?.error || 'Resposta inválida do servidor';
+            grid.innerHTML = '<div class="empty-state">Erro ao carregar imagens.<br><small style="color:#aaa"></small></div>';
+            grid.querySelector('small').textContent = msg;
             return;
         }
-        if (!Array.isArray(lista) || lista.length === 0) {
+        if (lista.length === 0) {
             grid.innerHTML = '<div class="empty-state">Nenhuma imagem no bucket.</div>';
             return;
         }
+
         grid.innerHTML = '';
         lista.forEach(item => {
             const url = PUB_URL + item.name;
             const kb = item.metadata?.size ? (item.metadata.size / 1024).toFixed(1) + ' KB' : '';
+
+            // Construção segura — sem innerHTML com dados do servidor
             const div = document.createElement('div');
             div.className = 'img-card';
-            div.innerHTML = `
-                <img src="${url}" alt="${item.name}" loading="lazy" onerror="this.style.background='#eee'">
-                <div class="img-card-body">
-                    <div class="img-name" title="${item.name}">${item.name}</div>
-                    <div class="img-size">${kb}</div>
-                    <div class="img-actions">
-                        <button class="btn-copy" onclick="copiarUrl('${url}', this)">📋 Copiar URL</button>
-                        <button class="btn-del" onclick="deletarImagem('${item.name}', this)">🗑</button>
-                    </div>
-                </div>`;
+
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = item.name;
+            img.loading = 'lazy';
+            img.onerror = function() { this.style.background = '#eee'; };
+
+            const body = document.createElement('div');
+            body.className = 'img-card-body';
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'img-name';
+            nameDiv.title = item.name;
+            nameDiv.textContent = item.name;
+
+            const sizeDiv = document.createElement('div');
+            sizeDiv.className = 'img-size';
+            sizeDiv.textContent = kb;
+
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'img-actions';
+
+            const btnCopy = document.createElement('button');
+            btnCopy.className = 'btn-copy';
+            btnCopy.textContent = '📋 Copiar URL';
+            btnCopy.addEventListener('click', () => copiarUrl(url, btnCopy));
+
+            const btnDel = document.createElement('button');
+            btnDel.className = 'btn-del';
+            btnDel.textContent = '🗑';
+            btnDel.addEventListener('click', () => deletarImagem(item.name, btnDel));
+
+            actionsDiv.appendChild(btnCopy);
+            actionsDiv.appendChild(btnDel);
+            body.appendChild(nameDiv);
+            body.appendChild(sizeDiv);
+            body.appendChild(actionsDiv);
+            div.appendChild(img);
+            div.appendChild(body);
             grid.appendChild(div);
         });
     } catch (e) {
-        grid.innerHTML = `<div class="empty-state">Erro ao carregar imagens.<br><small style="color:#aaa">${e.message}</small></div>`;
+        grid.innerHTML = '<div class="empty-state">Erro ao carregar imagens.<br><small style="color:#aaa"></small></div>';
+        grid.querySelector('small').textContent = e.message;
     }
 }
 
@@ -271,18 +315,19 @@ function copiarUrl(url, btn) {
     });
 }
 
-// ── Deletar ──────────────────────────────────────────────────
+// ── Deletar (via n8n) ────────────────────────────────────────
 async function deletarImagem(nome, btn) {
     if (!confirm(`Deletar "${nome}"?`)) return;
     btn.disabled = true;
     try {
-        const resp = await fetch(`${BASE}/object/${SUPABASE_BUCKET}`, {
-            method: 'DELETE',
-            headers: { ...HEADERS, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prefixes: [nome] })
+        const resp = await fetch(`${N8N_URL}/storage-deletar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ _api_key: N8N_API_KEY, bucket: SUPABASE_BUCKET, nome })
         });
-        if (resp.ok) listarImagens();
-        else { alert('Erro ao deletar.'); btn.disabled = false; }
+        const json = await resp.json();
+        if (json.ok) listarImagens();
+        else { alert('Erro ao deletar: ' + (json.error || 'falha')); btn.disabled = false; }
     } catch { alert('Erro de conexão.'); btn.disabled = false; }
 }
 
