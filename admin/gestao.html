@@ -124,6 +124,19 @@
             .dash-cards { grid-template-columns: 1fr; }
             .dash-duplo  { grid-template-columns: 1fr; }
         }
+
+        /* ── Modal Notificação ── */
+        #modal-notif { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9000; align-items:center; justify-content:center; }
+        #modal-notif.show { display:flex; }
+        .modal-notif-card { background:#fff; border-radius:14px; padding:32px 28px; max-width:340px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:modalIn .18s ease; }
+        @keyframes modalIn { from{transform:scale(.92);opacity:0} to{transform:scale(1);opacity:1} }
+        .modal-notif-icon { font-size:44px; margin-bottom:12px; line-height:1; }
+        .modal-notif-msg { font-size:15px; color:#2c3e50; margin-bottom:24px; line-height:1.5; }
+        .modal-notif-btns { display:flex; gap:10px; justify-content:center; }
+        .modal-notif-btn-ok { background:#f1c40f; color:#1a252f; border:none; border-radius:8px; padding:12px 40px; font-size:14px; font-weight:700; cursor:pointer; transition:background .2s; }
+        .modal-notif-btn-ok:hover { background:#f39c12; }
+        .modal-notif-btn-cancel { background:#e0e0e0; color:#333; border:none; border-radius:8px; padding:12px 24px; font-size:14px; font-weight:700; cursor:pointer; transition:background .2s; }
+        .modal-notif-btn-cancel:hover { background:#ccc; }
     </style>
 </head>
 <body>
@@ -327,10 +340,46 @@
         </div>
     </div>
 
+    <!-- Modal Notificação -->
+    <div id="modal-notif">
+        <div class="modal-notif-card">
+            <div class="modal-notif-icon" id="modal-notif-icon"></div>
+            <div class="modal-notif-msg" id="modal-notif-msg"></div>
+            <div class="modal-notif-btns">
+                <button class="modal-notif-btn-cancel" id="modal-notif-cancel" style="display:none">Cancelar</button>
+                <button class="modal-notif-btn-ok" id="modal-notif-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../conexao/config.js"></script>
     <script src="../conexao/db.js"></script>
     <script src="../conexao/crypto.js"></script>
     <script>
+        // ── Modal Notificação ─────────────────────────────────
+        let _modalResolve = null;
+        function mostrarModal(msg, tipo) {
+            const icons = { sucesso: '✅', erro: '❌', aviso: '⚠️' };
+            document.getElementById('modal-notif-icon').textContent = icons[tipo] || 'ℹ️';
+            document.getElementById('modal-notif-msg').textContent = msg;
+            document.getElementById('modal-notif-cancel').style.display = 'none';
+            document.getElementById('modal-notif').classList.add('show');
+            return new Promise(r => { _modalResolve = r; });
+        }
+        function mostrarConfirm(msg) {
+            document.getElementById('modal-notif-icon').textContent = '⚠️';
+            document.getElementById('modal-notif-msg').textContent = msg;
+            document.getElementById('modal-notif-cancel').style.display = '';
+            document.getElementById('modal-notif').classList.add('show');
+            return new Promise(r => { _modalResolve = r; });
+        }
+        function fecharModalNotif(resultado) {
+            document.getElementById('modal-notif').classList.remove('show');
+            if (_modalResolve) { _modalResolve(resultado); _modalResolve = null; }
+        }
+        document.getElementById('modal-notif-btn').addEventListener('click', () => fecharModalNotif(true));
+        document.getElementById('modal-notif-cancel').addEventListener('click', () => fecharModalNotif(false));
+
         // ── Navegação entre seções ─────────────────────────────
         let dashCarregado = false;
         let dashInterval  = null;
@@ -471,8 +520,8 @@
                 document.querySelectorAll('.checkboxes-nivel input[type="checkbox"]:checked')
             ).map(cb => cb.value);
 
-            if (!nome || !login) return alert("Preencha todos os campos!");
-            if (niveis.length === 0) return alert("Selecione pelo menos um nível de acesso!");
+            if (!nome || !login) { await mostrarModal('Preencha todos os campos!', 'aviso'); return; }
+            if (niveis.length === 0) { await mostrarModal('Selecione pelo menos um nível de acesso!', 'aviso'); return; }
 
             const campos = { nome_completo: nome, login: login, nivel_acesso: niveis.join(',') };
 
@@ -484,7 +533,7 @@
             const result = resp ? await resp.json().catch(() => null) : null;
 
             if (!result || !result.ok) {
-                alert("Erro ao atualizar operador.");
+                await mostrarModal('Erro ao atualizar operador.', 'erro');
                 return;
             }
 
@@ -497,20 +546,20 @@
                 }).catch(() => null);
                 const dSenha = rSenha ? await rSenha.json().catch(() => null) : null;
                 if (!dSenha || !dSenha.ok) {
-                    alert("Dados atualizados, mas erro ao alterar senha.");
+                    await mostrarModal('Dados atualizados, mas erro ao alterar senha.', 'aviso');
                     fecharModal();
                     buscarUsuarios();
                     return;
                 }
             }
 
-            alert("Operador atualizado com sucesso!");
+            await mostrarModal('Operador atualizado com sucesso!', 'sucesso');
             fecharModal();
             buscarUsuarios();
         }
 
         async function solicitarExclusao(idUsuario, loginUsuario) {
-            if (confirm(`⚠️ Excluir '${loginUsuario.toUpperCase()}' permanentemente?`)) {
+            if (await mostrarConfirm(`Excluir '${loginUsuario.toUpperCase()}' permanentemente? Esta ação não pode ser desfeita.`)) {
                 const resp = await fetch(`${N8N_URL}/admin-api`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -518,10 +567,10 @@
                 }).catch(() => null);
                 const result = resp ? await resp.json().catch(() => null) : null;
                 if (result && result.ok) {
-                    alert("Acesso removido!");
+                    await mostrarModal('Acesso removido com sucesso!', 'sucesso');
                     buscarUsuarios();
                 } else {
-                    alert("Erro ao remover usuário.");
+                    await mostrarModal('Erro ao remover usuário.', 'erro');
                 }
             }
         }
