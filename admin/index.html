@@ -413,13 +413,17 @@
             const pass = document.getElementById('pass-admin').value.trim();
             if (!user || !pass) return;
 
-            const senhaHash = await hashSenha(user, pass);
-            const data = await dbBuscar('usuarios', { login: user, senha: senhaHash });
+            const resp = await fetch(`${N8N_URL}/login-portaria`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login: user, senha: pass, portaria: 'administrador', _api_key: N8N_API_KEY })
+            }).catch(() => null);
+            const resultado = resp ? await resp.json().catch(() => null) : null;
 
-            if (data && data.length > 0 && data[0].nivel_acesso.toLowerCase().split(',').map(n => n.trim()).includes('administrador')) {
-                sessionStorage.setItem('adminSession', JSON.stringify({ nome: data[0].nome_completo }));
+            if (resultado && resultado.ok && resultado.nivel_acesso.toLowerCase().split(',').map(n => n.trim()).includes('administrador')) {
+                sessionStorage.setItem('adminSession', JSON.stringify({ nome: resultado.nome_completo }));
                 document.getElementById('wrapper-login').style.display = 'none';
-                document.getElementById('nome-admin-logado').innerText = data[0].nome_completo;
+                document.getElementById('nome-admin-logado').innerText = resultado.nome_completo;
             } else {
                 alert("Acesso Negado: Usuário não é Administrador ou senha incorreta.");
             }
@@ -435,12 +439,16 @@
             if (!nome || !login || !senha) return alert("Atenção: Preencha todos os campos!");
 
             const senhaHash = await hashSenha(login, senha);
-            const result = await dbSalvar('usuarios', {
-                nome_completo: nome,
-                login: login,
-                senha: senhaHash,
-                nivel_acesso: nivel
-            });
+            const resp = await fetch(`${N8N_URL}/gestao-usuarios`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    _api_key: N8N_API_KEY,
+                    operacao: 'cadastrar',
+                    dados: { nome_completo: nome, login, senha: senhaHash, nivel_acesso: nivel }
+                })
+            }).catch(() => null);
+            const result = resp ? await resp.json().catch(() => null) : null;
 
             if (result && result.ok) {
                 alert("Usuário " + nome + " cadastrado com sucesso!");
