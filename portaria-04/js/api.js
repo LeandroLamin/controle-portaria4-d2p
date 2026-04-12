@@ -6,6 +6,8 @@
  * ================================================================================
  */
 
+const TABELA_P04 = 'portaria-04-acessos';
+
 let dadosFiltradosGlobal = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,7 +21,7 @@ async function localizar() {
     let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
     if (!cpfVal) return notify("Digite um CPF.", 'aviso');
 
-    const data = await dbBuscar('acessos', { cpf: cpfVal }, { order: 'id.desc', limit: 1 });
+    const data = await dbBuscar(TABELA_P04, { cpf: cpfVal }, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
         const ultimo = data[0];
@@ -56,7 +58,7 @@ async function salvar() {
         return notify("Preencha todos os campos antes de salvar.", 'aviso');
     }
 
-    const result = await dbSalvar('acessos', dados);
+    const result = await dbSalvar(TABELA_P04, dados);
 
     if (result && result.ok) {
         notify("Acesso registrado com sucesso!", 'sucesso');
@@ -84,7 +86,7 @@ async function buscarRelatorio() {
         }
     }
 
-    const data = await dbBuscar('acessos', filtros);
+    const data = await dbBuscar(TABELA_P04, filtros);
 
     if (data === null) return;
     if (data.length > 0) {
