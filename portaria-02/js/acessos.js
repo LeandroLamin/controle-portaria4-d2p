@@ -37,6 +37,29 @@ async function acsRegistrar(acesso) {
     const result = await dbSalvar(TABELA_ACS, dados);
     if (result && result.ok) {
         notify(`${acesso} registrada com sucesso!`, 'sucesso');
+
+        // Se SAÍDA: gravar SAÍDA também no Peão 2 para invalidar o acesso
+        if (acesso === 'SAÍDA' && dados.cpf) {
+            const peao2 = await dbBuscar('portaria-peao2-acessos',
+                { cpf: dados.cpf, data_gte: dados.data, data_lte: dados.data },
+                { order: 'id.desc', limit: 1 });
+            if (peao2 && peao2.length > 0 && peao2[0].acesso === 'ENTRADA') {
+                const ref = peao2[0];
+                await dbSalvar('portaria-peao2-acessos', {
+                    nome:    ref.nome,
+                    cpf:     ref.cpf,
+                    empresa: ref.empresa,
+                    cavalo:  ref.cavalo  || '',
+                    placa:   ref.placa,
+                    carreta: ref.carreta || '',
+                    motivo:  ref.motivo,
+                    acesso:  'SAÍDA',
+                    data:    dados.data,
+                    hora:    dados.hora
+                });
+            }
+        }
+
         limparCampos('tela-acessos');
         document.getElementById('acs-peao2-status').style.display = 'none';
     } else {
