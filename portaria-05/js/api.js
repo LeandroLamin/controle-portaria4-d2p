@@ -9,20 +9,23 @@ let dadosFiltradosGlobal = [];
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    const cpfInput = document.getElementById('p05-cpf');
-    if (cpfInput) {
-        cpfInput.addEventListener('keydown', (e) => {
+    ['p05-cpf', 'p05-num-cracha'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') localizar();
         });
-    }
+    });
 });
 
-// ── 1. LOCALIZAR por CPF ──────────────────────────────────────────────────────
+// ── 1. LOCALIZAR por CPF ou N° Crachá ────────────────────────────────────────
 async function localizar() {
-    const cpf = document.getElementById('p05-cpf').value.trim();
-    if (!cpf) return notify('Digite o CPF para localizar.', 'aviso');
+    const cpf    = document.getElementById('p05-cpf').value.trim();
+    const cracha = document.getElementById('p05-num-cracha').value.trim();
 
-    const data = await dbBuscar(TABELA_P05, { cpf }, { order: 'id.desc', limit: 1 });
+    if (!cpf && !cracha) return notify('Digite o CPF ou N° Crachá para localizar.', 'aviso');
+
+    const filtros = cpf ? { cpf } : { num_cracha: cracha };
+    const data = await dbBuscar(TABELA_P05, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
         const u = data[0];
