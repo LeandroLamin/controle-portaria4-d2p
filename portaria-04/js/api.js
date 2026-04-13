@@ -11,26 +11,35 @@ const TABELA_P04 = 'portaria-04-acessos';
 let dadosFiltradosGlobal = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('cpf').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') localizar();
+    ['cpf', 'cracha'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') localizar();
+        });
     });
 });
 
-// --- 1. LOCALIZAR ---
+// --- 1. LOCALIZAR por CPF ou Nº Crachá ---
 async function localizar() {
-    let cpfVal = document.getElementById('cpf').value.replace(/\D/g, '');
-    if (!cpfVal) return notify("Digite um CPF.", 'aviso');
+    const cpfVal    = document.getElementById('cpf').value.replace(/\D/g, '');
+    const crachaVal = document.getElementById('cracha').value.trim();
 
-    const data = await dbBuscar(TABELA_P04, { cpf: cpfVal }, { order: 'id.desc', limit: 1 });
+    if (!cpfVal && !crachaVal) return notify("Digite o CPF ou Nº Crachá.", 'aviso');
+
+    const filtros = cpfVal ? { cpf: cpfVal } : { cracha: crachaVal };
+    const data = await dbBuscar(TABELA_P04, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
-        const ultimo = data[0];
-        document.getElementById('nome').value = ultimo.nome;
-        document.getElementById('empresa').value = ultimo.empresa;
-        document.getElementById('responsavel').value = ultimo.responsavel;
-        notify("CPF localizado!", 'sucesso');
+        const u = data[0];
+        document.getElementById('cpf').value        = u.cpf        || '';
+        document.getElementById('nome').value       = u.nome       || '';
+        document.getElementById('empresa').value    = u.empresa    || '';
+        document.getElementById('responsavel').value = u.responsavel || '';
+        document.getElementById('cracha').value     = u.cracha     || '';
+        document.getElementById('vigilante').value  = u.vigilante  || '';
+        notify("Registro localizado!", 'sucesso');
     } else {
-        notify("CPF não localizado na base.", 'aviso');
+        notify("Registro não localizado na base.", 'aviso');
     }
 }
 
