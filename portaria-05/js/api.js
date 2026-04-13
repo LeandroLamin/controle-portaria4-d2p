@@ -33,11 +33,10 @@ async function localizar() {
         document.getElementById('p05-cpf').value         = u.cpf         || '';
         document.getElementById('p05-empresa').value     = u.empresa     || '';
         document.getElementById('p05-responsavel').value = u.responsavel || '';
+        document.getElementById('p05-motivo').value      = u.motivo      || '';
+        document.getElementById('p05-liberado').value    = u.liberado    || '';
         document.getElementById('p05-num-cracha').value  = u.num_cracha  || '';
         document.getElementById('p05-vigilante').value   = u.vigilante   || '';
-        // Mantém "Selecione" vazio para obrigar preenchimento do novo acesso
-        document.getElementById('p05-motivo').value   = '';
-        document.getElementById('p05-liberado').value = '';
         notify('Cadastro localizado!', 'sucesso');
     } else {
         notify('CPF não localizado na base.', 'aviso');
