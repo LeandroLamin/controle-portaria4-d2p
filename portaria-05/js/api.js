@@ -30,6 +30,7 @@ async function localizar() {
     if (data && data.length > 0) {
         const u = data[0];
         document.getElementById('p05-nome').value        = u.nome        || '';
+        document.getElementById('p05-cpf').value         = u.cpf         || '';
         document.getElementById('p05-empresa').value     = u.empresa     || '';
         document.getElementById('p05-responsavel').value = u.responsavel || '';
         document.getElementById('p05-num-cracha').value  = u.num_cracha  || '';
