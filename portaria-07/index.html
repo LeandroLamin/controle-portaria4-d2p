@@ -1,145 +1,271 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Acesso - Portaria 07 CVP</title>
-    <script>
-        (function() {
-            var auth = sessionStorage.getItem('d2p-auth');
-            if (!auth) { location.replace('/menu/index.html'); return; }
-            var niveis = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
-            if (!niveis.includes('p07') && !niveis.includes('portaria-07') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Portaria+07'); }
-        })();
-    </script>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        :root { --teal:#1a8a7a; --teal-dk:#136b5e; --teal-lt:#e8f5f3; --yellow:#f5c518; --yellow-dk:#d4a800; --red:#e03030; --red-dk:#b82020; --gray-bg:#f0f2f5; --border:#d0d8e0; --text:#1a2a38; --label:#4a6070; --green-field:#d4f5d4; }
-        body { font-family:'Segoe UI',Arial,sans-serif; color:var(--text); background:var(--gray-bg); }
-        .topbar { background:var(--teal); display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:52px; box-shadow:0 2px 8px rgba(0,0,0,.15); }
-        .topbar-logo { font-size:11px; font-weight:800; color:rgba(255,255,255,.7); letter-spacing:3px; text-transform:uppercase; }
-        .topbar-titulo { font-size:16px; font-weight:700; color:#fff; letter-spacing:1px; }
-        .topbar-user { font-size:12px; color:rgba(255,255,255,.85); }
-        .topbar-user span { font-weight:700; color:#fff; }
-        .topbar-user a { color:var(--yellow); cursor:pointer; margin-left:12px; text-decoration:none; font-weight:600; }
-        .divisor-top { height:3px; background:linear-gradient(to right,var(--yellow),var(--teal-lt)); }
-        .content { padding:28px 32px; }
-        .card { background:#fff; border-radius:10px; padding:28px 32px 32px; box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border); max-width:900px; margin:0 auto; }
-        .sec-header { font-size:13px; font-weight:700; color:var(--teal-dk); letter-spacing:1.5px; text-transform:uppercase; padding-bottom:10px; border-bottom:2px solid var(--yellow); margin-bottom:24px; }
-        .campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
-        .campo-group { display:flex; flex-direction:column; gap:4px; }
-        .campo-label { font-size:11px; font-weight:600; color:var(--label); letter-spacing:.5px; text-transform:uppercase; }
-        input[type="text"], select, input[type="date"] { border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; height:36px; }
-        input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
-        .acoes { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; align-items:center; }
-        .btn-acao { padding:9px 22px; border-radius:6px; font-size:13px; font-weight:700; border:none; cursor:pointer; letter-spacing:.5px; transition:all .15s; }
-        .btn-filtro { background:#4a7080; color:#fff; }
-        .btn-limpar { background:#607080; color:#fff; }
-        .btn-pesquisar { background:var(--teal); color:#fff; }
-        .btn-salvar { background:#27ae60; color:#fff; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Acesso - Portaria 07 CVP</title>
+
+<script>
+(function() {
+    var auth = sessionStorage.getItem('d2p-auth');
+    if (!auth) { location.replace('/menu/index.html'); return; }
+    var niveis = (sessionStorage.getItem('d2p-nivel') || '').toLowerCase().split(',').map(function(n){ return n.trim(); });
+    if (!niveis.includes('p07') && !niveis.includes('portaria-07') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Portaria+07'); }
+})();
+</script>
+
+<script src="/js/xlsx.full.min.js"></script>
+<script src="../conexao/config.js?v=2"></script>
+<script src="../conexao/db.js?v=2"></script>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --teal:#1a8a7a; --teal-dk:#136b5e; --teal-lt:#e8f5f3;
+  --yellow:#f5c518; --yellow-dk:#d4a800;
+  --red:#e03030; --red-dk:#b82020;
+  --gray-bg:#f0f2f5; --border:#d0d8e0; --text:#1a2a38;
+  --label:#4a6070; --green-field:#d4f5d4;
+}
+body { font-family:'Segoe UI',Arial,sans-serif; color:var(--text); background:var(--gray-bg); margin:0; padding:0; }
+#sistema-principal { width:100%; display:none; }
+
+.topbar { background:var(--teal); display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:52px; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+.topbar-logo { font-size:11px; font-weight:800; color:rgba(255,255,255,.7); letter-spacing:3px; text-transform:uppercase; }
+.topbar-titulo { font-size:16px; font-weight:700; color:#fff; letter-spacing:1px; }
+.topbar-user { font-size:12px; color:rgba(255,255,255,.85); }
+.topbar-user span { font-weight:700; color:#fff; }
+.topbar-user a { color:var(--yellow); cursor:pointer; margin-left:8px; text-decoration:none; font-weight:600; }
+.divisor-top { height:3px; background:linear-gradient(to right,var(--yellow),var(--teal-lt)); }
+
+.layout { display:flex; min-height:calc(100vh - 55px); }
+.sidebar { width:140px; background:#fff; border-right:1px solid var(--border); padding:20px 10px; display:flex; flex-direction:column; gap:6px; }
+.nav-btn { background:none; border:none; border-radius:6px; padding:11px 8px; font-size:12px; font-weight:700; color:var(--label); cursor:pointer; text-align:center; letter-spacing:.5px; transition:all .15s; }
+.nav-btn:hover { background:var(--teal-lt); color:var(--teal-dk); }
+.nav-btn.active { background:var(--teal); color:#fff; box-shadow:0 2px 8px rgba(26,138,122,.3); }
+
+.content { flex:1; padding:28px 32px; }
+.card { background:#fff; border-radius:10px; padding:28px 32px 32px; box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border); max-width:920px; margin:0 auto; }
+.tela { display:none; }
+.tela.ativa { display:block; }
+.sec-header { font-size:13px; font-weight:700; color:var(--teal-dk); letter-spacing:1.5px; text-transform:uppercase; padding-bottom:10px; border-bottom:2px solid var(--yellow); margin-bottom:24px; }
+.campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
+.campo-group { display:flex; flex-direction:column; gap:4px; }
+.campo-label { font-size:11px; font-weight:600; color:var(--label); letter-spacing:.5px; text-transform:uppercase; }
+input[type="text"], select, input[type="date"] { border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; height:36px; }
+input[type="text"]:focus, select:focus { border-color:var(--teal); }
+input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
+.acoes { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; align-items:center; }
+.btn-acao { padding:9px 22px; border-radius:6px; font-size:13px; font-weight:700; border:none; cursor:pointer; letter-spacing:.5px; transition:all .15s; }
+.btn-filtro    { background:#4a7080; color:#fff; }
+.btn-limpar    { background:#607080; color:#fff; }
+.btn-pesquisar { background:var(--teal); color:#fff; }
+.btn-salvar    { background:#27ae60; color:#fff; }
+</style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-logo">D2P·BRAZIL</div>
-  <div class="topbar-titulo">CONTROLE DE ACESSO — PORTARIA 07 CVP</div>
-  <div class="topbar-user">
-    Usuário: <span id="nome-logado"></span>
-    <a href="/portarias.html">SAIR</a>
-  </div>
-</div>
-<div class="divisor-top"></div>
-
-<div class="content">
-  <div class="card">
-    <div class="sec-header">Cadastro de Acesso — CVP</div>
-
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="p07-nome" style="width:260px"></div>
-      <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p07-cpf" class="rg-field" style="width:130px"></div>
-      <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="p07-empresa" style="width:200px"></div>
-    </div>
-
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">Responsável ou Gestor</span><input type="text" id="p07-responsavel" style="width:280px"></div>
-      <div class="campo-group"><span class="campo-label">Motivo do Acesso</span>
-        <select id="p07-motivo" style="width:230px">
-          <option value="">Selecione</option>
-          <option>Ambulatório</option>
-          <option>Colaborador</option>
-          <option>Crachá não passa</option>
-          <option>Crachá vencido</option>
-          <option>Esqueceu crachá</option>
-          <option>Não acessou</option>
-          <option>Pendência SG3</option>
-          <option>Perdeu crachá</option>
-          <option>Perícia Trabalhista</option>
-          <option>Prestador</option>
-          <option>Primeiro dia de trabalho</option>
-          <option>Segundo dia de trabalho</option>
-          <option>Transbordo</option>
-          <option>Visita</option>
-          <option>Visita a Fábrica</option>
-          <option>Visita técnica</option>
-          <option>SAT</option>
-          <option>Outros</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">Liberado Por</span>
-        <select id="p07-liberado" style="width:220px">
-          <option value="">Selecione</option>
-          <option>Acessos CAS</option>
-          <option>Identificação</option>
-          <option>Inspetor de Vigilância</option>
-          <option>Central de Segurança</option>
-          <option>Segurança Patrimonial</option>
-          <option>E-mail</option>
-          <option>GDV</option>
-          <option>SAT</option>
-          <option>Outros</option>
-        </select>
-      </div>
-      <div class="campo-group"><span class="campo-label">Nº do Crachá</span><input type="text" id="p07-cracha" class="rg-field" style="width:140px"></div>
-      <div class="campo-group"><span class="campo-label">Vigilante</span>
-        <select id="p07-vigilante" style="width:230px">
-          <option value="">Selecione</option>
-          <option>ANITA STACHUKA MUNHOZ</option>
-          <option>MARIA NATALI</option>
-          <option>RAFAELA BERTÃO</option>
-          <option>MARCIA CRISTINA OLIVEIRA</option>
-          <option>ALISON GEISON VEIGA</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">OBS</span><input type="text" id="p07-obs" style="width:500px"></div>
-      <div class="campo-group"><span class="campo-label">Acesso</span>
-        <select id="p07-acesso" style="width:160px">
-          <option value="">Selecione</option>
-          <option>ENTRADA</option>
-          <option>SAÍDA</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="acoes">
-      <button class="btn-acao btn-filtro"    onclick="p07AbrirRelatorio()">RELATÓRIO</button>
-      <button class="btn-acao btn-limpar"    onclick="p07Limpar()">LIMPAR TELA</button>
-      <button class="btn-acao btn-pesquisar" onclick="localizar()">LOCALIZAR</button>
-      <button class="btn-acao btn-salvar"    onclick="salvar()">SALVAR</button>
+<div id="sistema-principal">
+  <div class="topbar">
+    <div class="topbar-logo">D2P·BRAZIL</div>
+    <div class="topbar-titulo">CONTROLE DE ACESSO — PORTARIA 07 CVP</div>
+    <div class="topbar-user">
+      Usuário: <span id="nome-logado">—</span>
+      <a onclick="fazerLogout()">| Sair</a>
     </div>
   </div>
-</div>
+  <div class="divisor-top"></div>
 
+  <div class="layout">
+    <div class="sidebar">
+      <button class="nav-btn active" onclick="mudarTela('acessos',this)">ACESSOS</button>
+      <button class="nav-btn" onclick="mudarTela('armarios',this)">ARMÁRIOS</button>
+    </div>
+
+    <div class="content">
+
+      <!-- ── ABA ACESSOS ─────────────────────────────────────────────────── -->
+      <div id="tela-acessos" class="tela ativa">
+        <div class="card">
+          <div class="sec-header">Cadastro de Acesso — CVP</div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="p07-nome" style="width:260px"></div>
+            <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p07-cpf" class="rg-field" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="p07-empresa" style="width:200px"></div>
+          </div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Responsável ou Gestor</span><input type="text" id="p07-responsavel" style="width:280px"></div>
+            <div class="campo-group"><span class="campo-label">Motivo do Acesso</span>
+              <select id="p07-motivo" style="width:230px">
+                <option value="">Selecione</option>
+                <option>Ambulatório</option>
+                <option>Colaborador</option>
+                <option>Crachá não passa</option>
+                <option>Crachá vencido</option>
+                <option>Esqueceu crachá</option>
+                <option>Não acessou</option>
+                <option>Pendência SG3</option>
+                <option>Perdeu crachá</option>
+                <option>Perícia Trabalhista</option>
+                <option>Prestador</option>
+                <option>Primeiro dia de trabalho</option>
+                <option>Segundo dia de trabalho</option>
+                <option>Transbordo</option>
+                <option>Visita</option>
+                <option>Visita a Fábrica</option>
+                <option>Visita técnica</option>
+                <option>SAT</option>
+                <option>Outros</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Liberado Por</span>
+              <select id="p07-liberado" style="width:220px">
+                <option value="">Selecione</option>
+                <option>Acessos CAS</option>
+                <option>Identificação</option>
+                <option>Inspetor de Vigilância</option>
+                <option>Central de Segurança</option>
+                <option>Segurança Patrimonial</option>
+                <option>E-mail</option>
+                <option>GDV</option>
+                <option>SAT</option>
+                <option>Outros</option>
+              </select>
+            </div>
+            <div class="campo-group"><span class="campo-label">Nº do Crachá</span><input type="text" id="p07-cracha" class="rg-field" style="width:140px"></div>
+            <div class="campo-group"><span class="campo-label">Vigilante</span>
+              <select id="p07-vigilante" style="width:230px">
+                <option value="">Selecione</option>
+                <option>ANITA STACHUKA MUNHOZ</option>
+                <option>MARIA NATALI</option>
+                <option>RAFAELA BERTÃO</option>
+                <option>MARCIA CRISTINA OLIVEIRA</option>
+                <option>ALISON GEISON VEIGA</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">OBS</span><input type="text" id="p07-obs" style="width:500px"></div>
+            <div class="campo-group"><span class="campo-label">Acesso</span>
+              <select id="p07-acesso" style="width:160px">
+                <option value="">Selecione</option>
+                <option>ENTRADA</option>
+                <option>SAÍDA</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="acoes">
+            <button class="btn-acao btn-filtro"    onclick="p07AbrirRelatorio()">RELATÓRIO</button>
+            <button class="btn-acao btn-limpar"    onclick="limparCampos('tela-acessos')">LIMPAR TELA</button>
+            <button class="btn-acao btn-pesquisar" onclick="localizar()">LOCALIZAR</button>
+            <button class="btn-acao btn-salvar"    onclick="salvar()">SALVAR</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ABA ARMÁRIOS ───────────────────────────────────────────────── -->
+      <div id="tela-armarios" class="tela">
+        <div class="card">
+          <div class="sec-header">Controle de Armários</div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="arm-nome" style="width:240px"></div>
+            <div class="campo-group"><span class="campo-label">BPU</span><input type="text" id="arm-bpu" style="width:100px"></div>
+            <div class="campo-group"><span class="campo-label">Nº Armário</span><input type="text" id="arm-armario" class="rg-field" style="width:110px"></div>
+            <div class="campo-group"><span class="campo-label">Qual Fábrica?</span>
+              <select id="arm-fabrica" style="width:160px">
+                <option value="">Selecione</option>
+                <option>VESTIARIO1</option>
+                <option>VESTIARIO2</option>
+                <option>PGCA</option>
+                <option>CVU</option>
+                <option>CPL</option>
+                <option>CMO</option>
+                <option>CIA</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="arm-empresa" style="width:190px"></div>
+            <div class="campo-group"><span class="campo-label">Setor</span><input type="text" id="arm-setor" style="width:160px"></div>
+            <div class="campo-group"><span class="campo-label">Vestiário/Fábrica</span>
+              <select id="arm-vestiario" style="width:160px">
+                <option value="">Selecione</option>
+                <option>VESTIARIO1</option>
+                <option>VESTIARIO2</option>
+                <option>PGCA</option>
+                <option>CVU</option>
+                <option>CPL</option>
+                <option>CMO</option>
+                <option>CIA</option>
+              </select>
+            </div>
+            <div class="campo-group"><span class="campo-label">Gênero</span>
+              <select id="arm-genero" style="width:140px">
+                <option value="">Selecione</option>
+                <option>MASCULINO</option>
+                <option>FEMININO</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Turno</span><input type="text" id="arm-turno" style="width:130px"></div>
+            <div class="campo-group"><span class="campo-label">Responsável</span><input type="text" id="arm-responsavel" style="width:220px"></div>
+            <div class="campo-group"><span class="campo-label">Situação</span>
+              <select id="arm-situacao" style="width:130px">
+                <option value="">Selecione</option>
+                <option>ATIVO</option>
+                <option>INATIVO</option>
+              </select>
+            </div>
+            <div class="campo-group"><span class="campo-label">Telefone</span><input type="text" id="arm-fone" style="width:150px"></div>
+          </div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">Ramal</span><input type="text" id="arm-ramal" style="width:120px"></div>
+            <div class="campo-group"><span class="campo-label">Vigilante</span>
+              <select id="arm-vigilante" style="width:230px">
+                <option value="">Selecione</option>
+                <option>ANITA STACHUKA MUNHOZ</option>
+                <option>MARIA NATALI</option>
+                <option>RAFAELA BERTÃO</option>
+                <option>MARCIA CRISTINA OLIVEIRA</option>
+                <option>ALISON GEISON VEIGA</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="campos-linha">
+            <div class="campo-group"><span class="campo-label">OBS</span><input type="text" id="arm-obs" style="width:700px"></div>
+          </div>
+
+          <div class="acoes">
+            <button class="btn-acao btn-filtro"    onclick="armAbrirRelatorio()">RELATÓRIO</button>
+            <button class="btn-acao btn-limpar"    onclick="limparCampos('tela-armarios')">LIMPAR TELA</button>
+            <button class="btn-acao btn-pesquisar" onclick="armLocalizar()">LOCALIZAR</button>
+            <button class="btn-acao btn-salvar"    onclick="armSalvar()">SALVAR</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /layout -->
+</div><!-- /sistema-principal -->
+
+<!-- ── MODAL RELATÓRIO ACESSOS ──────────────────────────────────────────── -->
 <div id="modal-p07" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
   <div style="background:#fff; border-radius:10px; max-width:1200px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
-      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — PORTARIA 07 CVP</span>
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO — PORTARIA 07 CVP — ACESSOS</span>
       <button onclick="p07FecharRelatorio()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
     </div>
     <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
@@ -174,13 +300,73 @@
   </div>
 </div>
 
-<script src="/js/xlsx.full.min.js"></script>
-<script src="../conexao/config.js?v=2"></script>
-<script src="../conexao/db.js?v=2"></script>
+<!-- ── MODAL RELATÓRIO ARMÁRIOS ─────────────────────────────────────────── -->
+<div id="modal-arm" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:1400px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO — PORTARIA 07 CVP — ARMÁRIOS</span>
+      <button onclick="armFecharRelatorio()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="arm-f-inicio" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="arm-f-fim" style="width:150px"></div>
+      <div class="campo-group"><span class="campo-label">Nome / BPU / Armário</span><input type="text" id="arm-f-busca" style="width:220px" placeholder="Buscar..."></div>
+      <button class="btn-acao btn-pesquisar" onclick="armBuscarRelatorio()">FILTRAR</button>
+      <button class="btn-acao btn-limpar"    onclick="armLimparFiltro()">LIMPAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="arm-tabela-resultados" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px;">Data</th>
+            <th style="padding:8px 10px;">Hora</th>
+            <th style="padding:8px 10px;">Nome</th>
+            <th style="padding:8px 10px;">BPU</th>
+            <th style="padding:8px 10px;">Nº Armário</th>
+            <th style="padding:8px 10px;">Fábrica</th>
+            <th style="padding:8px 10px;">Empresa</th>
+            <th style="padding:8px 10px;">Setor</th>
+            <th style="padding:8px 10px;">Vestiário</th>
+            <th style="padding:8px 10px;">Gênero</th>
+            <th style="padding:8px 10px;">Turno</th>
+            <th style="padding:8px 10px;">Responsável</th>
+            <th style="padding:8px 10px;">Situação</th>
+            <th style="padding:8px 10px;">Telefone</th>
+            <th style="padding:8px 10px;">Ramal</th>
+            <th style="padding:8px 10px;">Vigilante</th>
+            <th style="padding:8px 10px;">OBS</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button onclick="armExportarXLSX()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
+  </div>
+</div>
+
 <script src="../js/ui.js?v=2"></script>
-<script src="js/api.js?v=1"></script>
+<script src="js/api.js?v=2"></script>
+<script src="js/armarios.js?v=1"></script>
 <script>
-  document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('sistema-principal').style.display = 'block';
+    document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
+});
+
+function fazerLogout() { location.href = '/portarias.html'; }
+
+function mudarTela(id, btn) {
+    document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tela-' + id).classList.add('ativa');
+    btn.classList.add('active');
+}
+
+function limparCampos(telaId) {
+    const t = document.getElementById(telaId);
+    t.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+    t.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+}
 </script>
 <script src="/js/session-timeout.js"></script>
 </body>

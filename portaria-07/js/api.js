@@ -77,11 +77,7 @@ async function salvar() {
 
 // ── 3. LIMPAR TELA ────────────────────────────────────────────────────────────
 function p07Limpar() {
-    ['p07-nome','p07-cpf','p07-empresa','p07-responsavel','p07-cracha','p07-obs',
-     'p07-motivo','p07-liberado','p07-vigilante','p07-acesso'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
+    limparCampos('tela-acessos');
 }
 
 // ── 4. RELATÓRIO — CONTROLES ──────────────────────────────────────────────────
