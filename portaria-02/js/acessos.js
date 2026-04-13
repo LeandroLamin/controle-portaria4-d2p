@@ -89,7 +89,20 @@ async function acsPesquisar() {
         document.getElementById('acs-motivo').value  = u.motivo  || '';
         notify('Registro localizado!', 'sucesso');
     } else {
-        notify('Nenhum registro encontrado.', 'aviso');
+        // Não encontrado na P02 — busca no Peão 2 (primeiro acesso pela P02)
+        const peao2Dados = await dbBuscar('portaria-peao2-acessos', filtros, { order: 'id.desc', limit: 1 });
+        if (peao2Dados && peao2Dados.length > 0) {
+            const p = peao2Dados[0];
+            document.getElementById('acs-nome').value    = p.nome    || '';
+            document.getElementById('acs-cpf').value     = p.cpf     || '';
+            document.getElementById('acs-empresa').value = p.empresa || '';
+            document.getElementById('acs-placa').value   = p.placa   || '';
+            document.getElementById('acs-veiculo').value = p.cavalo  || '';
+            document.getElementById('acs-carreta').value = p.carreta || '';
+            notify('Dados carregados do Peão 2.', 'sucesso');
+        } else {
+            notify('Nenhum registro encontrado.', 'aviso');
+        }
     }
 
     // ── Verifica passagem pelo Peão 2 (só se for ENTRADA) ───────────────────
