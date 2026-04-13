@@ -29,6 +29,7 @@ async function paSalvar() {
         carreta: document.getElementById('pa-carreta').value.trim().toUpperCase(),
         motivo:  document.getElementById('pa-motivo').value,
         acesso:  acesso,
+        origem:  'PEÃO 2',
         data:    agora.toLocaleDateString('en-CA'),
         hora:    agora.toTimeString().slice(0, 8)
     };
@@ -132,7 +133,8 @@ function _paRenderizarTabela(lista) {
             [item.nome || '', false], [item.cpf || '', false],
             [item.empresa || '', false], [item.cavalo || '', false],
             [item.placa || '', false], [item.carreta || '', false],
-            [item.motivo || '', false], [item.acesso || '', true]
+            [item.motivo || '', false], [item.acesso || '', true],
+            [item.origem || '', false]
         ].forEach(([val, bold]) => {
             const td = document.createElement('td');
             td.style.padding = '7px 10px';
@@ -148,7 +150,7 @@ function _paRenderizarTabela(lista) {
 function paExportarXLSX() {
     if (dadosPAGlobal.length === 0) return notify('Busque os dados primeiro.', 'aviso');
 
-    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Veículo','Placa','Carreta','Motivo','Acesso'];
+    const cabecalho = ['Data','Hora','Nome','CPF','Empresa','Veículo','Placa','Carreta','Motivo','Acesso','Origem'];
     const linhas = dadosPAGlobal.map(r => [
         _formatarDataPA(r.data),
         r.hora    || '',
@@ -159,7 +161,8 @@ function paExportarXLSX() {
         r.placa   || '',
         r.carreta || '',
         r.motivo  || '',
-        r.acesso  || ''
+        r.acesso  || '',
+        r.origem  || ''
     ]);
 
     const ws = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);

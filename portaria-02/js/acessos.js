@@ -54,6 +54,7 @@ async function acsRegistrar(acesso) {
                     carreta: ref.carreta || '',
                     motivo:  ref.motivo,
                     acesso:  'SAÍDA',
+                    origem:  'PORTARIA 02',
                     data:    dados.data,
                     hora:    dados.hora
                 });
