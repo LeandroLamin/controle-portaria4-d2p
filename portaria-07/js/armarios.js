@@ -15,6 +15,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') armLocalizar();
         });
     });
+
+    const fone = document.getElementById('arm-fone');
+    if (fone) fone.addEventListener('input', () => {
+        let v = fone.value.replace(/\D/g, '').slice(0, 11);
+        if (v.length <= 10) {
+            v = v.replace(/^(\d{0,2})(\d{0,4})(\d{0,4})$/, (_, a, b, c) =>
+                a ? '(' + a + ')' + (b ? b + (c ? '-' + c : '') : '') : '');
+        } else {
+            v = v.replace(/^(\d{2})(\d{5})(\d{0,4})$/, (_, a, b, c) =>
+                '(' + a + ')' + b + (c ? '-' + c : ''));
+        }
+        fone.value = v;
+    });
 });
 
 // ── 1. LOCALIZAR por Nº Armário ou BPU ───────────────────────────────────────
