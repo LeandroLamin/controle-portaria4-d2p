@@ -52,7 +52,7 @@ function _armAbrirModalLocalizar(lista) {
             item.nome        || '',
             item.bpu         || '',
             item.armario     || '',
-            item.fabrica     || '',
+            item.vestiario   || '',
             item.empresa     || '',
             item.situacao    || '',
             _formatarDataArm(item.data)
