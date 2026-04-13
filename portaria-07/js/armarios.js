@@ -21,12 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
 async function armLocalizar() {
     const armario = document.getElementById('arm-armario').value.trim().toUpperCase();
     const bpu     = document.getElementById('arm-bpu').value.trim();
-    const fabrica = document.getElementById('arm-fabrica').value;
 
     if (!armario && !bpu) return notify('Digite o Nº Armário ou BPU para localizar.', 'aviso');
 
     const filtros = armario ? { armario } : { bpu };
-    if (fabrica) filtros.fabrica = fabrica;
     const data = await dbBuscar(TABELA_ARM, filtros, { order: 'id.desc' });
 
     if (!data || data.length === 0) {
@@ -76,7 +74,6 @@ function _armPreencherFormulario(u) {
     document.getElementById('arm-nome').value        = u.nome        || '';
     document.getElementById('arm-bpu').value         = u.bpu         || '';
     document.getElementById('arm-armario').value     = u.armario     || '';
-    document.getElementById('arm-fabrica').value     = u.fabrica     || '';
     document.getElementById('arm-empresa').value     = u.empresa     || '';
     document.getElementById('arm-setor').value       = u.setor       || '';
     document.getElementById('arm-vestiario').value   = u.vestiario   || '';
@@ -98,7 +95,6 @@ async function armSalvar() {
         nome:        document.getElementById('arm-nome').value.trim().toUpperCase(),
         bpu:         document.getElementById('arm-bpu').value.trim().toUpperCase(),
         armario:     document.getElementById('arm-armario').value.trim().toUpperCase(),
-        fabrica:     document.getElementById('arm-fabrica').value,
         empresa:     document.getElementById('arm-empresa').value.trim().toUpperCase(),
         setor:       document.getElementById('arm-setor').value.trim().toUpperCase(),
         vestiario:   document.getElementById('arm-vestiario').value,
