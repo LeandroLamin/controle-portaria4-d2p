@@ -24,7 +24,9 @@ async function armLocalizar() {
 
     if (!armario && !bpu) return notify('Digite o Nº Armário ou BPU para localizar.', 'aviso');
 
-    const filtros = armario ? { armario } : { bpu };
+    const filtros = {};
+    if (armario) filtros.armario = armario;
+    if (bpu)     filtros.bpu     = bpu;
     const data = await dbBuscar(TABELA_ARM, filtros, { order: 'id.desc' });
 
     if (!data || data.length === 0) {
