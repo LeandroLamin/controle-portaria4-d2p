@@ -27,29 +27,68 @@ async function armLocalizar() {
 
     const filtros = armario ? { armario } : { bpu };
     if (fabrica) filtros.fabrica = fabrica;
-    const data = await dbBuscar(TABELA_ARM, filtros, { order: 'id.desc', limit: 1 });
+    const data = await dbBuscar(TABELA_ARM, filtros, { order: 'id.desc' });
 
-    if (data && data.length > 0) {
-        const u = data[0];
-        document.getElementById('arm-nome').value       = u.nome       || '';
-        document.getElementById('arm-bpu').value        = u.bpu        || '';
-        document.getElementById('arm-armario').value    = u.armario    || '';
-        document.getElementById('arm-fabrica').value    = u.fabrica    || '';
-        document.getElementById('arm-empresa').value    = u.empresa    || '';
-        document.getElementById('arm-setor').value      = u.setor      || '';
-        document.getElementById('arm-vestiario').value  = u.vestiario  || '';
-        document.getElementById('arm-genero').value     = u.genero     || '';
-        document.getElementById('arm-turno').value      = u.turno      || '';
-        document.getElementById('arm-responsavel').value = u.responsavel || '';
-        document.getElementById('arm-situacao').value   = u.situacao   || '';
-        document.getElementById('arm-fone').value       = u.fone       || '';
-        document.getElementById('arm-ramal').value      = u.ramal      || '';
-        document.getElementById('arm-vigilante').value  = u.vigilante  || '';
-        document.getElementById('arm-obs').value        = u.obs        || '';
-        notify('Registro localizado!', 'sucesso');
-    } else {
-        notify('Registro não localizado na base.', 'aviso');
+    if (!data || data.length === 0) {
+        return notify('Registro não localizado na base.', 'aviso');
     }
+
+    _armAbrirModalLocalizar(data);
+}
+
+function _armAbrirModalLocalizar(lista) {
+    const tbody = document.querySelector('#arm-loc-tabela tbody');
+    tbody.innerHTML = '';
+
+    lista.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.style.cssText = 'border-bottom:1px solid #e8ecf0; cursor:pointer;';
+        tr.addEventListener('mouseover',  () => { tr.style.background = '#e8f5f3'; });
+        tr.addEventListener('mouseout',   () => { tr.style.background = ''; });
+        tr.addEventListener('click', () => {
+            _armPreencherFormulario(item);
+            document.getElementById('modal-arm-localizar').style.display = 'none';
+        });
+
+        [
+            item.nome        || '',
+            item.bpu         || '',
+            item.armario     || '',
+            item.fabrica     || '',
+            item.empresa     || '',
+            item.situacao    || '',
+            _formatarDataArm(item.data)
+        ].forEach(val => {
+            const td = document.createElement('td');
+            td.style.padding = '8px 10px';
+            td.textContent = val;
+            tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById('arm-loc-count').textContent = lista.length;
+    document.getElementById('modal-arm-localizar').style.display = 'block';
+}
+
+function _armPreencherFormulario(u) {
+    document.getElementById('arm-nome').value        = u.nome        || '';
+    document.getElementById('arm-bpu').value         = u.bpu         || '';
+    document.getElementById('arm-armario').value     = u.armario     || '';
+    document.getElementById('arm-fabrica').value     = u.fabrica     || '';
+    document.getElementById('arm-empresa').value     = u.empresa     || '';
+    document.getElementById('arm-setor').value       = u.setor       || '';
+    document.getElementById('arm-vestiario').value   = u.vestiario   || '';
+    document.getElementById('arm-genero').value      = u.genero      || '';
+    document.getElementById('arm-turno').value       = u.turno       || '';
+    document.getElementById('arm-responsavel').value = u.responsavel || '';
+    document.getElementById('arm-situacao').value    = u.situacao    || '';
+    document.getElementById('arm-fone').value        = u.fone        || '';
+    document.getElementById('arm-ramal').value       = u.ramal       || '';
+    document.getElementById('arm-vigilante').value   = u.vigilante   || '';
+    document.getElementById('arm-obs').value         = u.obs         || '';
+    notify('Registro selecionado!', 'sucesso');
 }
 
 // ── 2. SALVAR ─────────────────────────────────────────────────────────────────

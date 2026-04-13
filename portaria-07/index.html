@@ -261,6 +261,32 @@ input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
   </div><!-- /layout -->
 </div><!-- /sistema-principal -->
 
+<!-- ── MODAL LOCALIZAR ARMÁRIOS ──────────────────────────────────────────── -->
+<div id="modal-arm-localizar" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9100; overflow:auto;">
+  <div style="background:#fff; border-radius:10px; max-width:960px; margin:60px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">LOCALIZAR ARMÁRIO — <span id="arm-loc-count">0</span> resultado(s) — clique na linha para selecionar</span>
+      <button onclick="document.getElementById('modal-arm-localizar').style.display='none'" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="arm-loc-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead style="background:var(--teal); color:#fff;">
+          <tr>
+            <th style="padding:8px 10px; text-align:left;">Nome</th>
+            <th style="padding:8px 10px; text-align:left;">BPU</th>
+            <th style="padding:8px 10px; text-align:left;">Nº Armário</th>
+            <th style="padding:8px 10px; text-align:left;">Fábrica</th>
+            <th style="padding:8px 10px; text-align:left;">Empresa</th>
+            <th style="padding:8px 10px; text-align:left;">Situação</th>
+            <th style="padding:8px 10px; text-align:left;">Data</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <!-- ── MODAL RELATÓRIO ACESSOS ──────────────────────────────────────────── -->
 <div id="modal-p07" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
   <div style="background:#fff; border-radius:10px; max-width:1200px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
