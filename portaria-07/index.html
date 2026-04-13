@@ -256,21 +256,6 @@ input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
       <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">LOCALIZAR ARMÁRIO — <span id="arm-loc-count">0</span> resultado(s) — clique na linha para selecionar</span>
       <button onclick="document.getElementById('modal-arm-localizar').style.display='none'" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
     </div>
-    <div style="margin-bottom:14px;">
-      <div class="campo-group" style="display:inline-flex; flex-direction:column; gap:4px;">
-        <span class="campo-label">Qual Fábrica?</span>
-        <select id="arm-loc-fabrica" style="width:180px" onchange="armLocFiltrarFabrica()">
-          <option value="">Todas</option>
-          <option>VESTIARIO1</option>
-          <option>VESTIARIO2</option>
-          <option>PGCA</option>
-          <option>CVU</option>
-          <option>CPL</option>
-          <option>CMO</option>
-          <option>CIA</option>
-        </select>
-      </div>
-    </div>
     <div style="overflow-x:auto;">
       <table id="arm-loc-tabela" style="width:100%; border-collapse:collapse; font-size:12px;">
         <thead style="background:var(--teal); color:#fff;">

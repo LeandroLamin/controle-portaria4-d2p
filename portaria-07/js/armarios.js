@@ -34,11 +34,7 @@ async function armLocalizar() {
     _armAbrirModalLocalizar(data);
 }
 
-let _armLocListaCompleta = [];
-
 function _armAbrirModalLocalizar(lista) {
-    _armLocListaCompleta = lista;
-    document.getElementById('arm-loc-fabrica').selectedIndex = 0;
     const tbody = document.querySelector('#arm-loc-tabela tbody');
     tbody.innerHTML = '';
 
@@ -72,35 +68,6 @@ function _armAbrirModalLocalizar(lista) {
 
     document.getElementById('arm-loc-count').textContent = lista.length;
     document.getElementById('modal-arm-localizar').style.display = 'block';
-}
-
-function armLocFiltrarFabrica() {
-    const fab = document.getElementById('arm-loc-fabrica').value;
-    const filtrado = fab ? _armLocListaCompleta.filter(i => i.fabrica === fab) : _armLocListaCompleta;
-    const tbody = document.querySelector('#arm-loc-tabela tbody');
-    tbody.innerHTML = '';
-    filtrado.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.style.cssText = 'border-bottom:1px solid #e8ecf0; cursor:pointer;';
-        tr.addEventListener('mouseover',  () => { tr.style.background = '#e8f5f3'; });
-        tr.addEventListener('mouseout',   () => { tr.style.background = ''; });
-        tr.addEventListener('click', () => {
-            _armPreencherFormulario(item);
-            document.getElementById('modal-arm-localizar').style.display = 'none';
-        });
-        [
-            item.nome || '', item.bpu || '', item.armario || '',
-            item.fabrica || '', item.empresa || '', item.situacao || '',
-            _formatarDataArm(item.data)
-        ].forEach(val => {
-            const td = document.createElement('td');
-            td.style.padding = '8px 10px';
-            td.textContent = val;
-            tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-    });
-    document.getElementById('arm-loc-count').textContent = filtrado.length;
 }
 
 function _armPreencherFormulario(u) {
