@@ -49,16 +49,17 @@ function _armAbrirModalLocalizar(lista) {
         });
 
         [
-            item.nome        || '',
-            item.bpu         || '',
-            item.armario     || '',
-            item.vestiario   || '',
-            item.empresa     || '',
-            item.situacao    || '',
-            _formatarDataArm(item.data)
-        ].forEach(val => {
+            [item.nome        || '', null],
+            [item.bpu         || '', null],
+            [item.armario     || '', null],
+            [item.vestiario   || '', null],
+            [item.empresa     || '', null],
+            [item.situacao    || '', item.situacao === 'ATIVO' ? '#27ae60' : item.situacao === 'INATIVO' ? '#e03030' : null],
+            [_formatarDataArm(item.data), null]
+        ].forEach(([val, color]) => {
             const td = document.createElement('td');
             td.style.padding = '8px 10px';
+            if (color) { td.style.color = color; td.style.fontWeight = '700'; }
             td.textContent = val;
             tr.appendChild(td);
         });
