@@ -21,10 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
 async function armLocalizar() {
     const armario = document.getElementById('arm-armario').value.trim().toUpperCase();
     const bpu     = document.getElementById('arm-bpu').value.trim();
+    const fabrica = document.getElementById('arm-fabrica').value;
 
     if (!armario && !bpu) return notify('Digite o Nº Armário ou BPU para localizar.', 'aviso');
 
     const filtros = armario ? { armario } : { bpu };
+    if (fabrica) filtros.fabrica = fabrica;
     const data = await dbBuscar(TABELA_ARM, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
@@ -100,22 +102,25 @@ function armFecharRelatorio() {
 }
 
 function armLimparFiltro() {
-    document.getElementById('arm-f-inicio').value = '';
-    document.getElementById('arm-f-fim').value    = '';
-    document.getElementById('arm-f-busca').value  = '';
+    document.getElementById('arm-f-inicio').value  = '';
+    document.getElementById('arm-f-fim').value     = '';
+    document.getElementById('arm-f-busca').value   = '';
+    document.getElementById('arm-f-fabrica').selectedIndex = 0;
     document.querySelector('#arm-tabela-resultados tbody').innerHTML = '';
     dadosArmGlobal = [];
 }
 
 // ── 4. BUSCAR RELATÓRIO ───────────────────────────────────────────────────────
 async function armBuscarRelatorio() {
-    const inicio = document.getElementById('arm-f-inicio').value;
-    const fim    = document.getElementById('arm-f-fim').value;
-    const busca  = document.getElementById('arm-f-busca').value.trim().toUpperCase();
+    const inicio  = document.getElementById('arm-f-inicio').value;
+    const fim     = document.getElementById('arm-f-fim').value;
+    const busca   = document.getElementById('arm-f-busca').value.trim().toUpperCase();
+    const fabrica = document.getElementById('arm-f-fabrica').value;
 
     if (!inicio || !fim) return notify('Selecione o período.', 'aviso');
 
     const filtros = { data_gte: inicio, data_lte: fim };
+    if (fabrica) filtros.fabrica = fabrica;
     if (busca) {
         if (/^\d+$/.test(busca)) {
             filtros.armario = busca;

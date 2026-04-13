@@ -311,6 +311,18 @@ input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
       <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="arm-f-inicio" style="width:150px"></div>
       <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="arm-f-fim" style="width:150px"></div>
       <div class="campo-group"><span class="campo-label">Nome / BPU / Armário</span><input type="text" id="arm-f-busca" style="width:220px" placeholder="Buscar..."></div>
+      <div class="campo-group"><span class="campo-label">Qual Fábrica?</span>
+        <select id="arm-f-fabrica" style="width:160px">
+          <option value="">Todas</option>
+          <option>VESTIARIO1</option>
+          <option>VESTIARIO2</option>
+          <option>PGCA</option>
+          <option>CVU</option>
+          <option>CPL</option>
+          <option>CMO</option>
+          <option>CIA</option>
+        </select>
+      </div>
       <button class="btn-acao btn-pesquisar" onclick="armBuscarRelatorio()">FILTRAR</button>
       <button class="btn-acao btn-limpar"    onclick="armLimparFiltro()">LIMPAR</button>
     </div>
