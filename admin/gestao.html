@@ -682,6 +682,12 @@
             return Object.values(mapa).filter(r => (r.acesso || '').toUpperCase() === 'ENTRADA');
         }
 
+        function _esc(v) {
+            return String(v == null ? '' : v)
+                .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+
         function dashRenderEventos(lista) {
             const el = document.getElementById('d-lista-eventos');
             document.getElementById('d-badge-eventos').textContent = lista.length + ' eventos';
@@ -697,10 +703,10 @@
                     <div class="dash-item-evento">
                         <div class="dash-tipo-icon ${isEnt ? 'ent' : 'sai'}">${isEnt ? svgEnt() : svgSai()}</div>
                         <div style="min-width:0;flex:1">
-                            <div class="dash-ev-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
-                            <div class="dash-ev-sub">${r.empresa || ''}${r.motivo ? ' · ' + r.motivo : ''}</div>
+                            <div class="dash-ev-nome" title="${_esc(r.nome)}">${_esc(r.nome) || '—'}</div>
+                            <div class="dash-ev-sub">${_esc(r.empresa)}${r.motivo ? ' · ' + _esc(r.motivo) : ''}</div>
                         </div>
-                        <div class="dash-ev-hora">${r.hora || ''}</div>
+                        <div class="dash-ev-hora">${_esc(r.hora)}</div>
                     </div>`;
             }).join('');
         }
@@ -719,10 +725,10 @@
                 <div class="dash-item-presente">
                     <div class="dash-avatar">${iniciais(r.nome)}</div>
                     <div style="min-width:0;flex:1">
-                        <div class="dash-pr-nome" title="${r.nome || ''}">${r.nome || '—'}</div>
-                        <div class="dash-pr-sub">${r.empresa || ''}${r.cracha ? ' · Crachá ' + r.cracha : ''}</div>
+                        <div class="dash-pr-nome" title="${_esc(r.nome)}">${_esc(r.nome) || '—'}</div>
+                        <div class="dash-pr-sub">${_esc(r.empresa)}${r.cracha ? ' · Crachá ' + _esc(r.cracha) : ''}</div>
                     </div>
-                    <div class="dash-pr-hora">${svgClk()} ${r.hora || ''}</div>
+                    <div class="dash-pr-hora">${svgClk()} ${_esc(r.hora)}</div>
                 </div>`).join('');
         }
 
@@ -742,12 +748,12 @@
                     : `<span class="dash-badge-sai">↑ Saída</span>`;
                 return `
                     <tr>
-                        <td>${r.data || '—'}</td>
-                        <td style="font-family:monospace">${r.hora || '—'}</td>
-                        <td style="color:#7f8c8d;font-size:11px">${r.portaria || '—'}</td>
-                        <td style="font-weight:500">${r.nome || '—'}</td>
-                        <td style="color:#7f8c8d">${r.empresa || '—'}</td>
-                        <td style="color:#7f8c8d">${r.motivo || '—'}</td>
+                        <td>${_esc(r.data) || '—'}</td>
+                        <td style="font-family:monospace">${_esc(r.hora) || '—'}</td>
+                        <td style="color:#7f8c8d;font-size:11px">${_esc(r.portaria) || '—'}</td>
+                        <td style="font-weight:500">${_esc(r.nome) || '—'}</td>
+                        <td style="color:#7f8c8d">${_esc(r.empresa) || '—'}</td>
+                        <td style="color:#7f8c8d">${_esc(r.motivo) || '—'}</td>
                         <td>${badge}</td>
                     </tr>`;
             }).join('');
