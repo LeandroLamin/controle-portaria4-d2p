@@ -31,12 +31,14 @@ async function localizar() {
 
     if (data && data.length > 0) {
         const u = data[0];
-        document.getElementById('cpf').value        = u.cpf        || '';
-        document.getElementById('nome').value       = u.nome       || '';
-        document.getElementById('empresa').value    = u.empresa    || '';
+        document.getElementById('cpf').value         = u.cpf         || '';
+        document.getElementById('nome').value        = u.nome        || '';
+        document.getElementById('empresa').value     = u.empresa     || '';
         document.getElementById('responsavel').value = u.responsavel || '';
-        document.getElementById('cracha').value     = u.cracha     || '';
-        document.getElementById('vigilante').value  = u.vigilante  || '';
+        document.getElementById('liberado').value    = u.liberado    || '';
+        document.getElementById('motivo').value      = u.motivo      || '';
+        document.getElementById('cracha').value      = u.cracha      || '';
+        document.getElementById('vigilante').value   = u.vigilante   || '';
         notify("Registro localizado!", 'sucesso');
     } else {
         notify("Registro não localizado na base.", 'aviso');
