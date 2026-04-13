@@ -8,12 +8,12 @@ const TABELA_PV = 'portaria-peao2-visitantes';
 let dadosPVGlobal = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    const cpfInput = document.getElementById('pv-cpf');
-    if (cpfInput) {
-        cpfInput.addEventListener('keydown', (e) => {
+    ['pv-cpf', 'pv-cracha'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') pvPesquisar();
         });
-    }
+    });
 });
 
 // ── 1. REGISTRAR ENTRADA / SAÍDA ─────────────────────────────────────────────
@@ -45,12 +45,15 @@ async function pvRegistrar(acesso) {
     }
 }
 
-// ── 2. PESQUISAR por CPF ─────────────────────────────────────────────────────
+// ── 2. PESQUISAR por CPF ou N° Crachá ────────────────────────────────────────
 async function pvPesquisar() {
-    const cpf = document.getElementById('pv-cpf').value.trim();
-    if (!cpf) return notify('Digite o CPF para pesquisar.', 'aviso');
+    const cpf    = document.getElementById('pv-cpf').value.trim();
+    const cracha = document.getElementById('pv-cracha').value.trim().toUpperCase();
 
-    const data = await dbBuscar(TABELA_PV, { cpf }, { order: 'id.desc', limit: 1 });
+    if (!cpf && !cracha) return notify('Digite o CPF ou N° Crachá para pesquisar.', 'aviso');
+
+    const filtros = cpf ? { cpf } : { num_cracha: cracha };
+    const data = await dbBuscar(TABELA_PV, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
         const u = data[0];
