@@ -393,12 +393,12 @@ async function corteBuscarRelatorio() {
     const inicio   = document.getElementById('corte-f-inicio').value;
     const fim      = document.getElementById('corte-f-fim').value;
     const busca    = document.getElementById('corte-f-busca').value.trim().toUpperCase();
-    const situacao = document.getElementById('corte-f-situacao').value;
+    const vestiario = document.getElementById('corte-f-situacao').value;
 
     if (!inicio || !fim) return notify('Selecione o período.', 'aviso');
 
     const filtros = { data_gte: inicio, data_lte: fim };
-    if (situacao) filtros.situacao_corte = situacao;
+    if (vestiario) filtros.vestiario = vestiario;
     if (busca) {
         if (/^\d+$/.test(busca)) filtros.bpu = busca;
         else filtros.nome_like = busca;

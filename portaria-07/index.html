@@ -473,12 +473,16 @@ input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
       <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="corte-f-inicio" style="width:150px"></div>
       <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="corte-f-fim" style="width:150px"></div>
       <div class="campo-group"><span class="campo-label">Nome / BPU</span><input type="text" id="corte-f-busca" style="width:200px" placeholder="Buscar..."></div>
-      <div class="campo-group"><span class="campo-label">Situação</span>
-        <select id="corte-f-situacao" style="width:140px">
-          <option value="">Todas</option>
-          <option>PENDENTE</option>
-          <option>APROVADO</option>
-          <option>NEGADO</option>
+      <div class="campo-group"><span class="campo-label">Vestiário</span>
+        <select id="corte-f-situacao" style="width:160px">
+          <option value="">Todos</option>
+          <option>VESTIARIO1</option>
+          <option>VESTIARIO2</option>
+          <option>PGCA</option>
+          <option>CVU</option>
+          <option>CPL</option>
+          <option>CMO</option>
+          <option>CIA</option>
         </select>
       </div>
       <button class="btn-acao btn-pesquisar" onclick="corteBuscarRelatorio()">FILTRAR</button>
