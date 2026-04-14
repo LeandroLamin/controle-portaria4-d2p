@@ -184,26 +184,35 @@ function _corteSelecionarHistorico(card, item) {
 
     // Carrega PDF no viewer
     if (item.pdf_url) {
-        _corteAtualizarViewer(item.pdf_url);
+        _corteAtualizarViewer(item.pdf_url, /\.(jpg|jpeg|png|gif|webp)$/i.test(item.pdf_url));
     } else {
         corteViewerFechar();
     }
 }
 
-// ── 3. PDF VIEWER ─────────────────────────────────────────────────────────────
-function _corteAtualizarViewer(url) {
+// ── 3. PDF / IMAGEM VIEWER ────────────────────────────────────────────────────
+function _corteAtualizarViewer(url, ehImagem) {
     document.getElementById('corte-viewer-placeholder').style.display = 'none';
-    document.getElementById('corte-pdf-viewer').style.display         = 'block';
     document.getElementById('corte-viewer-acoes').style.display       = 'flex';
-    document.getElementById('corte-pdf-viewer').src                   = url;
     document.getElementById('corte-viewer-link').href                 = url;
+    if (ehImagem) {
+        document.getElementById('corte-pdf-viewer').style.display  = 'none';
+        document.getElementById('corte-img-viewer').style.display  = 'block';
+        document.getElementById('corte-img-viewer').src            = url;
+    } else {
+        document.getElementById('corte-img-viewer').style.display  = 'none';
+        document.getElementById('corte-pdf-viewer').style.display  = 'block';
+        document.getElementById('corte-pdf-viewer').src            = url;
+    }
 }
 
 function corteViewerFechar() {
     document.getElementById('corte-viewer-placeholder').style.display = 'block';
     document.getElementById('corte-pdf-viewer').style.display         = 'none';
+    document.getElementById('corte-img-viewer').style.display         = 'none';
     document.getElementById('corte-viewer-acoes').style.display       = 'none';
     document.getElementById('corte-pdf-viewer').src                   = '';
+    document.getElementById('corte-img-viewer').src                   = '';
     document.getElementById('corte-viewer-link').href                 = '#';
 }
 
@@ -221,21 +230,22 @@ function corteSituacaoStyle(sel) {
     }
 }
 
-// ── 5. SELECIONAR PDF (upload) ────────────────────────────────────────────────
+// ── 5. SELECIONAR ARQUIVO (PDF ou imagem) ─────────────────────────────────────
 function _corteSelecionarPdf(file) {
-    if (!file.name.toLowerCase().endsWith('.pdf')) return notify('Selecione apenas arquivos .PDF.', 'aviso');
+    const ehImagem = file.type.startsWith('image/');
+    const ehPdf    = file.name.toLowerCase().endsWith('.pdf');
+    if (!ehPdf && !ehImagem) return notify('Selecione um arquivo PDF ou imagem (JPG, PNG...).', 'aviso');
     if (file.size > 10 * 1024 * 1024) return notify('Arquivo muito grande. Máximo 10 MB.', 'aviso');
 
     _cortePdfArquivo = file;
     const label = document.getElementById('corte-pdf-label');
     const area  = document.getElementById('corte-pdf-area');
-    label.textContent  = '✓ ' + file.name;
-    label.style.color  = '#27ae60';
+    label.textContent      = '✓ ' + file.name;
+    label.style.color      = '#27ae60';
     area.style.borderColor = '#27ae60';
     area.style.background  = '#e8f5e9';
 
-    // Preview imediato no viewer
-    _corteAtualizarViewer(URL.createObjectURL(file));
+    _corteAtualizarViewer(URL.createObjectURL(file), ehImagem);
 }
 
 // ── 6. SALVAR ─────────────────────────────────────────────────────────────────
@@ -288,7 +298,7 @@ async function corteSalvar() {
         const hist = await dbBuscar(TABELA_CORTE, filtros, { order: 'id.desc' });
         _corteCarregarHistorico(hist || []);
         // Mantém PDF no viewer se foi enviado
-        if (pdf_url) _corteAtualizarViewer(pdf_url);
+        if (pdf_url) _corteAtualizarViewer(pdf_url, /\.(jpg|jpeg|png|gif|webp)$/i.test(pdf_url));
         // Limpa apenas os campos da solicitação e o upload
         document.getElementById('corte-motivo').value    = '';
         document.getElementById('corte-situacao').value  = '';
