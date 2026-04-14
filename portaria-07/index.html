@@ -45,14 +45,14 @@ body { font-family:'Segoe UI',Arial,sans-serif; color:var(--text); background:va
 .nav-btn.active { background:var(--teal); color:#fff; box-shadow:0 2px 8px rgba(26,138,122,.3); }
 
 .content { flex:1; padding:20px 24px; overflow:hidden; }
-.card { background:#fff; border-radius:10px; padding:20px 24px 24px; box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border); }
+.card { background:#fff; border-radius:10px; padding:28px 32px 32px; box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border); max-width:860px; margin:0; }
 .tela { display:none; }
 .tela.ativa { display:block; }
 .sec-header { font-size:13px; font-weight:700; color:var(--teal-dk); letter-spacing:1.5px; text-transform:uppercase; padding-bottom:10px; border-bottom:2px solid var(--yellow); margin-bottom:24px; }
-.campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; justify-content:flex-start; }
-.campo-group { display:flex; flex-direction:column; gap:4px; flex:1 1 auto; min-width:120px; }
+.campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
+.campo-group { display:flex; flex-direction:column; gap:4px; }
 .campo-label { font-size:11px; font-weight:600; color:var(--label); letter-spacing:.5px; text-transform:uppercase; }
-input[type="text"], select, input[type="date"] { border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; height:36px; width:100%; }
+input[type="text"], select, input[type="date"] { border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; height:36px; }
 input[type="text"]:focus, select:focus { border-color:var(--teal); }
 input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
 .acoes { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; align-items:center; }
