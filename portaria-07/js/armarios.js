@@ -169,7 +169,7 @@ async function armBuscarRelatorio() {
     if (!inicio || !fim) return notify('Selecione o período.', 'aviso');
 
     const filtros = { data_gte: inicio, data_lte: fim };
-    if (fabrica) filtros.fabrica = fabrica;
+    if (fabrica) filtros.vestiario = fabrica;
     if (busca) {
         if (/^\d+$/.test(busca)) {
             filtros.armario = busca;
