@@ -313,7 +313,9 @@ async function corteSalvar() {
 
 // ── 7. UPLOAD PDF ─────────────────────────────────────────────────────────────
 async function _corteUploadPdf(file, identificador, agora) {
-    const nome = `corte-${identificador}-${agora.getTime()}.pdf`;
+    const ext  = file.name.includes('.') ? file.name.split('.').pop().toLowerCase() : 'pdf';
+    const nome = `corte-${identificador}-${agora.getTime()}.${ext}`;
+    const content_type = file.type || 'application/octet-stream';
     const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload  = e => resolve(e.target.result.split(',')[1]);
@@ -326,7 +328,7 @@ async function _corteUploadPdf(file, identificador, agora) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 _api_key: N8N_API_KEY, bucket: SUPABASE_BUCKET,
-                nome, content_type: 'application/pdf', upsert: true, dados: base64
+                nome, content_type, upsert: true, dados: base64
             })
         });
         const json = await resp.json();
