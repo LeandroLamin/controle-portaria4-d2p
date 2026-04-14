@@ -49,10 +49,10 @@ body { font-family:'Segoe UI',Arial,sans-serif; color:var(--text); background:va
 .tela { display:none; }
 .tela.ativa { display:block; }
 .sec-header { font-size:13px; font-weight:700; color:var(--teal-dk); letter-spacing:1.5px; text-transform:uppercase; padding-bottom:10px; border-bottom:2px solid var(--yellow); margin-bottom:24px; }
-.campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
-.campo-group { display:flex; flex-direction:column; gap:4px; }
+.campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; justify-content:flex-start; }
+.campo-group { display:flex; flex-direction:column; gap:4px; flex:1 1 auto; min-width:120px; }
 .campo-label { font-size:11px; font-weight:600; color:var(--label); letter-spacing:.5px; text-transform:uppercase; }
-input[type="text"], select, input[type="date"] { border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; height:36px; }
+input[type="text"], select, input[type="date"] { border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; height:36px; width:100%; }
 input[type="text"]:focus, select:focus { border-color:var(--teal); }
 input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
 .acoes { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; align-items:center; }
