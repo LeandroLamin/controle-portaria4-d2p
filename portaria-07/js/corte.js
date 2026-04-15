@@ -191,7 +191,10 @@ function _corteSelecionarHistorico(card, item) {
 }
 
 // ── 3. PDF / IMAGEM VIEWER ────────────────────────────────────────────────────
-function _corteAtualizarViewer(url, ehImagem) {
+let _cortePdfDoc = null;
+let _cortePdfPagAtual = 1;
+
+async function _corteAtualizarViewer(url, ehImagem) {
     document.getElementById('corte-viewer-placeholder').style.display = 'none';
     document.getElementById('corte-viewer-acoes').style.display       = 'flex';
     document.getElementById('corte-viewer-link').href                 = url;
@@ -202,8 +205,37 @@ function _corteAtualizarViewer(url, ehImagem) {
     } else {
         document.getElementById('corte-img-viewer').style.display  = 'none';
         document.getElementById('corte-pdf-viewer').style.display  = 'block';
-        document.getElementById('corte-pdf-viewer').src            = url;
+        _cortePdfPagAtual = 1;
+        try {
+            _cortePdfDoc = await pdfjsLib.getDocument({ url, withCredentials: false }).promise;
+            _cortePdfRenderPagina(_cortePdfPagAtual);
+        } catch (e) {
+            notify('Erro ao carregar PDF: ' + e.message, 'erro');
+        }
     }
+}
+
+async function _cortePdfRenderPagina(num) {
+    if (!_cortePdfDoc) return;
+    const page    = await _cortePdfDoc.getPage(num);
+    const canvas  = document.getElementById('corte-pdf-canvas');
+    const ctx     = canvas.getContext('2d');
+    const viewport = page.getViewport({ scale: canvas.parentElement.clientWidth / page.getViewport({ scale: 1 }).width });
+    canvas.width  = viewport.width;
+    canvas.height = viewport.height;
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    document.getElementById('corte-pdf-paginfo').textContent =
+        `Página ${num} de ${_cortePdfDoc.numPages}`;
+    document.getElementById('corte-pdf-nav').style.display =
+        _cortePdfDoc.numPages > 1 ? 'flex' : 'none';
+}
+
+function cortePdfPaginar(delta) {
+    if (!_cortePdfDoc) return;
+    const nova = _cortePdfPagAtual + delta;
+    if (nova < 1 || nova > _cortePdfDoc.numPages) return;
+    _cortePdfPagAtual = nova;
+    _cortePdfRenderPagina(_cortePdfPagAtual);
 }
 
 function corteViewerFechar() {
@@ -211,9 +243,10 @@ function corteViewerFechar() {
     document.getElementById('corte-pdf-viewer').style.display         = 'none';
     document.getElementById('corte-img-viewer').style.display         = 'none';
     document.getElementById('corte-viewer-acoes').style.display       = 'none';
-    document.getElementById('corte-pdf-viewer').src                   = '';
     document.getElementById('corte-img-viewer').src                   = '';
     document.getElementById('corte-viewer-link').href                 = '#';
+    _cortePdfDoc = null;
+    _cortePdfPagAtual = 1;
 }
 
 // ── 4. ESTILO SITUAÇÃO ────────────────────────────────────────────────────────
