@@ -7,6 +7,24 @@
 const TABELA_ARM = 'portaria-07-armarios';
 let dadosArmGlobal = [];
 
+const _CORES_ARM_SIT = {
+    ATIVO:   { bg: '#e8f5e9', color: '#1a6e3a', border: '#27ae60' },
+    INATIVO: { bg: '#fdecea', color: '#8b1a1a', border: '#e03030' }
+};
+
+function armSituacaoStyle(sel) {
+    const c = _CORES_ARM_SIT[sel.value];
+    if (c) {
+        sel.style.background  = c.bg;
+        sel.style.borderColor = c.border;
+        sel.style.color       = c.color;
+    } else {
+        sel.style.background  = '';
+        sel.style.borderColor = '';
+        sel.style.color       = '';
+    }
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     ['arm-armario', 'arm-bpu'].forEach(id => {
@@ -94,7 +112,9 @@ function _armPreencherFormulario(u) {
     document.getElementById('arm-genero').value      = u.genero      || '';
     document.getElementById('arm-turno').value       = u.turno       || '';
     document.getElementById('arm-responsavel').value = u.responsavel || '';
-    document.getElementById('arm-situacao').value    = u.situacao    || '';
+    const selSit = document.getElementById('arm-situacao');
+    selSit.value = u.situacao || '';
+    armSituacaoStyle(selSit);
     document.getElementById('arm-fone').value        = u.fone        || '';
     document.getElementById('arm-ramal').value       = u.ramal       || '';
     document.getElementById('arm-vigilante').value   = u.vigilante   || '';

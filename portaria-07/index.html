@@ -14,6 +14,8 @@
 })();
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 <script src="/js/xlsx.full.min.js"></script>
 <script src="../conexao/config.js?v=2"></script>
 <script src="../conexao/db.js?v=2"></script>
@@ -210,7 +212,7 @@ input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
             <div class="campo-group"><span class="campo-label">Turno</span><input type="text" id="arm-turno" style="width:130px"></div>
             <div class="campo-group"><span class="campo-label">Responsável</span><input type="text" id="arm-responsavel" style="width:220px"></div>
             <div class="campo-group"><span class="campo-label">Situação</span>
-              <select id="arm-situacao" style="width:130px">
+              <select id="arm-situacao" style="width:130px; font-weight:700; transition:all .2s;" onchange="armSituacaoStyle(this)">
                 <option value="">Selecione</option>
                 <option>ATIVO</option>
                 <option>INATIVO</option>
@@ -351,9 +353,16 @@ input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
                   <div style="font-size:46px; margin-bottom:8px;">📄</div>
                   <div style="font-size:12px;">Nenhum documento</div>
                 </div>
-                <iframe id="corte-pdf-viewer" src="" style="display:none; width:100%; height:440px; border-radius:8px; border:1px solid var(--border);"></iframe>
+                <div id="corte-pdf-viewer" style="display:none; width:100%; max-height:440px; overflow-y:auto; border-radius:8px; border:1px solid var(--border); background:#fff;">
+                  <canvas id="corte-pdf-canvas" style="width:100%; display:block;"></canvas>
+                  <div id="corte-pdf-nav" style="display:flex; align-items:center; justify-content:center; gap:8px; padding:6px; background:#f0f2f5; border-top:1px solid var(--border); font-size:12px;">
+                    <button onclick="cortePdfPaginar(-1)" style="background:var(--teal);color:#fff;border:none;border-radius:4px;padding:3px 10px;cursor:pointer;font-size:13px;">‹</button>
+                    <span id="corte-pdf-paginfo" style="color:var(--label);"></span>
+                    <button onclick="cortePdfPaginar(1)" style="background:var(--teal);color:#fff;border:none;border-radius:4px;padding:3px 10px;cursor:pointer;font-size:13px;">›</button>
+                  </div>
+                </div>
                 <img id="corte-img-viewer" src="" alt="" style="display:none; width:100%; border-radius:8px; border:1px solid var(--border); object-fit:contain; max-height:440px;">
-                <div id="corte-viewer-acoes" style="display:none; margin-top:10px; display:flex; gap:8px;">
+                <div id="corte-viewer-acoes" style="display:none; margin-top:10px; gap:8px;">
                   <a id="corte-viewer-link" href="#" target="_blank" rel="noopener"
                      style="flex:1; text-align:center; background:var(--teal); color:#fff; padding:8px 0; border-radius:6px; font-size:12px; font-weight:700; text-decoration:none; letter-spacing:.5px;">⬇ ABRIR / BAIXAR</a>
                   <button onclick="corteViewerFechar()"
