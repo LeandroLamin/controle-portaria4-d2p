@@ -226,9 +226,9 @@
             <span class="titulo">PAINEL GESTÃO</span>
         </div>
         <div style="flex-grow: 1;">
-            <a href="#" class="menu-item active" id="nav-cadastro" onclick="mostrarSecao(event, 'cadastro', this)">➕ Novo Cadastro</a>
+            <a href="javascript:void(0)" class="menu-item active" id="nav-cadastro" onclick="mostrarSecao(event, 'cadastro', document.getElementById('nav-cadastro'))">➕ Novo Cadastro</a>
             <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
-            <a href="#" class="menu-item" id="nav-dashboard" onclick="mostrarSecao(event, 'dashboard', this)">📊 Dashboard de Acessos</a>
+            <a href="javascript:void(0)" class="menu-item" id="nav-dashboard" onclick="mostrarSecao(event, 'dashboard', document.getElementById('nav-dashboard'))">📊 Dashboard de Acessos</a>
             <a href="storage.html" class="menu-item">🖼️ Gerenciar Imagens</a>
         </div>
         <button class="btn-sair" onclick="history.back()">← VOLTAR</button>

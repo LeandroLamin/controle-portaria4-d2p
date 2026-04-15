@@ -152,8 +152,8 @@
         </div>
         <div class="sidebar-nav">
             <a href="index.html" class="menu-item">➕ Novo Cadastro</a>
-            <a href="#" class="menu-item active" id="nav-usuarios" onclick="mostrarSecao(event, 'usuarios', this)">👥 Gestão de Usuários</a>
-            <a href="#" class="menu-item" id="nav-dashboard" onclick="mostrarSecao(event, 'dashboard', this)">📊 Dashboard de Acessos</a>
+            <a href="javascript:void(0)" class="menu-item active" id="nav-usuarios" onclick="mostrarSecao(event, 'usuarios', document.getElementById('nav-usuarios'))">👥 Gestão de Usuários</a>
+            <a href="javascript:void(0)" class="menu-item" id="nav-dashboard" onclick="mostrarSecao(event, 'dashboard', document.getElementById('nav-dashboard'))">📊 Dashboard de Acessos</a>
             <a href="storage.html" class="menu-item">🖼️ Gerenciar Imagens</a>
         </div>
         <button class="btn-sair" onclick="location.href='../portarias.html'">← VOLTAR</button>
