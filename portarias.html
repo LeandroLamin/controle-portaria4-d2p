@@ -18,7 +18,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 250px;
+        padding-top: 110px;
         min-height: 100vh;
         margin: 0;
         zoom: 0.9;
@@ -29,11 +29,17 @@
         left: 0;
         right: 0;
         z-index: 100;
-        text-align: center;
-        background-color: var(--cor-fundo);
-        padding: 12px 0 10px;
+        background-color: #ffffff;
+        padding: 8px 40px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+    }
+    .header-textos {
+        text-align: center;
     }
     .logo-texto {
         font-size: 14px;
@@ -42,7 +48,7 @@
         letter-spacing: 3px;
         text-transform: uppercase;
     }
-    h1 { color: var(--cor-primaria); margin-top: 10px; }
+    h1 { color: var(--cor-primaria); margin: 2px 0 0; font-size: 20px; }
     .grid-portarias {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -174,9 +180,11 @@ function fecharModal() {
 </script>
 
 <div class="header">
-    <img src="https://n8n-supabase.tbjno4.easypanel.host/storage/v1/object/public/assets/Captura%20de%20tela%202026-04-15%20091433.png" alt="Logo RDB" style="max-width: 100px; height: auto; margin-bottom: 4px;">
-    <div class="logo-texto">SEGURANÇA PATRIMONIAL D2P-BRAZIL</div>
-    <h1>Selecione a Portaria de Trabalho</h1>
+    <div class="header-textos">
+        <div class="logo-texto">SEGURANÇA PATRIMONIAL D2P-BRAZIL</div>
+        <h1>Selecione a Portaria de Trabalho</h1>
+    </div>
+    <img src="https://n8n-supabase.tbjno4.easypanel.host/storage/v1/object/public/assets/Captura%20de%20tela%202026-04-15%20091433.png" alt="Logo RDB" style="max-width: 60px; height: auto;">
 </div>
 
 <div class="grid-portarias">
