@@ -21,7 +21,7 @@
         /* ── Sidebar ── */
         .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; background: #2c3e50; padding: 20px; display: flex; flex-direction: column; z-index: 1000; }
         .sidebar-header { text-align: center; border-bottom: 1px solid #34495e; padding-bottom: 20px; margin-bottom: 20px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; cursor: pointer; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: #bdc3c7; text-decoration: none; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border-left: 4px solid transparent; }
         .menu-item.active, .menu-item:hover { background: #34495e; color: white; border-left: 4px solid #f1c40f; }
         .btn-sair { margin-top: auto; background: #34495e; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 14px; font-weight: 600; }
 
@@ -86,11 +86,12 @@
 <nav class="sidebar">
     <div class="sidebar-header">
         <div style="font-size:10px;color:#95a5a6;letter-spacing:2px;">SEGURANÇA D2P</div>
-        <h2 style="color:white;font-size:18px;margin-top:5px;">PAINEL GESTÃO</h2>
+        <h2 style="color:white;font-size:18px;margin:5px 0 0 0;">PAINEL GESTÃO</h2>
     </div>
     <div style="flex-grow:1;">
         <a href="index.html" class="menu-item">➕ Novo Cadastro</a>
         <a href="gestao.html" class="menu-item">👥 Gestão de Usuários</a>
+        <a href="gestao.html#dashboard" class="menu-item">📊 Dashboard de Acessos</a>
         <a href="storage.html" class="menu-item active">🖼️ Gerenciar Imagens</a>
     </div>
     <button class="btn-sair" onclick="location.href='../portarias.html'">← VOLTAR</button>
