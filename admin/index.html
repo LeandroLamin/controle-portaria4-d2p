@@ -84,13 +84,15 @@
             display: flex; flex-direction: column; padding: 20px;
             box-shadow: 4px 0 10px rgba(0,0,0,0.1);
         }
-        .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--sidebar-item); padding-bottom: 20px; }
+        .sidebar-header { text-align: center; margin-bottom: 16px; border-bottom: 1px solid var(--sidebar-item); padding-bottom: 16px; line-height: 1; }
+        .sidebar-header .sub { font-size: 10px; color: #95a5a6; letter-spacing: 2px; display: block; margin: 0; padding: 0; line-height: 1.4; }
+        .sidebar-header .titulo { font-size: 18px; color: white; font-weight: 700; display: block; margin: 4px 0 0 0; padding: 0; line-height: 1.4; }
         .menu-item {
-            display: flex; align-items: center; gap: 12px; padding: 15px;
+            display: flex; align-items: center; gap: 12px; padding: 13px 15px;
             color: var(--text-muted); text-decoration: none; border-radius: 8px;
-            margin-bottom: 10px; transition: 0.3s; cursor: pointer;
+            margin-bottom: 8px; transition: background-color .15s, color .15s, box-shadow .15s; cursor: pointer; line-height: 1.4;
         }
-        .menu-item:hover, .menu-item.active { background-color: var(--sidebar-item); color: white; border-left: 4px solid var(--accent-gold); }
+        .menu-item:hover, .menu-item.active { background-color: var(--sidebar-item); color: white; box-shadow: inset 4px 0 0 var(--accent-gold); }
         .btn-sair {
             background: var(--sidebar-item); color: white; border: none; padding: 12px;
             border-radius: 8px; cursor: pointer; margin-top: auto; width: 100%;
@@ -220,8 +222,8 @@
     <!-- SIDEBAR -->
     <nav class="sidebar">
         <div class="sidebar-header">
-            <div style="font-size: 10px; color: var(--text-muted); letter-spacing: 2px;">SEGURANÇA D2P</div>
-            <h2 style="color: white; font-size: 18px; margin-top: 5px;">PAINEL GESTÃO</h2>
+            <span class="sub">SEGURANÇA D2P</span>
+            <span class="titulo">PAINEL GESTÃO</span>
         </div>
         <div style="flex-grow: 1;">
             <a href="#" class="menu-item active" id="nav-cadastro" onclick="mostrarSecao(event, 'cadastro', this)">➕ Novo Cadastro</a>
