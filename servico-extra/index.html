@@ -122,6 +122,36 @@
     </div>
 </div>
 
+<!-- ===== MODAL ALTERAR SENHA ===== -->
+<div id="modal-alterar-senha" class="modal-overlay" onclick="if(event.target===this)fecharAlterarSenha()">
+    <div class="modal-box">
+        <div class="modal-titulo">Alterar Senha</div>
+        <div class="senha-wrapper">
+            <input class="modal-input" type="password" id="alt-senha-atual" placeholder="Senha atual">
+            <button type="button" class="btn-olho" onclick="toggleOlho(this,'alt-senha-atual')" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+            </button>
+        </div>
+        <div class="senha-wrapper">
+            <input class="modal-input" type="password" id="alt-senha-nova" placeholder="Nova senha" oninput="verificarMatchAlt()">
+            <button type="button" class="btn-olho" onclick="toggleOlho(this,'alt-senha-nova')" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+            </button>
+        </div>
+        <div class="senha-wrapper">
+            <input class="modal-input" type="password" id="alt-senha-confirma" placeholder="Confirme a nova senha" oninput="verificarMatchAlt()">
+            <button type="button" class="btn-olho" onclick="toggleOlho(this,'alt-senha-confirma')" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+            </button>
+        </div>
+        <div class="cad-match" id="alt-match"></div>
+        <div class="modal-btns">
+            <button class="btn-modal-cancelar" onclick="fecharAlterarSenha()">Cancelar</button>
+            <button class="btn-modal-enviar" id="btn-alterar-senha" onclick="salvarNovaSenha()">Salvar</button>
+        </div>
+    </div>
+</div>
+
 <!-- ===== TOPBAR (visível após login) ===== -->
 <div id="topbar-form" style="display:none;">
     <div class="topbar">
@@ -131,6 +161,7 @@
                 <span class="topbar-nome" id="topbar-nome"></span>
                 <span class="topbar-relogio" id="topbar-relogio"></span>
             </div>
+            <button class="btn-sair" onclick="abrirAlterarSenha()" style="background:#2980b9;margin-right:8px;">Alterar Senha</button>
             <button class="btn-sair" onclick="sair()">Sair</button>
         </div>
     </div>
@@ -463,6 +494,64 @@ function toggleOlho(btn, inputId) {
     btn.querySelector('svg').innerHTML = mostrar
         ? '<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238zM13.646 14.354l-12-12 .708-.708 12 12z"/>'
         : '<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>';
+}
+
+// ===== ALTERAR SENHA =====
+function abrirAlterarSenha() {
+    document.getElementById('alt-senha-atual').value = '';
+    document.getElementById('alt-senha-nova').value = '';
+    document.getElementById('alt-senha-confirma').value = '';
+    document.getElementById('alt-match').textContent = '';
+    document.getElementById('alt-match').className = 'cad-match';
+    document.getElementById('modal-alterar-senha').classList.add('aberto');
+    document.getElementById('alt-senha-atual').focus();
+}
+function fecharAlterarSenha() {
+    document.getElementById('modal-alterar-senha').classList.remove('aberto');
+}
+function verificarMatchAlt() {
+    var s1 = document.getElementById('alt-senha-nova').value;
+    var s2 = document.getElementById('alt-senha-confirma').value;
+    var el = document.getElementById('alt-match');
+    if (!s2) { el.textContent = ''; el.className = 'cad-match'; return; }
+    if (s1 === s2) { el.textContent = '✓ Senhas coincidem'; el.className = 'cad-match ok'; }
+    else           { el.textContent = '✗ Senhas não coincidem'; el.className = 'cad-match nok'; }
+}
+async function salvarNovaSenha() {
+    var senhaAtual  = document.getElementById('alt-senha-atual').value;
+    var senhaNova   = document.getElementById('alt-senha-nova').value;
+    var confirma    = document.getElementById('alt-senha-confirma').value;
+    var btn         = document.getElementById('btn-alterar-senha');
+    var email       = sessionStorage.getItem('gps-extra-auth') || '';
+
+    if (!senhaAtual)          { notify('Informe a senha atual.', 'aviso'); return; }
+    if (!senhaNova)           { notify('Informe a nova senha.', 'aviso'); return; }
+    if (senhaNova.length < 6) { notify('A nova senha deve ter ao menos 6 caracteres.', 'aviso'); return; }
+    if (senhaNova !== confirma){ notify('As senhas não coincidem.', 'aviso'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+
+    // Verifica senha atual
+    var hashAtual = await hashSenha(email, senhaAtual);
+    var usuario = await dbBuscar('gps-acesso-extra', { email: email, senha: hashAtual }, { limit: 1 });
+    if (!usuario || usuario.length === 0) {
+        notify('Senha atual incorreta.', 'erro');
+        btn.disabled = false;
+        btn.textContent = 'Salvar';
+        document.getElementById('alt-senha-atual').value = '';
+        document.getElementById('alt-senha-atual').focus();
+        return;
+    }
+
+    btn.textContent = 'Salvando...';
+    var hashNova = await hashSenha(email, senhaNova);
+    await dbAtualizar('gps-acesso-extra', { email: email }, { senha: hashNova });
+
+    btn.disabled = false;
+    btn.textContent = 'Salvar';
+    fecharAlterarSenha();
+    notify('Senha alterada com sucesso!', 'sucesso');
 }
 
 // ===== MATCH SENHA CADASTRO =====
