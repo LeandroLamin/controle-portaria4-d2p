@@ -198,9 +198,9 @@ body {
 /* ===== STATUS BUSCA ===== */
 .status-card {
     background: #fff; border-radius: 3px;
-    padding: 14px 20px; margin: 16px auto 0; max-width: 900px;
+    padding: 14px 20px; margin: 12px auto 0; max-width: 900px;
     box-shadow: 0 1px 4px rgba(0,0,0,.08);
-    border-left: 3px solid var(--blue);
+    border-top: 3px solid var(--blue);
 }
 .status-titulo {
     font-size: 10px; font-weight: 800; color: var(--blue);
