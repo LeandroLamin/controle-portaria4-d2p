@@ -35,9 +35,12 @@
 <!-- ===== TELA DE ACESSO ===== -->
 <div id="tela-acesso">
     <div class="acesso-card">
-        <div class="acesso-marca">GPS Vigilância e Especializada</div>
-        <div class="acesso-titulo">Solicitação de<br>Serviço Extra</div>
-
+        <div class="acesso-header">
+            <div class="acesso-logo">🛡️</div>
+            <div class="acesso-marca">GPS Vigilância e Especializada</div>
+            <div class="acesso-titulo">Solicitação de Serviço Extra</div>
+        </div>
+        <div class="acesso-body">
         <div class="acesso-erro" id="acesso-erro">E-mail ou senha incorretos.</div>
 
         <input class="acesso-input" type="email" id="acesso-email" placeholder="Seu e-mail" autocomplete="email">
@@ -55,6 +58,7 @@
 
         <a class="link-recuperar" onclick="abrirRecuperar()">Esqueci minha senha</a>
         <a class="link-recuperar link-cadastrar" onclick="abrirCadastro()">Não tenho cadastro — Cadastrar-se</a>
+        </div>
     </div>
 </div>
 
@@ -161,8 +165,8 @@
                 <span class="topbar-nome" id="topbar-nome"></span>
                 <span class="topbar-relogio" id="topbar-relogio"></span>
             </div>
-            <button class="btn-sair" onclick="abrirAlterarSenha()" style="background:#2980b9;margin-right:8px;">Alterar Senha</button>
-            <button class="btn-sair" onclick="sair()">Sair</button>
+            <button class="btn-topbar azul" onclick="abrirAlterarSenha()">🔑 Alterar Senha</button>
+            <button class="btn-sair" onclick="sair()">↪ Sair</button>
         </div>
     </div>
 </div>
@@ -187,10 +191,11 @@
 <div id="conteudo-form" style="display:none;">
 
     <div class="form-header">
-        <div class="form-header-titulo">Formulário de Solicitação para Serviço Extra</div>
-        <div class="form-header-subtitulo">Contrato GPS Vigilância e Especializada</div>
-        <div class="form-header-aviso">
-            Dúvidas? Ligue: <b>(41) 99697-9238</b> ou <b>(41) 3380-2744</b>
+        <div class="form-header-icon">📋</div>
+        <div class="form-header-info">
+            <div class="form-header-titulo">Formulário de Solicitação — Serviço Extra</div>
+            <div class="form-header-subtitulo">Contrato GPS Vigilância e Especializada</div>
+            <div class="form-header-aviso">Dúvidas? <b>(41) 99697-9238</b> ou <b>(41) 3380-2744</b></div>
         </div>
     </div>
 
