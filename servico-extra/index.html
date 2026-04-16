@@ -12,6 +12,22 @@
 <script src="../conexao/db.js"></script>
 <script src="../js/ui.js"></script>
 
+<style>
+.status-card{background:#fff;border:1px solid #dde3ec;border-radius:8px;padding:16px 20px;margin:16px auto;max-width:900px;}
+.status-titulo{font-size:13px;font-weight:700;color:#1a3a5c;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;}
+.status-row{display:flex;gap:10px;}
+.status-row input{flex:1;padding:10px 14px;border:1px solid #ccd6e0;border-radius:6px;font-size:14px;font-family:inherit;}
+.status-row input:focus{outline:none;border-color:#1a3a5c;}
+.status-row button{padding:10px 20px;background:#1a3a5c;color:#fff;border:none;border-radius:6px;font-size:14px;cursor:pointer;font-family:inherit;font-weight:600;}
+.status-row button:hover{background:#14304d;}
+.status-aviso{color:#888;font-size:13px;margin-top:10px;}
+.status-info{margin-top:14px;}
+.status-badge{display:inline-block;padding:4px 16px;border-radius:20px;color:#fff;font-size:12px;font-weight:700;margin-bottom:12px;letter-spacing:.5px;}
+.status-tabela{width:100%;border-collapse:collapse;font-size:13px;}
+.status-tabela tr:nth-child(even){background:#f5f7fa;}
+.status-tabela td{padding:7px 10px;border-bottom:1px solid #eee;}
+.status-tabela td:first-child{color:#888;width:130px;}
+.status-tabela a{color:#1a3a5c;text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -90,6 +106,19 @@
             <button class="btn-modal-cancelar" onclick="fecharCadastro()">Cancelar</button>
             <button class="btn-modal-enviar" id="btn-cadastrar" onclick="enviarCadastro()">Cadastrar</button>
         </div>
+    </div>
+</div>
+
+<!-- ===== BUSCA DE STATUS ===== -->
+<div id="status-busca" style="display:none;">
+    <div class="status-card">
+        <div class="status-titulo">Acompanhar Solicitação</div>
+        <div class="status-row">
+            <input type="text" id="status-protocolo" placeholder="Número do protocolo — ex: GPS2604252879" maxlength="20"
+                onkeydown="if(event.key==='Enter')buscarStatus()">
+            <button onclick="buscarStatus()">Buscar</button>
+        </div>
+        <div id="status-resultado"></div>
     </div>
 </div>
 
@@ -319,6 +348,14 @@
             <textarea class="campo-textarea" id="observacoes" placeholder="Informações adicionais, requisitos específicos, equipamentos necessários..."></textarea>
         </div>
 
+        <div class="campo-grupo">
+            <label class="campo-label" for="arquivo-pdf">
+                Anexo
+                <span class="campo-hint">Opcional — apenas PDF, máx. 5 MB</span>
+            </label>
+            <input class="campo-input" type="file" id="arquivo-pdf" accept=".pdf" style="padding:8px;cursor:pointer;">
+        </div>
+
         <button class="btn-enviar" id="btn-enviar" onclick="enviarSolicitacao()">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
@@ -378,6 +415,7 @@ function mostrarFormulario() {
     document.getElementById('tela-acesso').style.display = 'none';
     document.getElementById('topbar-form').style.display = 'block';
     document.getElementById('conteudo-form').style.display = 'block';
+    document.getElementById('status-busca').style.display = 'block';
     _preencherDadosLogin();
 }
 
@@ -410,6 +448,7 @@ function sair() {
     document.getElementById('topbar-form').style.display = 'none';
     document.getElementById('conteudo-form').style.display = 'none';
     document.getElementById('tela-sucesso').style.display = 'none';
+    document.getElementById('status-busca').style.display = 'none';
     document.getElementById('tela-acesso').style.display = 'flex';
     document.getElementById('acesso-email').value = '';
     document.getElementById('acesso-senha').value = '';
@@ -593,14 +632,46 @@ async function enviarSolicitacao() {
         return;
     }
 
+    // Validar PDF opcional
+    var arquivoEl = document.getElementById('arquivo-pdf');
+    var arquivo = arquivoEl && arquivoEl.files[0];
+    if (arquivo) {
+        if (arquivo.type !== 'application/pdf') { notify('Apenas arquivos PDF são aceitos.', 'aviso'); return; }
+        if (arquivo.size > 5 * 1024 * 1024) { notify('O arquivo deve ter no máximo 5 MB.', 'aviso'); return; }
+    }
+
     var btn = document.getElementById('btn-enviar');
     btn.disabled = true;
-    btn.textContent = 'Enviando...';
+    var btnOriginalHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/></svg> ENVIAR SOLICITAÇÃO';
 
     var protocolo = gerarProtocolo();
     var agora = new Date();
     var hojeStr = String(agora.getDate()).padStart(2,'0') + '/' + String(agora.getMonth()+1).padStart(2,'0') + '/' + agora.getFullYear();
     var horaStr = String(agora.getHours()).padStart(2,'0') + ':' + String(agora.getMinutes()).padStart(2,'0');
+
+    // Upload PDF opcional
+    var pdfUrl = '';
+    if (arquivo) {
+        btn.textContent = 'Enviando anexo...';
+        try {
+            var base64 = await new Promise(function(resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function(e) { resolve(e.target.result.split(',')[1]); };
+                reader.onerror = reject;
+                reader.readAsDataURL(arquivo);
+            });
+            var nomeArquivo = 'servico-extra/' + protocolo + '/' + arquivo.name;
+            var upResp = await fetch(N8N_URL + '/storage-upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dados: base64, nome: nomeArquivo, content_type: 'application/pdf', _api_key: N8N_API_KEY })
+            });
+            var upData = await upResp.json();
+            if (upData.ok) pdfUrl = SUPABASE_URL + '/storage/v1/object/public/assets/' + nomeArquivo;
+        } catch(e) { console.warn('Upload PDF falhou:', e); }
+    }
+
+    btn.textContent = 'Salvando...';
 
     var dados = {
         protocolo:        protocolo,
@@ -624,17 +695,26 @@ async function enviarSolicitacao() {
         hora_solicitacao: horaStr,
         status:           'PENDENTE'
     };
+    if (pdfUrl) dados.pdf_url = pdfUrl;
 
     var resultado = await dbSalvar('gps-servico-extra', dados);
 
     btn.disabled = false;
-    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/></svg> ENVIAR SOLICITAÇÃO';
+    btn.innerHTML = btnOriginalHTML;
 
     if (resultado && resultado.ok !== false) {
+        // Enviar email (fire and forget)
+        fetch(N8N_URL + '/servico-extra-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.assign({}, dados, { _api_key: N8N_API_KEY }))
+        }).catch(function(){});
+
         document.getElementById('protocolo-num').textContent = protocolo;
         document.getElementById('conteudo-form').style.display = 'none';
         document.getElementById('tela-sucesso').style.display = 'block';
         document.getElementById('topbar-form').style.display = 'none';
+        document.getElementById('status-busca').style.display = 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
         notify('Erro ao enviar solicitação. Tente novamente.', 'erro');
@@ -645,6 +725,7 @@ function novaSolicitacao() {
     document.getElementById('tela-sucesso').style.display = 'none';
     document.getElementById('topbar-form').style.display = 'block';
     document.getElementById('conteudo-form').style.display = 'block';
+    document.getElementById('status-busca').style.display = 'block';
     document.querySelectorAll('.campo-input, .campo-textarea').forEach(function(el) { el.value = ''; });
     document.querySelectorAll('.checkbox-item').forEach(function(el) {
         el.querySelector('input').checked = false;
@@ -652,6 +733,35 @@ function novaSolicitacao() {
     });
     _preencherDadosLogin();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== BUSCA DE STATUS =====
+async function buscarStatus() {
+    var protocolo = document.getElementById('status-protocolo').value.trim().toUpperCase();
+    var resultado = document.getElementById('status-resultado');
+    if (!protocolo) { resultado.innerHTML = '<p class="status-aviso">Digite o número do protocolo.</p>'; return; }
+
+    resultado.innerHTML = '<p class="status-aviso">Buscando...</p>';
+    var dados = await dbBuscar('gps-servico-extra', { protocolo: protocolo }, { limit: 1 });
+
+    if (!dados || dados.length === 0) {
+        resultado.innerHTML = '<p class="status-aviso">Protocolo não encontrado.</p>';
+        return;
+    }
+    var s = dados[0];
+    var cor = s.status === 'APROVADO' ? '#27ae60' : s.status === 'REPROVADO' ? '#e74c3c' : '#e67e22';
+    resultado.innerHTML =
+        '<div class="status-info">' +
+        '<span class="status-badge" style="background:' + cor + '">' + (s.status || 'PENDENTE') + '</span>' +
+        '<table class="status-tabela">' +
+        '<tr><td>Protocolo</td><td><strong>' + s.protocolo + '</strong></td></tr>' +
+        '<tr><td>Serviço</td><td>' + s.tipo_servico + '</td></tr>' +
+        '<tr><td>Solicitante</td><td>' + s.nome_solicitante + '</td></tr>' +
+        '<tr><td>Local</td><td>' + s.local_servico + '</td></tr>' +
+        '<tr><td>Período</td><td>' + s.data_inicio + ' ' + s.hora_inicio + ' → ' + s.data_final + ' ' + s.hora_final + '</td></tr>' +
+        '<tr><td>Enviado em</td><td>' + s.data_solicitacao + ' às ' + s.hora_solicitacao + '</td></tr>' +
+        (s.pdf_url ? '<tr><td>Anexo</td><td><a href="' + s.pdf_url + '" target="_blank">Visualizar PDF</a></td></tr>' : '') +
+        '</table></div>';
 }
 </script>
 
