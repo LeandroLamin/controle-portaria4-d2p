@@ -36,8 +36,7 @@
 <div id="tela-acesso">
     <div class="acesso-card">
         <div class="acesso-header">
-            <div class="acesso-logo">🛡️</div>
-            <div class="acesso-marca">GPS Vigilância e Especializada</div>
+            <div class="acesso-logo">GRUPO <span>GPS</span></div>
             <div class="acesso-titulo">Solicitação de Serviço Extra</div>
         </div>
         <div class="acesso-body">
@@ -159,14 +158,19 @@
 <!-- ===== TOPBAR (visível após login) ===== -->
 <div id="topbar-form" style="display:none;">
     <div class="topbar">
-        <span class="topbar-titulo">Solicitação de Serviço Extra — GPS Vigilância</span>
+        <div class="topbar-brand">
+            <div class="topbar-brand-logo">GRUPO <span>GPS</span></div>
+            <div class="topbar-divider"></div>
+            <span class="topbar-titulo">Serviço Extra</span>
+        </div>
         <div class="topbar-usuario">
             <div class="topbar-info">
                 <span class="topbar-nome" id="topbar-nome"></span>
                 <span class="topbar-relogio" id="topbar-relogio"></span>
             </div>
+            <div class="topbar-avatar" id="topbar-avatar">?</div>
             <button class="btn-topbar azul" onclick="abrirAlterarSenha()">🔑 Alterar Senha</button>
-            <button class="btn-sair" onclick="sair()">↪ Sair</button>
+            <button class="btn-sair" onclick="sair()">Sair</button>
         </div>
     </div>
 </div>
@@ -462,6 +466,8 @@ function _preencherDadosLogin() {
     if (nome)  document.getElementById('nome-solicitante').value = nome;
     var elNome = document.getElementById('topbar-nome');
     if (elNome) elNome.textContent = nome;
+    var elAvatar = document.getElementById('topbar-avatar');
+    if (elAvatar && nome) elAvatar.textContent = nome.charAt(0).toUpperCase();
     _iniciarRelogio();
 }
 
