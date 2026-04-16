@@ -704,10 +704,11 @@ async function enviarSolicitacao() {
 
     if (resultado && resultado.ok !== false) {
         // Enviar email (fire and forget)
+        var emailLogin = sessionStorage.getItem('gps-extra-auth') || dados.email;
         fetch(N8N_URL + '/servico-extra-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(Object.assign({}, dados, { _api_key: N8N_API_KEY }))
+            body: JSON.stringify(Object.assign({}, dados, { _api_key: N8N_API_KEY, email_login: emailLogin }))
         }).catch(function(){});
 
         document.getElementById('protocolo-num').textContent = protocolo;
