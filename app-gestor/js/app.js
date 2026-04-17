@@ -3,7 +3,9 @@
  * Tabela: app-gestores (cadastro de gestores autorizados)
  */
 
-const TABELA_GESTORES = 'portaria-gestores';
+const TABELA_GESTORES    = 'portaria-gestores';
+const PLATE_RECOGNIZER   = 'https://api.platerecognizer.com/v1/plate-reader/';
+const PLATE_TOKEN        = '2bc63f6c1150244884c85b2b147fcae03ca5104d';
 let stream = null;
 
 // ── Init ──────────────────────────────────────────────────────────────────────
@@ -76,7 +78,7 @@ function pararCamera() {
     if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
 }
 
-// ── Capturar e OCR ────────────────────────────────────────────────────────────
+// ── Capturar e enviar para Platerecognizer ────────────────────────────────────
 async function capturarPlaca() {
     const video  = document.getElementById('video');
     const canvas = document.getElementById('canvas');
@@ -84,62 +86,38 @@ async function capturarPlaca() {
 
     if (!stream) { buscarPlaca(); return; }
 
-    // Captura frame completo
     canvas.width  = video.videoWidth;
     canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0);
+    canvas.getContext('2d').drawImage(video, 0, 0);
 
-    // Recorta só a faixa das letras grandes — ignora o topo (BRASIL)
-    const cropW = canvas.width  * 0.90;
-    const cropH = canvas.height * 0.25;
-    const cropX = (canvas.width  - cropW) / 2;
-    // Desloca para baixo do centro para pegar só os caracteres
-    const cropY = (canvas.height / 2) + (canvas.height * 0.05);
+    status.textContent = '🔍 Enviando para leitura...';
 
-    const crop = document.createElement('canvas');
-    crop.width  = cropW * 2;
-    crop.height = cropH * 2;
-    const cCtx = crop.getContext('2d');
+    canvas.toBlob(async (blob) => {
+        try {
+            const form = new FormData();
+            form.append('upload', blob, 'placa.jpg');
+            form.append('regions', 'br');
 
-    // Escala 2x para melhor resolução no OCR
-    cCtx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, crop.width, crop.height);
+            const resp = await fetch(PLATE_RECOGNIZER, {
+                method: 'POST',
+                headers: { 'Authorization': `Token ${PLATE_TOKEN}` },
+                body: form
+            });
 
-    // Pré-processamento: aumenta contraste sem binarizar
-    const imgData = cCtx.getImageData(0, 0, crop.width, crop.height);
-    const d = imgData.data;
-    const fator = 1.8;
-    for (let i = 0; i < d.length; i += 4) {
-        d[i]   = Math.min(255, (d[i]   - 128) * fator + 128);
-        d[i+1] = Math.min(255, (d[i+1] - 128) * fator + 128);
-        d[i+2] = Math.min(255, (d[i+2] - 128) * fator + 128);
-    }
-    cCtx.putImageData(imgData, 0, 0);
+            const data = await resp.json();
 
-    status.textContent = '🔍 Lendo placa...';
-
-    try {
-        const { data: { text } } = await Tesseract.recognize(crop, 'eng', {
-            tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-            tessedit_pageseg_mode:   '7', // linha única
-            tessedit_ocr_engine_mode: '1'
-        });
-
-        const limpo = text.replace(/[^A-Z0-9]/g, '').toUpperCase();
-
-        // Placa antiga: ABC1234 | Mercosul: ABC1D23
-        const match = limpo.match(/[A-Z]{3}[0-9][A-Z0-9][0-9]{2}/);
-        if (match) {
-            const placa = match[0];
-            document.getElementById('placa-manual').value = placa;
-            status.textContent = `Placa detectada: ${placa}`;
-            await buscarPorPlaca(placa);
-        } else {
-            status.textContent = `Não reconheceu (lido: "${limpo}") — tente manualmente.`;
+            if (data.results && data.results.length > 0) {
+                const placa = data.results[0].plate.toUpperCase();
+                document.getElementById('placa-manual').value = placa;
+                status.textContent = `Placa detectada: ${placa}`;
+                await buscarPorPlaca(placa);
+            } else {
+                status.textContent = 'Placa não detectada — tente manualmente.';
+            }
+        } catch {
+            status.textContent = 'Erro na leitura — tente manualmente.';
         }
-    } catch {
-        status.textContent = 'Erro na leitura — tente manualmente.';
-    }
+    }, 'image/jpeg', 0.9);
 }
 
 // ── Busca manual ──────────────────────────────────────────────────────────────
