@@ -1,7 +1,7 @@
 {
-    "name": "Gestão Portaria CVU",
-    "short_name": "Portaria D2P",
-    "description": "Controle de Acesso de Veículos — D2P Brazil",
+    "name": "Controle Acesso Placa Verde",
+    "short_name": "Placa Verde D2P",
+    "description": "Controle Acesso Placa Verde — D2P Brazil",
     "start_url": "/app-mobile/",
     "display": "standalone",
     "background_color": "#000000",
