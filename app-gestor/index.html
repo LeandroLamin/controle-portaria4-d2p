@@ -99,6 +99,12 @@
         .result-field-value { font-size:16px; font-weight:700; color:#fff; }
         .result-placa { font-size:28px; font-weight:900; letter-spacing:4px; color:#f5c518; text-align:center; margin-bottom:28px; }
 
+        .btns-acesso { display:flex; gap:16px; width:100%; max-width:340px; margin-bottom:20px; }
+        .btn-entrada { flex:1; padding:18px; background:#27ae60; color:#fff; border:none; border-radius:14px; font-size:17px; font-weight:900; cursor:pointer; letter-spacing:1px; }
+        .btn-entrada:active { background:#1e8449; }
+        .btn-saida   { flex:1; padding:18px; background:#e74c3c; color:#fff; border:none; border-radius:14px; font-size:17px; font-weight:900; cursor:pointer; letter-spacing:1px; }
+        .btn-saida:active   { background:#c0392b; }
+
         .btn-voltar {
             padding:14px 40px; background:rgba(255,255,255,0.15); color:#fff;
             border:2px solid rgba(255,255,255,0.3); border-radius:12px;
@@ -185,6 +191,10 @@
     <div class="result-status" id="result-status"></div>
     <div class="result-placa" id="result-placa"></div>
     <div class="result-card" id="result-card"></div>
+    <div class="btns-acesso" id="btns-acesso" style="display:none">
+        <button class="btn-entrada" onclick="registrarAcesso('ENTRADA')">↓ ENTRADA</button>
+        <button class="btn-saida"   onclick="registrarAcesso('SAÍDA')">↑ SAÍDA</button>
+    </div>
     <button class="btn-voltar" onclick="voltarScan()">← NOVA CONSULTA</button>
 </div>
 

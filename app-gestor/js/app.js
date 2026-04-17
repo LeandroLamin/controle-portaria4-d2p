@@ -4,6 +4,8 @@
  */
 
 const TABELA_GESTORES    = 'portaria-gestores';
+const TABELA_LOG         = 'portaria-gestores-log';
+let _gestorAtual = null;
 const PLATE_RECOGNIZER   = 'https://api.platerecognizer.com/v1/plate-reader/';
 const PLATE_TOKEN        = '2bc63f6c1150244884c85b2b147fcae03ca5104d';
 let stream = null;
@@ -145,6 +147,8 @@ async function buscarPorPlaca(placa) {
 
 // ── Resultado LIBERADO ────────────────────────────────────────────────────────
 function mostrarLiberado(placa, gestor) {
+    _gestorAtual = { ...gestor, placa };
+
     const tela = document.getElementById('tela-resultado');
     tela.className = 'liberado';
     tela.style.display = 'flex';
@@ -152,28 +156,44 @@ function mostrarLiberado(placa, gestor) {
     document.getElementById('result-icon').textContent   = '✅';
     document.getElementById('result-status').textContent = 'LIBERADO';
     document.getElementById('result-placa').textContent  = placa;
+    document.getElementById('btns-acesso').style.display = 'flex';
 
     document.getElementById('result-card').innerHTML = `
-        <div class="result-field">
+        <div class="result-field" style="text-align:center">
             <div class="result-field-label">Nome</div>
-            <div class="result-field-value">${gestor.nome || '—'}</div>
-        </div>
-        <div class="result-field">
-            <div class="result-field-label">Empresa</div>
-            <div class="result-field-value">${gestor.empresa || '—'}</div>
-        </div>
-        <div class="result-field">
-            <div class="result-field-label">Cargo</div>
-            <div class="result-field-value">${gestor.cargo || '—'}</div>
+            <div class="result-field-value" style="font-size:22px">${gestor.nome || '—'}</div>
         </div>
     `;
 }
 
+// ── Registrar ENTRADA / SAÍDA ─────────────────────────────────────────────────
+async function registrarAcesso(tipo) {
+    if (!_gestorAtual) return;
+    const agora = new Date();
+    const session = JSON.parse(sessionStorage.getItem('gestor-auth') || '{}');
+
+    const dados = {
+        placa:     _gestorAtual.placa,
+        nome:      _gestorAtual.nome,
+        empresa:   _gestorAtual.empresa || '',
+        cargo:     _gestorAtual.cargo   || '',
+        acesso:    tipo,
+        data:      agora.toLocaleDateString('en-CA'),
+        hora:      agora.toTimeString().slice(0, 8),
+        operador:  session.nome || ''
+    };
+
+    await dbSalvar(TABELA_LOG, dados);
+    voltarScan();
+}
+
 // ── Resultado NEGADO ──────────────────────────────────────────────────────────
 function mostrarNegado(placa) {
+    _gestorAtual = null;
     const tela = document.getElementById('tela-resultado');
     tela.className = 'negado';
     tela.style.display = 'flex';
+    document.getElementById('btns-acesso').style.display = 'none';
 
     document.getElementById('result-icon').textContent   = '🚫';
     document.getElementById('result-status').textContent = 'SEM ACESSO';
@@ -187,7 +207,9 @@ function mostrarNegado(placa) {
 
 // ── Voltar ────────────────────────────────────────────────────────────────────
 function voltarScan() {
-    document.getElementById('tela-resultado').style.display = 'none';
-    document.getElementById('placa-manual').value = '';
-    document.getElementById('status-ocr').textContent = 'Aponte para a placa e capture';
+    _gestorAtual = null;
+    document.getElementById('tela-resultado').style.display  = 'none';
+    document.getElementById('btns-acesso').style.display     = 'none';
+    document.getElementById('placa-manual').value            = '';
+    document.getElementById('status-ocr').textContent        = 'Aponte para a placa e capture';
 }
