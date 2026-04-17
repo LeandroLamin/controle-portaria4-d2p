@@ -13,14 +13,15 @@
     --fundo-dark: #1a202c;
 }
 
-body { 
-    background-color: var(--fundo-dark); 
-    margin: 0; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    min-height: 100vh; 
-    font-family: 'Segoe UI', Tahoma, sans-serif; 
+body {
+    background-color: var(--fundo-dark);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    zoom: 0.9;
 }
 
 /* LOGIN */
