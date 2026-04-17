@@ -12,161 +12,310 @@
             if (!niveis.includes('p03') && !niveis.includes('portaria-03') && !niveis.includes('administrador')) { location.replace('/portarias.html?negado=Portaria+03'); }
         })();
     </script>
+    <script src="/js/xlsx.full.min.js"></script>
+    <script src="../conexao/config.js?v=2"></script>
+    <script src="../conexao/db.js?v=2"></script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        :root { --teal:#1a8a7a; --teal-dk:#136b5e; --teal-lt:#e8f5f3; --yellow:#f5c518; --yellow-dk:#d4a800; --red:#e03030; --red-dk:#b82020; --gray-bg:#f0f2f5; --border:#d0d8e0; --text:#1a2a38; --label:#4a6070; --green-field:#d4f5d4; }
-        body { font-family:'Segoe UI',Arial,sans-serif; color:var(--text); background:var(--gray-bg); zoom: 0.9; }
+        :root {
+            --teal:#1a8a7a; --teal-dk:#136b5e; --teal-lt:#e8f5f3;
+            --yellow:#f5c518; --red:#e03030;
+            --gray-bg:#f0f2f5; --border:#d0d8e0; --text:#1a2a38;
+            --label:#4a6070; --green-field:#d4f5d4;
+        }
+        html, body { overflow:hidden; height:100%; }
+        body { font-family:'Segoe UI',Arial,sans-serif; color:var(--text); background:var(--gray-bg); zoom:0.9; }
+
         .topbar { background:var(--teal); display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:52px; box-shadow:0 2px 8px rgba(0,0,0,.15); }
         .topbar-logo { font-size:11px; font-weight:800; color:rgba(255,255,255,.7); letter-spacing:3px; text-transform:uppercase; }
         .topbar-titulo { font-size:16px; font-weight:700; color:#fff; letter-spacing:1px; }
         .topbar-user { font-size:12px; color:rgba(255,255,255,.85); }
         .topbar-user span { font-weight:700; color:#fff; }
-        .topbar-user a { color:var(--yellow); cursor:pointer; margin-left:12px; text-decoration:none; font-weight:600; }
+        .topbar-user a { color:var(--yellow); cursor:pointer; margin-left:8px; text-decoration:none; font-weight:600; }
         .divisor-top { height:3px; background:linear-gradient(to right,var(--yellow),var(--teal-lt)); }
-        .content { padding:28px 32px; }
-        .card { background:#fff; border-radius:10px; padding:28px 32px 32px; box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border); max-width:900px; margin:0 auto; }
+
+        .layout { display:flex; position:fixed; top:55px; left:0; right:0; bottom:0; overflow:hidden; }
+        .sidebar { width:150px; background:#fff; border-right:1px solid var(--border); padding:20px 10px; display:flex; flex-direction:column; gap:6px; flex-shrink:0; overflow-y:auto; }
+        .nav-btn { background:none; border:none; border-radius:6px; padding:11px 8px; font-size:12px; font-weight:700; color:var(--label); cursor:pointer; text-align:center; letter-spacing:.5px; transition:all .15s; }
+        .nav-btn:hover { background:var(--teal-lt); color:var(--teal-dk); }
+        .nav-btn.active { background:var(--teal); color:#fff; box-shadow:0 2px 8px rgba(26,138,122,.3); }
+
+        .content { flex:1; padding:18px 22px; overflow-y:auto; }
+        .tela { display:none; }
+        .tela.ativa { display:block; }
+
+        .card { background:#fff; border-radius:10px; padding:20px 24px 24px; box-shadow:0 2px 12px rgba(0,0,0,.07); border:1px solid var(--border); max-width:900px; margin:0 auto; }
         .sec-header { font-size:13px; font-weight:700; color:var(--teal-dk); letter-spacing:1.5px; text-transform:uppercase; padding-bottom:10px; border-bottom:2px solid var(--yellow); margin-bottom:24px; }
         .campos-linha { display:flex; align-items:flex-end; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
         .campo-group { display:flex; flex-direction:column; gap:4px; }
         .campo-label { font-size:11px; font-weight:600; color:var(--label); letter-spacing:.5px; text-transform:uppercase; }
         input[type="text"], select, input[type="date"] { border:1.5px solid var(--border); border-radius:5px; padding:7px 10px; font-size:13px; color:var(--text); background:#fff; outline:none; height:36px; }
+        input[type="text"]:focus, select:focus { border-color:var(--teal); }
         input.rg-field { background:var(--green-field); border:1.5px solid #27ae60; }
         .acoes { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; align-items:center; }
         .btn-acao { padding:9px 22px; border-radius:6px; font-size:13px; font-weight:700; border:none; cursor:pointer; letter-spacing:.5px; transition:all .15s; }
-        .btn-filtro { background:#4a7080; color:#fff; }
-        .btn-limpar { background:#607080; color:#fff; }
+        .btn-filtro    { background:#4a7080; color:#fff; }
+        .btn-limpar    { background:#607080; color:#fff; }
         .btn-pesquisar { background:var(--teal); color:#fff; }
-        .btn-salvar { background:#27ae60; color:#fff; }
+        .btn-salvar    { background:#27ae60; color:#fff; }
     </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="topbar-logo">D2P·BRAZIL</div>
-  <div class="topbar-titulo">CONTROLE DE ACESSO — PORTARIA 03</div>
-  <div class="topbar-user">
-    Usuário: <span id="nome-logado"></span>
-    <a href="/portarias.html">SAIR</a>
-  </div>
+    <div class="topbar-logo">D2P·BRAZIL</div>
+    <div class="topbar-titulo">CONTROLE DE ACESSO — PORTARIA 03</div>
+    <div class="topbar-user">
+        Usuário: <span id="nome-logado">—</span>
+        <a href="/portarias.html">| Sair</a>
+    </div>
 </div>
 <div class="divisor-top"></div>
 
-<div class="content">
-  <div class="card">
-    <div class="sec-header">Cadastro de Acesso — Portaria 03</div>
-
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="p03-nome" style="width:260px"></div>
-      <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p03-cpf" class="rg-field" style="width:130px"></div>
-      <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="p03-empresa" style="width:200px"></div>
+<div class="layout">
+    <div class="sidebar">
+        <button class="nav-btn active" onclick="mudarTela('visitas', this)">VISITA / ACESSOS</button>
+        <button class="nav-btn"        onclick="mudarTela('veiculos', this)">ACESSO DE VEÍCULOS</button>
     </div>
 
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">Responsável</span><input type="text" id="p03-responsavel" style="width:260px"></div>
-      <div class="campo-group"><span class="campo-label">Motivo</span>
-        <select id="p03-motivo" style="width:220px">
-          <option value="">Selecione</option>
-          <option>Esqueceu crachá</option>
-          <option>Transbordo</option>
-          <option>Crachá vencido</option>
-          <option>Visita técnica</option>
-          <option>Reunião</option>
-          <option>Banco Santander</option>
-          <option>Perícia Trabalhista</option>
-          <option>Primeiro dia de trabalho</option>
-          <option>Não acessou</option>
-          <option>Pendência SG3</option>
-          <option>Outros</option>
-        </select>
-      </div>
-    </div>
+    <div class="content">
 
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">Liberado</span>
-        <select id="p03-liberado" style="width:210px">
-          <option value="">Selecione</option>
-          <option>Segurança Patrimonial</option>
-          <option>Acessos/CAS</option>
-          <option>Identificação</option>
-          <option>Central de Segurança</option>
-          <option>E-mail</option>
-          <option>GDV</option>
-          <option>Não acessou</option>
-          <option>Outros</option>
-        </select>
-      </div>
-      <div class="campo-group"><span class="campo-label">Número do Crachá</span><input type="text" id="p03-num-cracha" class="rg-field" style="width:140px"></div>
-      <div class="campo-group"><span class="campo-label">Vigilante/Porteiro</span><input type="text" id="p03-vigilante" style="width:190px"></div>
-    </div>
+        <!-- ── ABA VISITA / ACESSOS ───────────────────────────────────────── -->
+        <div id="tela-visitas" class="tela ativa">
+            <div class="card">
+                <div class="sec-header">Visita / Acessos — Portaria 03</div>
 
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">OBS</span><input type="text" id="p03-obs" style="width:760px"></div>
-    </div>
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">Nome</span><input type="text" id="p03-nome" style="width:260px"></div>
+                    <div class="campo-group"><span class="campo-label">CPF</span><input type="text" id="p03-cpf" class="rg-field" style="width:130px"></div>
+                    <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="p03-empresa" style="width:200px"></div>
+                </div>
 
-    <div class="campos-linha">
-      <div class="campo-group"><span class="campo-label">Acesso</span>
-        <select id="p03-acesso" style="width:160px">
-          <option value="">Selecione</option>
-          <option>ENTRADA</option>
-          <option>SAÍDA</option>
-        </select>
-      </div>
-    </div>
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">Responsável</span><input type="text" id="p03-responsavel" style="width:260px"></div>
+                    <div class="campo-group"><span class="campo-label">Motivo</span>
+                        <select id="p03-motivo" style="width:220px">
+                            <option value="">Selecione</option>
+                            <option>Esqueceu crachá</option>
+                            <option>Transbordo</option>
+                            <option>Crachá vencido</option>
+                            <option>Visita técnica</option>
+                            <option>Reunião</option>
+                            <option>Banco Santander</option>
+                            <option>Perícia Trabalhista</option>
+                            <option>Primeiro dia de trabalho</option>
+                            <option>Não acessou</option>
+                            <option>Pendência SG3</option>
+                            <option>Prestador de Serviço</option>
+                            <option>Colaborador</option>
+                            <option>Visitante</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                </div>
 
-    <div class="acoes">
-      <button class="btn-acao btn-filtro"    onclick="p03AbrirRelatorio()">RELATÓRIO</button>
-      <button class="btn-acao btn-limpar"    onclick="p03Limpar()">LIMPAR TELA</button>
-      <button class="btn-acao btn-pesquisar" onclick="localizar()">LOCALIZAR</button>
-      <button class="btn-acao btn-salvar"    onclick="salvar()">SALVAR</button>
-    </div>
-  </div>
-</div>
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">Liberado</span>
+                        <select id="p03-liberado" style="width:210px">
+                            <option value="">Selecione</option>
+                            <option>Segurança Patrimonial</option>
+                            <option>Acessos/CAS</option>
+                            <option>Identificação</option>
+                            <option>Central de Segurança</option>
+                            <option>E-mail</option>
+                            <option>GDV</option>
+                            <option>Não acessou</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                    <div class="campo-group"><span class="campo-label">Número do Crachá</span><input type="text" id="p03-num-cracha" class="rg-field" style="width:140px"></div>
+                    <div class="campo-group"><span class="campo-label">Vigilante/Porteiro</span><input type="text" id="p03-vigilante" style="width:190px"></div>
+                </div>
 
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">OBS</span><input type="text" id="p03-obs" style="width:760px"></div>
+                </div>
+
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">Acesso</span>
+                        <select id="p03-acesso" style="width:160px">
+                            <option value="">Selecione</option>
+                            <option>ENTRADA</option>
+                            <option>SAÍDA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="acoes">
+                    <button class="btn-acao btn-filtro"    onclick="p03AbrirRelatorio()">RELATÓRIO</button>
+                    <button class="btn-acao btn-limpar"    onclick="p03Limpar()">LIMPAR TELA</button>
+                    <button class="btn-acao btn-pesquisar" onclick="localizar()">LOCALIZAR</button>
+                    <button class="btn-acao btn-salvar"    onclick="salvar()">SALVAR</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── ABA ACESSO DE VEÍCULOS ─────────────────────────────────────── -->
+        <div id="tela-veiculos" class="tela">
+            <div class="card">
+                <div class="sec-header">Acesso de Veículos — Portaria 03</div>
+
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">Placa</span><input type="text" id="v03-placa" class="rg-field" style="width:130px" placeholder="AAA-0000"></div>
+                    <div class="campo-group"><span class="campo-label">Tipo de Veículo</span>
+                        <select id="v03-tipo" style="width:200px">
+                            <option value="">Selecione</option>
+                            <option>Automóvel</option>
+                            <option>Caminhão</option>
+                            <option>Caminhonete</option>
+                            <option>Moto</option>
+                            <option>Ônibus</option>
+                            <option>Van</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                    <div class="campo-group"><span class="campo-label">Cor</span><input type="text" id="v03-cor" style="width:120px"></div>
+                </div>
+
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">Motorista / Condutor</span><input type="text" id="v03-motorista" style="width:260px"></div>
+                    <div class="campo-group"><span class="campo-label">CPF do Condutor</span><input type="text" id="v03-cpf" class="rg-field" style="width:140px"></div>
+                    <div class="campo-group"><span class="campo-label">Empresa</span><input type="text" id="v03-empresa" style="width:200px"></div>
+                </div>
+
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">Destino / Setor</span><input type="text" id="v03-destino" style="width:260px"></div>
+                    <div class="campo-group"><span class="campo-label">Motivo</span>
+                        <select id="v03-motivo" style="width:220px">
+                            <option value="">Selecione</option>
+                            <option>Entrega</option>
+                            <option>Coleta</option>
+                            <option>Prestação de Serviço</option>
+                            <option>Visita</option>
+                            <option>Colaborador</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                    <div class="campo-group"><span class="campo-label">Vigilante/Porteiro</span><input type="text" id="v03-vigilante" style="width:190px"></div>
+                </div>
+
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">OBS</span><input type="text" id="v03-obs" style="width:760px"></div>
+                </div>
+
+                <div class="campos-linha">
+                    <div class="campo-group"><span class="campo-label">Acesso</span>
+                        <select id="v03-acesso" style="width:160px">
+                            <option value="">Selecione</option>
+                            <option>ENTRADA</option>
+                            <option>SAÍDA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="acoes">
+                    <button class="btn-acao btn-filtro"    onclick="v03AbrirRelatorio()">RELATÓRIO</button>
+                    <button class="btn-acao btn-limpar"    onclick="v03Limpar()">LIMPAR TELA</button>
+                    <button class="btn-acao btn-pesquisar" onclick="v03Localizar()">LOCALIZAR</button>
+                    <button class="btn-acao btn-salvar"    onclick="v03Salvar()">SALVAR</button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+</div><!-- /layout -->
+
+<!-- MODAL RELATÓRIO — VISITAS -->
 <div id="modal-p03" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
-  <div style="background:#fff; border-radius:10px; max-width:1100px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
-      <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — PORTARIA 03</span>
-      <button onclick="p03FecharRelatorio()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+    <div style="background:#fff; border-radius:10px; max-width:1100px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+            <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — VISITA/ACESSOS P03</span>
+            <button onclick="p03FecharRelatorio()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+        </div>
+        <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+            <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="filtro-inicio" style="width:150px"></div>
+            <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="filtro-fim" style="width:150px"></div>
+            <div class="campo-group"><span class="campo-label">Nome / CPF</span><input type="text" id="filtro-nome" style="width:220px" placeholder="Buscar..."></div>
+            <button class="btn-acao btn-pesquisar" onclick="buscarRelatorio()">FILTRAR</button>
+            <button class="btn-acao btn-limpar"    onclick="p03LimparFiltro()">LIMPAR</button>
+        </div>
+        <div style="overflow-x:auto;">
+            <table id="tabela-resultados" style="width:100%; border-collapse:collapse; font-size:12px;">
+                <thead style="background:var(--teal); color:#fff;">
+                    <tr>
+                        <th style="padding:8px 10px;">Data</th>
+                        <th style="padding:8px 10px;">Hora</th>
+                        <th style="padding:8px 10px;">CPF</th>
+                        <th style="padding:8px 10px;">Nome</th>
+                        <th style="padding:8px 10px;">Empresa</th>
+                        <th style="padding:8px 10px;">Responsável</th>
+                        <th style="padding:8px 10px;">Motivo</th>
+                        <th style="padding:8px 10px;">Liberado</th>
+                        <th style="padding:8px 10px;">Nº Crachá</th>
+                        <th style="padding:8px 10px;">Vigilante</th>
+                        <th style="padding:8px 10px;">OBS</th>
+                        <th style="padding:8px 10px;">Acesso</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <button onclick="exportarExcel()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
     </div>
-    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
-      <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="filtro-inicio" style="width:150px"></div>
-      <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="filtro-fim" style="width:150px"></div>
-      <div class="campo-group"><span class="campo-label">Nome / CPF</span><input type="text" id="filtro-nome" style="width:220px" placeholder="Buscar..."></div>
-      <button class="btn-acao btn-pesquisar" onclick="buscarRelatorio()">FILTRAR</button>
-      <button class="btn-acao btn-limpar"    onclick="p03LimparFiltro()">LIMPAR</button>
-    </div>
-    <div style="overflow-x:auto;">
-      <table id="tabela-resultados" style="width:100%; border-collapse:collapse; font-size:12px;">
-        <thead style="background:var(--teal); color:#fff;">
-          <tr>
-            <th style="padding:8px 10px;">Data</th>
-            <th style="padding:8px 10px;">Hora</th>
-            <th style="padding:8px 10px;">CPF</th>
-            <th style="padding:8px 10px;">Nome</th>
-            <th style="padding:8px 10px;">Empresa</th>
-            <th style="padding:8px 10px;">Responsável</th>
-            <th style="padding:8px 10px;">Motivo</th>
-            <th style="padding:8px 10px;">Liberado</th>
-            <th style="padding:8px 10px;">Nº Crachá</th>
-            <th style="padding:8px 10px;">Vigilante</th>
-            <th style="padding:8px 10px;">OBS</th>
-            <th style="padding:8px 10px;">Acesso</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <button onclick="exportarExcel()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
-  </div>
 </div>
 
-<script src="/js/xlsx.full.min.js"></script>
-<script src="../conexao/config.js?v=2"></script>
-<script src="../conexao/db.js?v=2"></script>
+<!-- MODAL RELATÓRIO — VEÍCULOS -->
+<div id="modal-v03" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; overflow:auto;">
+    <div style="background:#fff; border-radius:10px; max-width:1100px; margin:40px auto; padding:28px 32px; box-shadow:0 8px 40px rgba(0,0,0,.3);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--yellow); padding-bottom:12px;">
+            <span style="font-size:14px; font-weight:800; color:var(--teal-dk); letter-spacing:1px;">RELATÓRIO / BUSCA — VEÍCULOS P03</span>
+            <button onclick="v03FecharRelatorio()" style="background:var(--red); border:none; color:#fff; border-radius:5px; padding:5px 14px; font-weight:700; cursor:pointer;">✕ FECHAR</button>
+        </div>
+        <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px;">
+            <div class="campo-group"><span class="campo-label">Data Inicial</span><input type="date" id="v-filtro-inicio" style="width:150px"></div>
+            <div class="campo-group"><span class="campo-label">Data Final</span><input type="date" id="v-filtro-fim" style="width:150px"></div>
+            <div class="campo-group"><span class="campo-label">Placa / Motorista</span><input type="text" id="v-filtro-busca" style="width:220px" placeholder="Buscar..."></div>
+            <button class="btn-acao btn-pesquisar" onclick="v03BuscarRelatorio()">FILTRAR</button>
+            <button class="btn-acao btn-limpar"    onclick="v03LimparFiltro()">LIMPAR</button>
+        </div>
+        <div style="overflow-x:auto;">
+            <table id="tabela-v03" style="width:100%; border-collapse:collapse; font-size:12px;">
+                <thead style="background:var(--teal); color:#fff;">
+                    <tr>
+                        <th style="padding:8px 10px;">Data</th>
+                        <th style="padding:8px 10px;">Hora</th>
+                        <th style="padding:8px 10px;">Placa</th>
+                        <th style="padding:8px 10px;">Tipo</th>
+                        <th style="padding:8px 10px;">Cor</th>
+                        <th style="padding:8px 10px;">Motorista</th>
+                        <th style="padding:8px 10px;">CPF</th>
+                        <th style="padding:8px 10px;">Empresa</th>
+                        <th style="padding:8px 10px;">Destino</th>
+                        <th style="padding:8px 10px;">Motivo</th>
+                        <th style="padding:8px 10px;">Vigilante</th>
+                        <th style="padding:8px 10px;">OBS</th>
+                        <th style="padding:8px 10px;">Acesso</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <button onclick="v03ExportarExcel()" style="margin-top:16px; background:#27ae60; color:#fff; border:none; border-radius:6px; padding:9px 22px; font-size:13px; font-weight:700; cursor:pointer;">GERAR EXCEL</button>
+    </div>
+</div>
+
 <script src="../js/ui.js?v=2"></script>
-<script src="js/api.js?v=1"></script>
+<script src="js/api.js?v=2"></script>
+<script src="js/veiculos.js?v=1"></script>
 <script>
-  document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
+    document.getElementById('nome-logado').innerText = sessionStorage.getItem('d2p-auth');
+
+    function mudarTela(nome, btn) {
+        document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tela-' + nome).classList.add('ativa');
+        btn.classList.add('active');
+    }
 </script>
 <script src="/js/session-timeout.js"></script>
 </body>
