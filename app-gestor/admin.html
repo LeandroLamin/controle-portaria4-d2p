@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin — Gestores Cadastrados</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html, body { min-height:100%; background:#111; font-family:'Segoe UI',Arial,sans-serif; color:#fff; }
+
+        .header { background:#000; padding:16px 20px; border-bottom:2px solid #f5c518; display:flex; align-items:center; justify-content:space-between; }
+        .header-titulo { font-size:14px; font-weight:800; color:#f5c518; letter-spacing:1px; }
+        .btn-sair { background:none; border:none; color:#f5c518; font-size:12px; font-weight:700; cursor:pointer; }
+
+        .body { padding:20px 16px 40px; max-width:500px; margin:0 auto; }
+
+        /* FORM ADD */
+        .card-add { background:#1a1a1a; border-radius:14px; padding:20px; margin-bottom:24px; border:1px solid #333; }
+        .card-add h3 { font-size:13px; font-weight:700; color:#f5c518; letter-spacing:1px; text-transform:uppercase; margin-bottom:16px; }
+        .form-group { margin-bottom:14px; }
+        .form-label { display:block; font-size:11px; font-weight:700; color:rgba(255,255,255,.5); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+        .form-input {
+            width:100%; padding:12px 14px;
+            background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.15);
+            border-radius:10px; color:#fff; font-size:15px; outline:none;
+        }
+        .form-input:focus { border-color:#f5c518; }
+        .form-input::placeholder { color:rgba(255,255,255,.25); }
+        .btn-add {
+            width:100%; padding:14px; background:#f5c518; color:#000;
+            border:none; border-radius:10px; font-size:14px; font-weight:800;
+            letter-spacing:1px; cursor:pointer; margin-top:4px;
+        }
+        .btn-add:active { background:#d4a800; }
+
+        /* LISTA */
+        .lista-titulo { font-size:12px; font-weight:700; color:rgba(255,255,255,.4); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
+        .gestor-card {
+            background:#1a1a1a; border-radius:12px; padding:16px;
+            margin-bottom:12px; border:1px solid #2a2a2a;
+            display:flex; align-items:center; justify-content:space-between; gap:12px;
+        }
+        .gestor-info { flex:1; min-width:0; }
+        .gestor-nome { font-size:15px; font-weight:700; color:#fff; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .gestor-sub { font-size:12px; color:rgba(255,255,255,.5); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .gestor-placa { display:inline-block; background:#f5c518; color:#000; font-size:12px; font-weight:800; padding:3px 10px; border-radius:6px; letter-spacing:2px; }
+        .btn-remover { background:#7a0a0a; border:none; color:#fff; border-radius:8px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; flex-shrink:0; }
+        .btn-remover:active { background:#5a0808; }
+
+        .estado-vazio { text-align:center; padding:40px 20px; color:rgba(255,255,255,.3); font-size:14px; }
+
+        /* NOTIF */
+        #notif { display:none; position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1a8a7a; color:#fff; padding:12px 24px; border-radius:10px; font-size:14px; font-weight:700; z-index:999; white-space:nowrap; }
+        #notif.erro { background:#7a0a0a; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-titulo">GESTORES CADASTRADOS</div>
+    <button class="btn-sair" onclick="location.href='index.html'">← VOLTAR</button>
+</div>
+
+<div class="body">
+
+    <div class="card-add">
+        <h3>+ Adicionar Gestor</h3>
+        <div class="form-group">
+            <label class="form-label">Nome Completo</label>
+            <input type="text" class="form-input" id="add-nome" placeholder="Ex: LEANDRO LAMIN" autocapitalize="words">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Empresa</label>
+            <input type="text" class="form-input" id="add-empresa" placeholder="Ex: RENAULT" autocapitalize="characters">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Cargo</label>
+            <input type="text" class="form-input" id="add-cargo" placeholder="Ex: DIRETOR DE QUALIDADE" autocapitalize="words">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Placa</label>
+            <input type="text" class="form-input" id="add-placa" placeholder="AAA-0000" maxlength="8" autocapitalize="characters" style="letter-spacing:3px; font-weight:700;">
+        </div>
+        <button class="btn-add" onclick="adicionarGestor()">CADASTRAR</button>
+    </div>
+
+    <div class="lista-titulo">Gestores cadastrados</div>
+    <div id="lista-gestores"><div class="estado-vazio">Carregando...</div></div>
+
+</div>
+
+<div id="notif"></div>
+
+<script src="../conexao/config.js?v=2"></script>
+<script src="../conexao/db.js?v=2"></script>
+<script>
+    const TABELA = 'app-gestores';
+
+    document.addEventListener('DOMContentLoaded', carregarLista);
+
+    async function carregarLista() {
+        const lista = document.getElementById('lista-gestores');
+        const data  = await dbBuscar(TABELA, {}, { order: 'id.desc' });
+
+        if (!data || data.length === 0) {
+            lista.innerHTML = '<div class="estado-vazio">Nenhum gestor cadastrado ainda.</div>';
+            return;
+        }
+
+        lista.innerHTML = data.map(g => `
+            <div class="gestor-card">
+                <div class="gestor-info">
+                    <div class="gestor-nome">${g.nome || '—'}</div>
+                    <div class="gestor-sub">${g.empresa || ''} ${g.cargo ? '· ' + g.cargo : ''}</div>
+                    <div class="gestor-placa">${g.placa || '—'}</div>
+                </div>
+                <button class="btn-remover" onclick="removerGestor(${g.id}, '${g.nome}')">REMOVER</button>
+            </div>
+        `).join('');
+    }
+
+    async function adicionarGestor() {
+        const nome    = document.getElementById('add-nome').value.trim().toUpperCase();
+        const empresa = document.getElementById('add-empresa').value.trim().toUpperCase();
+        const cargo   = document.getElementById('add-cargo').value.trim().toUpperCase();
+        const placa   = document.getElementById('add-placa').value.trim().toUpperCase();
+
+        if (!nome || !placa) return notif('Preencha pelo menos Nome e Placa.', true);
+
+        const result = await dbSalvar(TABELA, { nome, empresa, cargo, placa, ativo: true });
+        if (result && result.ok) {
+            notif('Gestor cadastrado!');
+            document.getElementById('add-nome').value    = '';
+            document.getElementById('add-empresa').value = '';
+            document.getElementById('add-cargo').value   = '';
+            document.getElementById('add-placa').value   = '';
+            carregarLista();
+        } else {
+            notif('Erro ao cadastrar.', true);
+        }
+    }
+
+    async function removerGestor(id, nome) {
+        if (!confirm(`Remover "${nome}"?`)) return;
+        const result = await dbDeletar(TABELA, { id });
+        if (result && result.ok) { notif('Removido!'); carregarLista(); }
+        else notif('Erro ao remover.', true);
+    }
+
+    function notif(msg, erro = false) {
+        const el = document.getElementById('notif');
+        el.textContent = msg;
+        el.className   = erro ? 'erro' : '';
+        el.style.display = 'block';
+        setTimeout(() => { el.style.display = 'none'; }, 2500);
+    }
+</script>
+</body>
+</html>
