@@ -90,9 +90,9 @@ async function capturarPlaca() {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0);
 
-    // Recorta só a área central (onde está o frame da placa)
-    const cropW = canvas.width  * 0.80;
-    const cropH = canvas.height * 0.30;
+    // Recorta faixa estreita central — só as letras grandes da placa
+    const cropW = canvas.width  * 0.65;
+    const cropH = canvas.height * 0.12;
     const cropX = (canvas.width  - cropW) / 2;
     const cropY = (canvas.height - cropH) / 2;
 
