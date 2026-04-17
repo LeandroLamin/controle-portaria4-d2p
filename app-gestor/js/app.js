@@ -185,10 +185,9 @@ async function registrarAcesso(tipo) {
 
     const result = await dbSalvar(TABELA_LOG, dados);
     if (result && result.ok) {
-        alert(`${tipo} registrada!`);
         voltarScan();
     } else {
-        alert(`Erro ao registrar ${tipo}: ${JSON.stringify(result)}`);
+        alert(`Erro ao registrar. Tente novamente.`);
     }
 }
 
