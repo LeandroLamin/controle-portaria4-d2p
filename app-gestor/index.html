@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Acesso Gestor">
+    <link rel="manifest" href="manifest.json">
+    <title>Acesso de Gestor — D2P</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html, body { height:100%; background:#000; font-family:'Segoe UI',Arial,sans-serif; color:#fff; }
+
+        /* ── LOGIN ── */
+        #tela-login {
+            min-height:100vh; display:flex; flex-direction:column;
+            align-items:center; justify-content:center; padding:32px 24px;
+            background:radial-gradient(ellipse at top, #1a1a1a 0%, #000 70%);
+        }
+        .logo svg { width:80px; height:80px; margin-bottom:24px; }
+        .login-titulo { font-size:22px; font-weight:800; color:#f5c518; text-align:center; letter-spacing:1px; line-height:1.3; margin-bottom:36px; }
+        .login-campo { width:100%; max-width:320px; margin-bottom:14px; }
+        .login-campo label { display:block; font-size:11px; color:#f5c518; font-weight:700; letter-spacing:1px; margin-bottom:6px; }
+        .login-campo input { width:100%; padding:14px 16px; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:15px; outline:none; }
+        .login-campo input:focus { border-color:#f5c518; }
+        .login-campo input::placeholder { color:rgba(255,255,255,.3); }
+        .btn-login { width:100%; max-width:320px; padding:15px; background:#f5c518; color:#000; border:none; border-radius:10px; font-size:15px; font-weight:800; letter-spacing:2px; cursor:pointer; margin-top:8px; }
+        .btn-login:active { background:#d4a800; }
+        .login-erro { color:#e74c3c; font-size:13px; margin-top:12px; text-align:center; display:none; }
+
+        /* ── TELA PRINCIPAL ── */
+        #tela-principal { display:none; min-height:100vh; background:#111; flex-direction:column; }
+
+        .app-header { background:#000; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #f5c518; }
+        .app-header-left { display:flex; align-items:center; gap:10px; }
+        .app-header-left svg { width:26px; height:26px; }
+        .app-header-titulo { font-size:13px; font-weight:800; color:#f5c518; letter-spacing:1px; }
+        .btn-sair { background:none; border:none; color:#f5c518; font-size:12px; font-weight:700; cursor:pointer; padding:6px 10px; }
+        .operador-bar { background:#0a0a0a; padding:6px 20px; font-size:11px; color:rgba(255,255,255,.4); border-bottom:1px solid #222; }
+
+        .scan-area { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; gap:20px; }
+
+        /* Câmera */
+        .camera-box { width:100%; max-width:360px; border-radius:16px; overflow:hidden; border:2px solid #333; background:#000; position:relative; aspect-ratio:16/9; }
+        #video { width:100%; height:100%; object-fit:cover; display:block; }
+        #canvas { display:none; }
+        .camera-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+        .camera-frame { width:80%; height:50%; border:2px solid #f5c518; border-radius:8px; box-shadow:0 0 0 9999px rgba(0,0,0,.4); }
+
+        .btn-capturar {
+            width:100%; max-width:360px; padding:16px;
+            background:#f5c518; color:#000;
+            border:none; border-radius:12px;
+            font-size:16px; font-weight:800; letter-spacing:1px; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; gap:10px;
+        }
+        .btn-capturar:active { background:#d4a800; }
+
+        .divisor { display:flex; align-items:center; gap:12px; width:100%; max-width:360px; color:rgba(255,255,255,.3); font-size:12px; }
+        .divisor::before, .divisor::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.15); }
+
+        .placa-manual { width:100%; max-width:360px; display:flex; gap:10px; }
+        .placa-input {
+            flex:1; padding:14px 16px;
+            background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.2);
+            border-radius:10px; color:#fff; font-size:18px; font-weight:700;
+            outline:none; text-align:center; letter-spacing:3px; text-transform:uppercase;
+        }
+        .placa-input:focus { border-color:#f5c518; }
+        .placa-input::placeholder { color:rgba(255,255,255,.3); font-size:14px; letter-spacing:1px; font-weight:400; }
+        .btn-buscar {
+            padding:14px 20px; background:#1a8a7a; color:#fff;
+            border:none; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer;
+        }
+        .btn-buscar:active { background:#136b5e; }
+
+        .status-ocr { font-size:12px; color:#f5c518; text-align:center; min-height:18px; }
+
+        /* ── TELA RESULTADO ── */
+        #tela-resultado {
+            display:none; position:fixed; inset:0; z-index:500;
+            flex-direction:column; align-items:center; justify-content:center;
+            padding:32px 24px; text-align:center;
+            transition:background .3s;
+        }
+        #tela-resultado.liberado { background:#0a5c2e; }
+        #tela-resultado.negado   { background:#7a0a0a; }
+
+        .result-icon { font-size:80px; margin-bottom:20px; }
+        .result-status { font-size:32px; font-weight:900; letter-spacing:3px; margin-bottom:28px; }
+        .result-card {
+            background:rgba(255,255,255,0.1); border-radius:16px;
+            padding:24px 28px; width:100%; max-width:320px; text-align:left; margin-bottom:32px;
+        }
+        .result-field { margin-bottom:14px; }
+        .result-field-label { font-size:10px; font-weight:700; color:rgba(255,255,255,.6); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+        .result-field-value { font-size:16px; font-weight:700; color:#fff; }
+        .result-placa { font-size:28px; font-weight:900; letter-spacing:4px; color:#f5c518; text-align:center; margin-bottom:28px; }
+
+        .btn-voltar {
+            padding:14px 40px; background:rgba(255,255,255,0.15); color:#fff;
+            border:2px solid rgba(255,255,255,0.3); border-radius:12px;
+            font-size:15px; font-weight:700; cursor:pointer; letter-spacing:1px;
+        }
+        .btn-voltar:active { background:rgba(255,255,255,0.25); }
+    </style>
+</head>
+<body>
+
+<!-- ── LOGIN ─────────────────────────────────────────────────────────────── -->
+<div id="tela-login">
+    <div class="logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,5 85,27 85,73 50,95 15,73 15,27" fill="none" stroke="#f5c518" stroke-width="3"/>
+            <polygon points="50,18 72,31 72,69 50,82 28,69 28,31" fill="none" stroke="#fff" stroke-width="2"/>
+            <polygon points="50,31 60,37 60,63 50,69 40,63 40,37" fill="#f5c518"/>
+        </svg>
+    </div>
+    <div class="login-titulo">Acesso<br>de Gestor</div>
+    <div class="login-campo">
+        <label>Login</label>
+        <input type="text" id="login-user" placeholder="Login" autocomplete="off" autocapitalize="none">
+    </div>
+    <div class="login-campo">
+        <label>Senha</label>
+        <input type="password" id="login-senha" placeholder="Senha">
+    </div>
+    <button class="btn-login" onclick="autenticar()">ACESSAR</button>
+    <div class="login-erro" id="login-erro">Usuário ou senha incorretos.</div>
+</div>
+
+<!-- ── PRINCIPAL ──────────────────────────────────────────────────────────── -->
+<div id="tela-principal">
+    <div class="app-header">
+        <div class="app-header-left">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="50,5 85,27 85,73 50,95 15,73 15,27" fill="none" stroke="#f5c518" stroke-width="4"/>
+                <polygon points="50,22 68,33 68,67 50,78 32,67 32,33" fill="none" stroke="#fff" stroke-width="3"/>
+                <polygon points="50,35 62,42 62,58 50,65 38,58 38,42" fill="#f5c518"/>
+            </svg>
+            <div class="app-header-titulo">ACESSO DE GESTOR</div>
+        </div>
+        <button class="btn-sair" onclick="sair()">SAIR</button>
+    </div>
+    <div class="operador-bar">Operador: <span id="nome-operador"></span></div>
+
+    <div class="scan-area">
+
+        <!-- Câmera -->
+        <div class="camera-box">
+            <video id="video" autoplay playsinline muted></video>
+            <canvas id="canvas"></canvas>
+            <div class="camera-overlay">
+                <div class="camera-frame"></div>
+            </div>
+        </div>
+
+        <div class="status-ocr" id="status-ocr">Aponte para a placa e capture</div>
+
+        <button class="btn-capturar" onclick="capturarPlaca()">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"/><path d="M8.5 3h7l1.5 2H19a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2L8.5 3z"/>
+            </svg>
+            CAPTURAR PLACA
+        </button>
+
+        <div class="divisor">ou digite manualmente</div>
+
+        <div class="placa-manual">
+            <input type="text" class="placa-input" id="placa-manual" placeholder="AAA-0000" maxlength="8" autocapitalize="characters">
+            <button class="btn-buscar" onclick="buscarPlaca()">BUSCAR</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ── RESULTADO ──────────────────────────────────────────────────────────── -->
+<div id="tela-resultado">
+    <div class="result-icon" id="result-icon"></div>
+    <div class="result-status" id="result-status"></div>
+    <div class="result-placa" id="result-placa"></div>
+    <div class="result-card" id="result-card"></div>
+    <button class="btn-voltar" onclick="voltarScan()">← NOVA CONSULTA</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="../conexao/config.js?v=2"></script>
+<script src="../conexao/crypto.js?v=2"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>
