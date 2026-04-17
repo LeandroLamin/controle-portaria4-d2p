@@ -168,7 +168,7 @@ function mostrarLiberado(placa, gestor) {
 
 // ── Registrar ENTRADA / SAÍDA ─────────────────────────────────────────────────
 async function registrarAcesso(tipo) {
-    if (!_gestorAtual) return;
+    if (!_gestorAtual) { alert('Erro: gestor não encontrado.'); return; }
     const agora = new Date();
     const session = JSON.parse(sessionStorage.getItem('gestor-auth') || '{}');
 
@@ -183,8 +183,13 @@ async function registrarAcesso(tipo) {
         operador:  session.nome || ''
     };
 
-    await dbSalvar(TABELA_LOG, dados);
-    voltarScan();
+    const result = await dbSalvar(TABELA_LOG, dados);
+    if (result && result.ok) {
+        alert(`${tipo} registrada!`);
+        voltarScan();
+    } else {
+        alert(`Erro ao registrar ${tipo}: ${JSON.stringify(result)}`);
+    }
 }
 
 // ── Resultado NEGADO ──────────────────────────────────────────────────────────
