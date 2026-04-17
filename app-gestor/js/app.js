@@ -84,26 +84,56 @@ async function capturarPlaca() {
 
     if (!stream) { buscarPlaca(); return; }
 
+    // Captura frame completo
     canvas.width  = video.videoWidth;
     canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+
+    // Recorta só a área central (onde está o frame da placa)
+    const cropW = canvas.width  * 0.80;
+    const cropH = canvas.height * 0.30;
+    const cropX = (canvas.width  - cropW) / 2;
+    const cropY = (canvas.height - cropH) / 2;
+
+    const crop = document.createElement('canvas');
+    crop.width  = cropW * 2;
+    crop.height = cropH * 2;
+    const cCtx = crop.getContext('2d');
+
+    // Escala 2x para melhor resolução no OCR
+    cCtx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, crop.width, crop.height);
+
+    // Pré-processamento: aumenta contraste
+    const imgData = cCtx.getImageData(0, 0, crop.width, crop.height);
+    const d = imgData.data;
+    for (let i = 0; i < d.length; i += 4) {
+        const gray = 0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2];
+        const val  = gray > 128 ? 255 : 0; // binarização
+        d[i] = d[i+1] = d[i+2] = val;
+    }
+    cCtx.putImageData(imgData, 0, 0);
 
     status.textContent = '🔍 Lendo placa...';
 
     try {
-        const { data: { text } } = await Tesseract.recognize(canvas, 'por', {
-            tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
+        const { data: { text } } = await Tesseract.recognize(crop, 'eng', {
+            tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+            tessedit_pageseg_mode:   '7', // linha única
+            tessedit_ocr_engine_mode: '1'
         });
 
-        // Extrai padrão de placa: AAA-0000 ou AAA0A00 (Mercosul)
-        const match = text.replace(/\s/g,'').match(/[A-Z]{3}[-]?[0-9A-Z][0-9]{2}[0-9A-Z]/);
+        const limpo = text.replace(/[^A-Z0-9]/g, '').toUpperCase();
+
+        // Placa antiga: ABC1234 | Mercosul: ABC1D23
+        const match = limpo.match(/[A-Z]{3}[0-9][A-Z0-9][0-9]{2}/);
         if (match) {
-            const placa = match[0].toUpperCase();
+            const placa = match[0];
             document.getElementById('placa-manual').value = placa;
             status.textContent = `Placa detectada: ${placa}`;
             await buscarPorPlaca(placa);
         } else {
-            status.textContent = 'Placa não reconhecida — tente manualmente.';
+            status.textContent = `Não reconheceu (lido: "${limpo}") — tente manualmente.`;
         }
     } catch {
         status.textContent = 'Erro na leitura — tente manualmente.';
