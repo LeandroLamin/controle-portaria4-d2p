@@ -8,18 +8,23 @@ let v03DadosFiltrados = [];
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    const el = document.getElementById('v03-placa');
-    if (el) el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') v03Localizar();
+    ['v03-placa', 'v03-cpf'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') v03Localizar();
+        });
     });
 });
 
-// ── 1. LOCALIZAR por Placa ────────────────────────────────────────────────────
+// ── 1. LOCALIZAR por Placa ou CPF ────────────────────────────────────────────
 async function v03Localizar() {
     const placa = document.getElementById('v03-placa').value.trim().toUpperCase();
-    if (!placa) return notify('Digite a placa para localizar.', 'aviso');
+    const cpf   = document.getElementById('v03-cpf').value.trim();
 
-    const data = await dbBuscar(TABELA_V03, { placa }, { order: 'id.desc', limit: 1 });
+    if (!placa && !cpf) return notify('Digite a placa ou CPF para localizar.', 'aviso');
+
+    const filtros = placa ? { placa } : { cpf };
+    const data = await dbBuscar(TABELA_V03, filtros, { order: 'id.desc', limit: 1 });
 
     if (data && data.length > 0) {
         const u = data[0];
