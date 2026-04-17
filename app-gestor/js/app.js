@@ -185,9 +185,10 @@ async function registrarAcesso(tipo) {
 
     const result = await dbSalvar(TABELA_LOG, dados);
     if (result && result.ok) {
-        voltarScan();
+        mostrarToast(`${tipo} registrada com sucesso!`, '#27ae60');
+        setTimeout(voltarScan, 1500);
     } else {
-        alert(`Erro ao registrar. Tente novamente.`);
+        mostrarToast('Erro ao registrar. Tente novamente.', '#e74c3c');
     }
 }
 
@@ -210,6 +211,21 @@ function mostrarNegado(placa) {
 }
 
 // ── Voltar ────────────────────────────────────────────────────────────────────
+function mostrarToast(msg, cor) {
+    let toast = document.getElementById('toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;color:#fff;z-index:9999;text-align:center;transition:opacity .3s;';
+        document.body.appendChild(toast);
+    }
+    toast.textContent    = msg;
+    toast.style.background = cor;
+    toast.style.opacity  = '1';
+    toast.style.display  = 'block';
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => { toast.style.display = 'none'; }, 300); }, 1200);
+}
+
 function voltarScan() {
     _gestorAtual = null;
     document.getElementById('tela-resultado').style.display  = 'none';
