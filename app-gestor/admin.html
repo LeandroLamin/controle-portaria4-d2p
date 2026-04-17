@@ -93,6 +93,7 @@
 
 <script src="../conexao/config.js?v=2"></script>
 <script src="../conexao/db.js?v=2"></script>
+<script src="../js/ui.js?v=2"></script>
 <script>
     const TABELA = 'app-gestores';
 
@@ -125,34 +126,26 @@
         const cargo   = document.getElementById('add-cargo').value.trim().toUpperCase();
         const placa   = document.getElementById('add-placa').value.trim().toUpperCase();
 
-        if (!nome || !placa) return notif('Preencha pelo menos Nome e Placa.', true);
+        if (!nome || !placa) return notify('Preencha pelo menos Nome e Placa.', 'aviso');
 
         const result = await dbSalvar(TABELA, { nome, empresa, cargo, placa, ativo: true });
         if (result && result.ok) {
-            notif('Gestor cadastrado!');
+            notify('Gestor cadastrado com sucesso!', 'sucesso');
             document.getElementById('add-nome').value    = '';
             document.getElementById('add-empresa').value = '';
             document.getElementById('add-cargo').value   = '';
             document.getElementById('add-placa').value   = '';
             carregarLista();
         } else {
-            notif('Erro ao cadastrar.', true);
+            notify('Erro ao cadastrar.', 'erro');
         }
     }
 
     async function removerGestor(id, nome) {
         if (!confirm(`Remover "${nome}"?`)) return;
         const result = await dbDeletar(TABELA, { id });
-        if (result && result.ok) { notif('Removido!'); carregarLista(); }
-        else notif('Erro ao remover.', true);
-    }
-
-    function notif(msg, erro = false) {
-        const el = document.getElementById('notif');
-        el.textContent = msg;
-        el.className   = erro ? 'erro' : '';
-        el.style.display = 'block';
-        setTimeout(() => { el.style.display = 'none'; }, 2500);
+        if (result && result.ok) { notify('Removido!', 'sucesso'); carregarLista(); }
+        else notify('Erro ao remover.', 'erro');
     }
 </script>
 </body>
