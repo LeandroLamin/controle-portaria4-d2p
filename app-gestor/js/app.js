@@ -90,11 +90,12 @@ async function capturarPlaca() {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0);
 
-    // Recorta faixa estreita central — só as letras grandes da placa
-    const cropW = canvas.width  * 0.92;
-    const cropH = canvas.height * 0.55;
+    // Recorta só a faixa das letras grandes — ignora o topo (BRASIL)
+    const cropW = canvas.width  * 0.90;
+    const cropH = canvas.height * 0.25;
     const cropX = (canvas.width  - cropW) / 2;
-    const cropY = (canvas.height - cropH) / 2;
+    // Desloca para baixo do centro para pegar só os caracteres
+    const cropY = (canvas.height / 2) + (canvas.height * 0.05);
 
     const crop = document.createElement('canvas');
     crop.width  = cropW * 2;
