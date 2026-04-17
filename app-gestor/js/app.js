@@ -104,13 +104,14 @@ async function capturarPlaca() {
     // Escala 2x para melhor resolução no OCR
     cCtx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, crop.width, crop.height);
 
-    // Pré-processamento: aumenta contraste
+    // Pré-processamento: aumenta contraste sem binarizar
     const imgData = cCtx.getImageData(0, 0, crop.width, crop.height);
     const d = imgData.data;
+    const fator = 1.8;
     for (let i = 0; i < d.length; i += 4) {
-        const gray = 0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2];
-        const val  = gray > 128 ? 255 : 0; // binarização
-        d[i] = d[i+1] = d[i+2] = val;
+        d[i]   = Math.min(255, (d[i]   - 128) * fator + 128);
+        d[i+1] = Math.min(255, (d[i+1] - 128) * fator + 128);
+        d[i+2] = Math.min(255, (d[i+2] - 128) * fator + 128);
     }
     cCtx.putImageData(imgData, 0, 0);
 
