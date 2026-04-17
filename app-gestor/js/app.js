@@ -3,7 +3,7 @@
  * Tabela: app-gestores (cadastro de gestores autorizados)
  */
 
-const TABELA_GESTORES = 'app-gestores';
+const TABELA_GESTORES = 'portaria-gestores';
 let stream = null;
 
 // ── Init ──────────────────────────────────────────────────────────────────────

@@ -3,7 +3,7 @@
  * Tabela: app-controle-veiculos
  */
 
-const TABELA_APP = 'app-controle-veiculos';
+const TABELA_APP = 'portaria-app-veiculos';
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
