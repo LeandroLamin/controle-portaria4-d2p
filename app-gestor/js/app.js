@@ -120,22 +120,25 @@ async function buscarPlaca() {
     if (!valor) return;
     document.getElementById('lista-resultados').style.display = 'none';
 
-    const ehPlaca = /^[A-Z]{3}[-]?[0-9A-Z]{4}$/.test(valor);
+    // Tenta por placa primeiro (exato)
+    let data = await dbBuscar(TABELA_GESTORES, { placa: valor }, { order: 'id.desc', limit: 1 });
+    if (data && data.length > 0) { mostrarLiberado(data[0].placa, data[0]); return; }
 
-    if (ehPlaca) {
-        const placa = valor.replace('-', '');
-        const data = await dbBuscar(TABELA_GESTORES, { placa }, { order: 'id.desc', limit: 1 });
-        if (data && data.length > 0) mostrarLiberado(data[0].placa, data[0]);
-        else mostrarNegado(valor);
+    // Tenta sem hífen
+    const semHifen = valor.replace(/-/g, '');
+    if (semHifen !== valor) {
+        data = await dbBuscar(TABELA_GESTORES, { placa: semHifen }, { order: 'id.desc', limit: 1 });
+        if (data && data.length > 0) { mostrarLiberado(data[0].placa, data[0]); return; }
+    }
+
+    // Tenta por nome parcial
+    data = await dbBuscar(TABELA_GESTORES, { nome_like: valor }, { order: 'nome.asc' });
+    if (!data || data.length === 0) {
+        mostrarNegado(valor);
+    } else if (data.length === 1) {
+        mostrarLiberado(data[0].placa, data[0]);
     } else {
-        const data = await dbBuscar(TABELA_GESTORES, { nome_like: valor }, { order: 'nome.asc' });
-        if (!data || data.length === 0) {
-            mostrarNegado(valor);
-        } else if (data.length === 1) {
-            mostrarLiberado(data[0].placa, data[0]);
-        } else {
-            mostrarListaResultados(data);
-        }
+        mostrarListaResultados(data);
     }
 }
 
