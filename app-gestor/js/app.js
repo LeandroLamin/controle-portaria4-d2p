@@ -240,8 +240,10 @@ function mostrarToast(msg, cor) {
 
 function voltarScan() {
     _gestorAtual = null;
+    window._listaGestores = [];
     document.getElementById('tela-resultado').style.display  = 'none';
     document.getElementById('btns-acesso').style.display     = 'none';
     document.getElementById('placa-manual').value            = '';
-    document.getElementById('status-ocr').textContent        = 'Aponte para a placa e capture';
+    document.getElementById('lista-resultados').style.display = 'none';
+    document.getElementById('lista-items').innerHTML          = '';
 }
