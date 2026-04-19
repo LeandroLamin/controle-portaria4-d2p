@@ -115,27 +115,7 @@
 </head>
 <body>
 
-<!-- ── LOGIN ─────────────────────────────────────────────────────────────── -->
-<div id="tela-login">
-    <div class="logo">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="50,5 85,27 85,73 50,95 15,73 15,27" fill="none" stroke="#f5c518" stroke-width="3"/>
-            <polygon points="50,18 72,31 72,69 50,82 28,69 28,31" fill="none" stroke="#fff" stroke-width="2"/>
-            <polygon points="50,31 60,37 60,63 50,69 40,63 40,37" fill="#f5c518"/>
-        </svg>
-    </div>
-    <div class="login-titulo">Acesso<br>de Gestor</div>
-    <div class="login-campo">
-        <label>Login</label>
-        <input type="text" id="login-user" placeholder="Login" autocomplete="off" autocapitalize="none">
-    </div>
-    <div class="login-campo">
-        <label>Senha</label>
-        <input type="password" id="login-senha" placeholder="Senha">
-    </div>
-    <button class="btn-login" onclick="autenticar()">ACESSAR</button>
-    <div class="login-erro" id="login-erro">Usuário ou senha incorretos.</div>
-</div>
+<!-- LOGIN DESATIVADO -->
 
 <!-- ── PRINCIPAL ──────────────────────────────────────────────────────────── -->
 <div id="tela-principal">
@@ -156,26 +136,6 @@
     <div class="operador-bar">Operador: <span id="nome-operador"></span></div>
 
     <div class="scan-area">
-
-        <!-- Câmera -->
-        <div class="camera-box">
-            <video id="video" autoplay playsinline muted></video>
-            <canvas id="canvas"></canvas>
-            <div class="camera-overlay">
-                <div class="camera-frame"></div>
-            </div>
-        </div>
-
-        <div class="status-ocr" id="status-ocr">Aponte para a placa e capture</div>
-
-        <button class="btn-capturar" onclick="capturarPlaca()">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="3"/><path d="M8.5 3h7l1.5 2H19a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2L8.5 3z"/>
-            </svg>
-            CAPTURAR PLACA
-        </button>
-
-        <div class="divisor">ou digite manualmente</div>
 
         <div class="placa-manual">
             <input type="text" class="placa-input" id="placa-manual" placeholder="AAA-0000" maxlength="8" autocapitalize="characters">

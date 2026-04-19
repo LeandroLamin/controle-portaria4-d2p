@@ -12,14 +12,8 @@ let stream = null;
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    const session = sessionStorage.getItem('gestor-auth');
-    if (session) {
-        const { nome } = JSON.parse(session);
-        mostrarPrincipal(nome);
-    }
-    document.getElementById('login-senha').addEventListener('keydown', e => {
-        if (e.key === 'Enter') autenticar();
-    });
+    // Login desativado — entra direto
+    mostrarPrincipal('Gestor');
     document.getElementById('placa-manual').addEventListener('keydown', e => {
         if (e.key === 'Enter') buscarPlaca();
     });
@@ -49,10 +43,8 @@ async function autenticar() {
 }
 
 function mostrarPrincipal(nome) {
-    document.getElementById('tela-login').style.display     = 'none';
     document.getElementById('tela-principal').style.display = 'flex';
     document.getElementById('nome-operador').textContent    = nome;
-    iniciarCamera();
 }
 
 function sair() {
