@@ -3,114 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1a1a2e">
+    <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Acesso Gestor">
     <link rel="manifest" href="manifest.json">
     <title>Acesso de Gestor — D2P</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        html, body { height:100%; font-family:'Segoe UI',Arial,sans-serif; background:#f0f2f5; }
+        html, body { height:100%; font-family:'Segoe UI',Arial,sans-serif; background:#f4f6f9; color:#1a1a2e; }
 
         /* ── TELA PRINCIPAL ── */
-        #tela-principal {
-            display:none; min-height:100vh; flex-direction:column;
-            background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        }
+        #tela-principal { display:none; min-height:100vh; flex-direction:column; background:#f4f6f9; }
 
         /* Header */
         .app-header {
-            padding:16px 20px;
+            background:#fff;
+            padding:14px 20px;
             display:flex; align-items:center; justify-content:space-between;
-            background:rgba(0,0,0,0.3);
-            border-bottom:1px solid rgba(255,255,255,0.08);
+            border-bottom:3px solid #e8eaf0;
+            box-shadow:0 2px 12px rgba(0,0,0,0.06);
         }
-        .app-header-left { display:flex; align-items:center; gap:12px; }
+        .app-header-left { display:flex; align-items:center; gap:14px; }
         .app-header-titulo {
-            font-size:11px; font-weight:700; color:rgba(255,255,255,0.7);
-            letter-spacing:2px; text-transform:uppercase;
+            font-size:13px; font-weight:700; color:#4a5568;
+            letter-spacing:1.5px; text-transform:uppercase;
         }
         .btn-sair {
-            background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
-            color:#fff; font-size:11px; font-weight:700; cursor:pointer;
-            padding:6px 14px; border-radius:20px; letter-spacing:1px;
+            background:#f0f2f5; border:1.5px solid #dde1e9;
+            color:#4a5568; font-size:11px; font-weight:700;
+            cursor:pointer; padding:7px 16px; border-radius:20px;
+            letter-spacing:1px; transition:background .15s;
         }
-        .btn-sair:active { background:rgba(255,255,255,0.2); }
+        .btn-sair:active { background:#e0e4ea; }
 
         /* Área central */
         .scan-area {
             flex:1; display:flex; flex-direction:column;
             align-items:center; justify-content:center;
-            padding:32px 24px; gap:0;
+            padding:32px 20px;
         }
 
-        /* Card de busca */
+        /* Card */
         .busca-card {
-            width:100%; max-width:420px;
-            background:rgba(255,255,255,0.05);
-            border:1px solid rgba(255,255,255,0.12);
-            border-radius:24px;
-            padding:36px 32px;
-            backdrop-filter:blur(12px);
-            box-shadow:0 20px 60px rgba(0,0,0,0.4);
+            width:100%; max-width:400px;
+            background:#fff;
+            border-radius:20px;
+            padding:36px 28px;
+            box-shadow:0 4px 32px rgba(0,0,0,0.10);
+            border:1px solid #e8eaf0;
         }
 
         .busca-card-titulo {
-            text-align:center; margin-bottom:8px;
-        }
-        .busca-card-titulo span {
-            font-size:13px; font-weight:700; color:rgba(255,255,255,0.5);
+            text-align:center; margin-bottom:6px;
+            font-size:11px; font-weight:700; color:#a0aab8;
             letter-spacing:2px; text-transform:uppercase;
         }
         .busca-card-subtitulo {
-            font-size:22px; font-weight:800; color:#fff;
-            text-align:center; margin-bottom:32px; letter-spacing:0.5px;
+            font-size:22px; font-weight:800; color:#1a1a2e;
+            text-align:center; margin-bottom:32px;
         }
 
         .placa-label {
-            font-size:10px; font-weight:700; color:rgba(255,255,255,0.5);
-            letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;
-            display:block;
+            font-size:10px; font-weight:700; color:#8492a6;
+            letter-spacing:2px; text-transform:uppercase;
+            margin-bottom:10px; display:block;
         }
         .placa-input {
             width:100%; padding:18px 20px;
-            background:rgba(255,255,255,0.08);
-            border:1.5px solid rgba(255,255,255,0.15);
-            border-radius:14px; color:#fff;
-            font-size:24px; font-weight:800;
+            background:#f7f9fc;
+            border:2px solid #e2e8f0;
+            border-radius:12px; color:#1a1a2e;
+            font-size:26px; font-weight:800;
             text-align:center; letter-spacing:6px; text-transform:uppercase;
             outline:none; margin-bottom:20px;
             transition:border-color .2s, background .2s;
         }
         .placa-input:focus {
-            border-color:rgba(255,255,255,0.5);
-            background:rgba(255,255,255,0.12);
+            border-color:#3b82f6;
+            background:#fff;
         }
         .placa-input::placeholder {
-            color:rgba(255,255,255,0.2); font-size:18px;
+            color:#c4cdd8; font-size:18px;
             letter-spacing:4px; font-weight:400;
         }
 
         .btn-buscar {
-            width:100%; padding:18px;
-            background:linear-gradient(135deg, #e94560 0%, #c0392b 100%);
-            color:#fff; border:none; border-radius:14px;
-            font-size:15px; font-weight:800; letter-spacing:3px;
+            width:100%; padding:17px;
+            background:#1e40af;
+            color:#fff; border:none; border-radius:12px;
+            font-size:14px; font-weight:800; letter-spacing:2px;
             cursor:pointer; text-transform:uppercase;
-            box-shadow:0 8px 24px rgba(233,69,96,0.4);
-            transition:transform .1s, box-shadow .1s;
+            box-shadow:0 4px 16px rgba(30,64,175,0.3);
+            transition:transform .1s, box-shadow .1s, background .15s;
         }
         .btn-buscar:active {
             transform:scale(0.98);
-            box-shadow:0 4px 12px rgba(233,69,96,0.3);
+            background:#1a35a0;
+            box-shadow:0 2px 8px rgba(30,64,175,0.2);
         }
 
-        /* Rodapé do card */
         .busca-card-footer {
-            text-align:center; margin-top:20px;
-            font-size:11px; color:rgba(255,255,255,0.25);
-            letter-spacing:1px;
+            text-align:center; margin-top:18px;
+            font-size:11px; color:#b0bac8; letter-spacing:1px;
         }
 
         /* ── TELA RESULTADO ── */
@@ -119,33 +114,33 @@
             flex-direction:column; align-items:center; justify-content:center;
             padding:32px 24px; text-align:center;
         }
-        #tela-resultado.liberado { background:linear-gradient(160deg,#0a5c2e,#0d7a3e); }
-        #tela-resultado.negado   { background:linear-gradient(160deg,#7a0a0a,#a01010); }
+        #tela-resultado.liberado { background:linear-gradient(160deg,#064e3b,#065f46); }
+        #tela-resultado.negado   { background:linear-gradient(160deg,#7f1d1d,#991b1b); }
 
-        .result-icon { font-size:72px; margin-bottom:16px; }
-        .result-status { font-size:28px; font-weight:900; letter-spacing:4px; margin-bottom:20px; color:#fff; }
+        .result-icon { font-size:72px; margin-bottom:14px; }
+        .result-status { font-size:26px; font-weight:900; letter-spacing:4px; color:#fff; margin-bottom:16px; }
         .result-placa { font-size:32px; font-weight:900; letter-spacing:6px; color:rgba(255,255,255,0.9); margin-bottom:28px; }
         .result-card {
-            background:rgba(255,255,255,0.12); border-radius:20px;
-            padding:24px 28px; width:100%; max-width:340px;
+            background:rgba(255,255,255,0.12); border-radius:18px;
+            padding:22px 28px; width:100%; max-width:340px;
             text-align:left; margin-bottom:28px;
-            border:1px solid rgba(255,255,255,0.15);
+            border:1px solid rgba(255,255,255,0.18);
         }
         .result-field { margin-bottom:12px; }
         .result-field:last-child { margin-bottom:0; }
         .result-field-label { font-size:10px; font-weight:700; color:rgba(255,255,255,.5); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
         .result-field-value { font-size:18px; font-weight:700; color:#fff; }
 
-        .btns-acesso { display:flex; gap:14px; width:100%; max-width:340px; margin-bottom:18px; }
-        .btn-entrada { flex:1; padding:18px; background:rgba(255,255,255,0.9); color:#0a5c2e; border:none; border-radius:14px; font-size:15px; font-weight:900; cursor:pointer; letter-spacing:1px; }
-        .btn-entrada:active { background:rgba(255,255,255,0.7); }
-        .btn-saida   { flex:1; padding:18px; background:rgba(0,0,0,0.3); color:#fff; border:2px solid rgba(255,255,255,0.4); border-radius:14px; font-size:15px; font-weight:900; cursor:pointer; letter-spacing:1px; }
-        .btn-saida:active { background:rgba(0,0,0,0.5); }
+        .btns-acesso { display:flex; gap:14px; width:100%; max-width:340px; margin-bottom:16px; }
+        .btn-entrada { flex:1; padding:17px; background:#fff; color:#065f46; border:none; border-radius:12px; font-size:14px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.2); }
+        .btn-entrada:active { background:#f0fdf4; }
+        .btn-saida   { flex:1; padding:17px; background:rgba(255,255,255,0.15); color:#fff; border:2px solid rgba(255,255,255,0.35); border-radius:12px; font-size:14px; font-weight:900; cursor:pointer; }
+        .btn-saida:active { background:rgba(255,255,255,0.25); }
 
         .btn-voltar {
-            padding:14px 40px; background:rgba(255,255,255,0.12);
+            padding:13px 36px; background:rgba(255,255,255,0.12);
             color:#fff; border:1px solid rgba(255,255,255,0.25);
-            border-radius:12px; font-size:14px; font-weight:700;
+            border-radius:10px; font-size:13px; font-weight:700;
             cursor:pointer; letter-spacing:1px;
         }
         .btn-voltar:active { background:rgba(255,255,255,0.2); }
@@ -159,18 +154,18 @@
 <div id="tela-principal">
     <div class="app-header">
         <div class="app-header-left">
-            <img src="https://supabase.laminlpp.com.br/storage/v1/object/public/assets/logo_rdb.png" alt="Logo" style="height:36px; width:auto;">
+            <img src="https://supabase.laminlpp.com.br/storage/v1/object/public/assets/logo_rdb.png" alt="Logo" style="height:38px; width:auto;">
             <div class="app-header-titulo">Acesso de Gestor</div>
         </div>
-        <div style="display:flex;gap:8px">
-            <button class="btn-sair" onclick="location.href='admin.html'" style="background:transparent;border-color:transparent;font-size:16px;padding:4px 8px;">⚙️</button>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn-sair" onclick="location.href='admin.html'" style="background:transparent;border-color:transparent;font-size:18px;padding:4px;">⚙️</button>
             <button class="btn-sair" onclick="sair()">SAIR</button>
         </div>
     </div>
 
     <div class="scan-area">
         <div class="busca-card">
-            <div class="busca-card-titulo"><span>Consulta de Veículo</span></div>
+            <div class="busca-card-titulo">Consulta de Veículo</div>
             <div class="busca-card-subtitulo">Digite a placa</div>
 
             <label class="placa-label">Placa do veículo</label>
@@ -178,7 +173,7 @@
                    placeholder="AAA-0000" maxlength="8"
                    autocapitalize="characters" autocomplete="off">
 
-            <button class="btn-buscar" onclick="buscarPlaca()">🔍 &nbsp;BUSCAR</button>
+            <button class="btn-buscar" onclick="buscarPlaca()">BUSCAR</button>
 
             <div class="busca-card-footer">Operador: <span id="nome-operador"></span></div>
         </div>
