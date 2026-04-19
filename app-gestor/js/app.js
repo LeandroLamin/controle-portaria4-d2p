@@ -116,24 +116,45 @@ async function capturarPlaca() {
 
 // ── Busca manual ──────────────────────────────────────────────────────────────
 async function buscarPlaca() {
-    const placa = document.getElementById('placa-manual').value.trim().toUpperCase();
-    if (!placa) return;
-    await buscarPorPlaca(placa);
+    const valor = document.getElementById('placa-manual').value.trim().toUpperCase();
+    if (!valor) return;
+    document.getElementById('lista-resultados').style.display = 'none';
+
+    const ehPlaca = /^[A-Z]{3}[-]?[0-9A-Z]{4}$/.test(valor);
+
+    if (ehPlaca) {
+        const placa = valor.replace('-', '');
+        const data = await dbBuscar(TABELA_GESTORES, { placa }, { order: 'id.desc', limit: 1 });
+        if (data && data.length > 0) mostrarLiberado(data[0].placa, data[0]);
+        else mostrarNegado(valor);
+    } else {
+        const data = await dbBuscar(TABELA_GESTORES, { nome_like: valor }, { order: 'nome.asc' });
+        if (!data || data.length === 0) {
+            mostrarNegado(valor);
+        } else if (data.length === 1) {
+            mostrarLiberado(data[0].placa, data[0]);
+        } else {
+            mostrarListaResultados(data);
+        }
+    }
 }
 
-// ── Busca no Supabase ─────────────────────────────────────────────────────────
-async function buscarPorPlaca(placa) {
+function mostrarListaResultados(lista) {
+    const container = document.getElementById('lista-items');
+    container.innerHTML = lista.map(g => `
+        <div class="gestor-item" onclick="selecionarGestor(${g.id})">
+            <div class="gestor-item-nome">${g.nome || '—'}</div>
+            <div class="gestor-item-sub">${g.empresa || ''} ${g.cargo ? '· ' + g.cargo : ''}</div>
+            <div class="gestor-item-placa">${g.placa || '—'}</div>
+        </div>
+    `).join('');
+    window._listaGestores = lista;
+    document.getElementById('lista-resultados').style.display = 'block';
+}
 
-    const data = await fetch(`${N8N_URL}/db-buscar`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tabela: TABELA_GESTORES, filtros: { placa }, order: 'id.desc', limit: 1, _api_key: N8N_API_KEY })
-    }).then(r => r.json()).catch(() => null);
-
-    if (data && Array.isArray(data) && data.length > 0) {
-        mostrarLiberado(placa, data[0]);
-    } else {
-        mostrarNegado(placa);
-    }
+function selecionarGestor(id) {
+    const g = (window._listaGestores || []).find(x => x.id === id);
+    if (g) mostrarLiberado(g.placa, g);
 }
 
 // ── Resultado LIBERADO ────────────────────────────────────────────────────────

@@ -95,6 +95,19 @@
             font-size:11px; color:rgba(255,255,255,.3); letter-spacing:1px;
         }
 
+        /* Lista de resultados */
+        #lista-resultados { margin-top:18px; display:none; }
+        .lista-titulo-busca { font-size:10px; font-weight:700; color:rgba(255,255,255,.4); letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
+        .gestor-item {
+            background:rgba(255,255,255,0.05); border:1px solid #333;
+            border-radius:10px; padding:14px 16px; margin-bottom:8px;
+            cursor:pointer; transition:background .15s;
+        }
+        .gestor-item:active { background:rgba(245,197,24,0.1); border-color:#f5c518; }
+        .gestor-item-nome { font-size:14px; font-weight:700; color:#fff; margin-bottom:3px; }
+        .gestor-item-sub { font-size:11px; color:rgba(255,255,255,.4); }
+        .gestor-item-placa { display:inline-block; background:#f5c518; color:#000; font-size:11px; font-weight:800; padding:2px 8px; border-radius:4px; letter-spacing:2px; margin-top:5px; }
+
         /* ── TELA RESULTADO ── */
         #tela-resultado {
             display:none; position:fixed; inset:0; z-index:500;
@@ -154,12 +167,18 @@
             <div class="busca-card-titulo">Consulta de Veículo</div>
             <div class="busca-card-subtitulo">Digite a placa</div>
 
-            <label class="placa-label">Placa do veículo</label>
+            <label class="placa-label">Placa ou Nome</label>
             <input type="text" class="placa-input" id="placa-manual"
-                   placeholder="AAA-0000" maxlength="8"
-                   autocapitalize="characters" autocomplete="off">
+                   placeholder="Placa ou nome..." maxlength="40"
+                   autocapitalize="characters" autocomplete="off"
+                   style="font-size:18px; letter-spacing:2px;">
 
             <button class="btn-buscar" onclick="buscarPlaca()">BUSCAR</button>
+
+            <div id="lista-resultados">
+                <div class="lista-titulo-busca">Selecione o gestor</div>
+                <div id="lista-items"></div>
+            </div>
 
             <div class="busca-card-footer">Operador: <span id="nome-operador"></span></div>
         </div>
