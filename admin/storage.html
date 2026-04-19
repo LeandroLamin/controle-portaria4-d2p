@@ -108,10 +108,10 @@
         <div class="card-title">Enviar Nova Imagem</div>
 
         <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-            <input type="file" id="file-input" accept="image/*">
+            <input type="file" id="file-input" accept="image/*,application/pdf">
             <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-            <p>Clique ou arraste uma imagem aqui</p>
-            <span>PNG, JPG, WEBP, SVG...</span>
+            <p>Clique ou arraste uma imagem ou PDF aqui</p>
+            <span>PNG, JPG, WEBP, SVG, PDF...</span>
         </div>
 
         <div id="preview-box">
@@ -156,7 +156,7 @@ dz.addEventListener('drop', e => {
     e.preventDefault();
     dz.classList.remove('over');
     const f = e.dataTransfer.files[0];
-    if (f && f.type.startsWith('image/')) selecionarArquivo(f);
+    if (f && (f.type.startsWith('image/') || f.type === 'application/pdf')) selecionarArquivo(f);
 });
 document.getElementById('file-input').addEventListener('change', e => {
     if (e.target.files[0]) selecionarArquivo(e.target.files[0]);
@@ -165,9 +165,19 @@ document.getElementById('file-input').addEventListener('change', e => {
 function selecionarArquivo(file) {
     arquivoSelecionado = file;
     document.getElementById('file-name').value = file.name;
-    const reader = new FileReader();
-    reader.onload = e => { document.getElementById('preview-img').src = e.target.result; };
-    reader.readAsDataURL(file);
+    const previewImg = document.getElementById('preview-img');
+    if (file.type === 'application/pdf') {
+        previewImg.src = '';
+        previewImg.style.display = 'none';
+        previewImg.insertAdjacentHTML('afterend', '<div id="pdf-placeholder" style="width:100px;height:100px;display:flex;align-items:center;justify-content:center;background:#fdecea;border-radius:8px;border:1px solid #e0e0e0;font-size:36px;">📄</div>');
+    } else {
+        previewImg.style.display = 'block';
+        const el = document.getElementById('pdf-placeholder');
+        if (el) el.remove();
+        const reader = new FileReader();
+        reader.onload = e => { previewImg.src = e.target.result; };
+        reader.readAsDataURL(file);
+    }
     document.getElementById('preview-box').style.display = 'flex';
     document.getElementById('btn-upload').style.display = 'inline-block';
     document.getElementById('upload-status').textContent = '';
@@ -263,11 +273,23 @@ async function listarImagens() {
             const div = document.createElement('div');
             div.className = 'img-card';
 
-            const img = document.createElement('img');
-            img.src = url;
-            img.alt = item.name;
-            img.loading = 'lazy';
-            img.onerror = function() { this.style.background = '#eee'; };
+            const isPdf = item.name.toLowerCase().endsWith('.pdf');
+            let imgEl;
+            if (isPdf) {
+                imgEl = document.createElement('a');
+                imgEl.href = url;
+                imgEl.target = '_blank';
+                imgEl.rel = 'noopener';
+                imgEl.style.cssText = 'width:100%;height:120px;display:flex;align-items:center;justify-content:center;background:#fdecea;font-size:48px;text-decoration:none;';
+                imgEl.textContent = '📄';
+            } else {
+                imgEl = document.createElement('img');
+                imgEl.src = url;
+                imgEl.alt = item.name;
+                imgEl.loading = 'lazy';
+                imgEl.onerror = function() { this.style.background = '#eee'; };
+            }
+            const img = imgEl;
 
             const body = document.createElement('div');
             body.className = 'img-card-body';
