@@ -148,6 +148,11 @@ const PUB_URL = SUPABASE_URL + '/storage/v1/object/public/' + SUPABASE_BUCKET + 
 
 let arquivoSelecionado = null;
 
+function sanitizarNome(nome) {
+    return nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+               .replace(/[^a-zA-Z0-9._-]/g, '-').replace(/-+/g, '-');
+}
+
 // ── Drag & Drop ──────────────────────────────────────────────
 const dz = document.getElementById('drop-zone');
 dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
@@ -164,7 +169,7 @@ document.getElementById('file-input').addEventListener('change', e => {
 
 function selecionarArquivo(file) {
     arquivoSelecionado = file;
-    document.getElementById('file-name').value = file.name;
+    document.getElementById('file-name').value = sanitizarNome(file.name);
     const previewImg = document.getElementById('preview-img');
     if (file.type === 'application/pdf') {
         previewImg.src = '';

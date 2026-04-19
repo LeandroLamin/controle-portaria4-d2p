@@ -207,7 +207,7 @@ async function _corteAtualizarViewer(url, ehImagem) {
         document.getElementById('corte-pdf-viewer').style.display  = 'block';
         _cortePdfPagAtual = 1;
         try {
-            _cortePdfDoc = await pdfjsLib.getDocument({ url, withCredentials: false }).promise;
+            _cortePdfDoc = await pdfjsLib.getDocument({ url, withCredentials: false, disableRange: true, disableStream: true }).promise;
             _cortePdfRenderPagina(_cortePdfPagAtual);
         } catch (e) {
             notify('Erro ao carregar PDF: ' + e.message, 'erro');
