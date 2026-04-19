@@ -11,31 +11,28 @@
     <title>Acesso de Gestor — D2P</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        html, body { height:100%; font-family:'Segoe UI',Arial,sans-serif; background:#f4f6f9; color:#1a1a2e; }
+        html, body { height:100%; font-family:'Segoe UI',Arial,sans-serif; background:#111; color:#fff; }
 
         /* ── TELA PRINCIPAL ── */
-        #tela-principal { display:none; min-height:100vh; flex-direction:column; background:#f4f6f9; }
+        #tela-principal { display:none; min-height:100vh; flex-direction:column; background:#111; }
 
         /* Header */
         .app-header {
-            background:#fff;
-            padding:14px 20px;
+            background:#000;
+            padding:16px 20px;
             display:flex; align-items:center; justify-content:space-between;
-            border-bottom:3px solid #e8eaf0;
-            box-shadow:0 2px 12px rgba(0,0,0,0.06);
+            border-bottom:2px solid #f5c518;
         }
         .app-header-left { display:flex; align-items:center; gap:14px; }
         .app-header-titulo {
-            font-size:13px; font-weight:700; color:#4a5568;
-            letter-spacing:1.5px; text-transform:uppercase;
+            font-size:13px; font-weight:800; color:#f5c518;
+            letter-spacing:1px; text-transform:uppercase;
         }
         .btn-sair {
-            background:#f0f2f5; border:1.5px solid #dde1e9;
-            color:#4a5568; font-size:11px; font-weight:700;
-            cursor:pointer; padding:7px 16px; border-radius:20px;
-            letter-spacing:1px; transition:background .15s;
+            background:none; border:none;
+            color:#f5c518; font-size:12px; font-weight:700;
+            cursor:pointer; padding:6px 10px;
         }
-        .btn-sair:active { background:#e0e4ea; }
 
         /* Área central */
         .scan-area {
@@ -47,65 +44,55 @@
         /* Card */
         .busca-card {
             width:100%; max-width:400px;
-            background:#fff;
-            border-radius:20px;
-            padding:36px 28px;
-            box-shadow:0 4px 32px rgba(0,0,0,0.10);
-            border:1px solid #e8eaf0;
+            background:#1a1a1a;
+            border-radius:14px;
+            padding:28px 24px;
+            border:1px solid #333;
         }
 
         .busca-card-titulo {
             text-align:center; margin-bottom:6px;
-            font-size:11px; font-weight:700; color:#a0aab8;
+            font-size:11px; font-weight:700; color:#f5c518;
             letter-spacing:2px; text-transform:uppercase;
         }
         .busca-card-subtitulo {
-            font-size:22px; font-weight:800; color:#1a1a2e;
-            text-align:center; margin-bottom:32px;
+            font-size:20px; font-weight:800; color:#fff;
+            text-align:center; margin-bottom:28px;
         }
 
         .placa-label {
-            font-size:10px; font-weight:700; color:#8492a6;
+            font-size:10px; font-weight:700; color:rgba(255,255,255,.5);
             letter-spacing:2px; text-transform:uppercase;
             margin-bottom:10px; display:block;
         }
         .placa-input {
-            width:100%; padding:18px 20px;
-            background:#f7f9fc;
-            border:2px solid #e2e8f0;
-            border-radius:12px; color:#1a1a2e;
+            width:100%; padding:16px 20px;
+            background:rgba(255,255,255,0.06);
+            border:1.5px solid rgba(255,255,255,0.15);
+            border-radius:10px; color:#fff;
             font-size:26px; font-weight:800;
             text-align:center; letter-spacing:6px; text-transform:uppercase;
-            outline:none; margin-bottom:20px;
-            transition:border-color .2s, background .2s;
+            outline:none; margin-bottom:18px;
+            transition:border-color .2s;
         }
-        .placa-input:focus {
-            border-color:#3b82f6;
-            background:#fff;
-        }
+        .placa-input:focus { border-color:#f5c518; }
         .placa-input::placeholder {
-            color:#c4cdd8; font-size:18px;
+            color:rgba(255,255,255,.2); font-size:18px;
             letter-spacing:4px; font-weight:400;
         }
 
         .btn-buscar {
-            width:100%; padding:17px;
-            background:#1e40af;
-            color:#fff; border:none; border-radius:12px;
-            font-size:14px; font-weight:800; letter-spacing:2px;
+            width:100%; padding:15px;
+            background:#f5c518; color:#000;
+            border:none; border-radius:10px;
+            font-size:14px; font-weight:800; letter-spacing:1px;
             cursor:pointer; text-transform:uppercase;
-            box-shadow:0 4px 16px rgba(30,64,175,0.3);
-            transition:transform .1s, box-shadow .1s, background .15s;
         }
-        .btn-buscar:active {
-            transform:scale(0.98);
-            background:#1a35a0;
-            box-shadow:0 2px 8px rgba(30,64,175,0.2);
-        }
+        .btn-buscar:active { background:#d4a800; }
 
         .busca-card-footer {
-            text-align:center; margin-top:18px;
-            font-size:11px; color:#b0bac8; letter-spacing:1px;
+            text-align:center; margin-top:16px;
+            font-size:11px; color:rgba(255,255,255,.3); letter-spacing:1px;
         }
 
         /* ── TELA RESULTADO ── */
