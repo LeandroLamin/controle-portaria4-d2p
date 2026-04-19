@@ -123,7 +123,6 @@ async function buscarPlaca() {
 
 // ── Busca no Supabase ─────────────────────────────────────────────────────────
 async function buscarPorPlaca(placa) {
-    document.getElementById('status-ocr').textContent = `Consultando ${placa}...`;
 
     const data = await fetch(`${N8N_URL}/db-buscar`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
